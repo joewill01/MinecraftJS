@@ -146,7 +146,7 @@ function buildTree(x,y,z) {
 }
 
 buildTree(4,1,4);
-b
+
 
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
