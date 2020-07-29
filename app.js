@@ -7,20 +7,18 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-
 var controls = new THREE.PointerLockControls(camera, document.body);
 
-var canvas = document.getElementsByTagName("canvas")[0]
+var canvas = document.getElementsByTagName("canvas")[0];
 canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
 document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
 
 canvas.onclick = function() {
   	controls.connect();
 	controls.lock();
-}
+};
 
 scene.add(controls.getObject());
-
 
 class Block {
 	constructor(x,y,z,texture_name) {
@@ -68,13 +66,15 @@ class Block {
 	}
 }
 
+// world 'generation'
 let blocks = [];
-
 for (let x = -8; x < 8; x++) {
 	for (let z = -8; z < 8; z++) {
 		blocks.push(new Block(x, 0, z, 'grass_block_top-NORMAL-BY-JOE.png'))
 	}
 }
+
+// random shit cause im bored
 
 function buildTree(x,y,z) {
 	blocks.push(new Block(x, y, z, 'oak_log.png'));
@@ -147,6 +147,7 @@ function buildTree(x,y,z) {
 }
 
 buildTree(4,1,4);
+buildTree(-4,1,-4);
 
 blocks.push(new Block(0,1,0, 'dark_oak_planks.png'));
 blocks.push(new Block(-1,1,1, 'dark_oak_planks.png'));
@@ -154,13 +155,15 @@ blocks.push(new Block(-2,1,1, 'dark_oak_planks.png'));
 blocks.push(new Block(-2,1,2, 'dark_oak_planks.png'));
 blocks.push(new Block(-2,1,3, 'dark_oak_planks.png'));
 
+// keypress detection and setting speeds
+
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
 
 function keyDownHandler(event) {
 	if (event.keyCode === 87) {
 		// w
-		cameraSpeedForward = 0.1;
+		cameraAccelerationForward = 0.02;
 	} if (event.keyCode === 65) {
 		// a
 		cameraSpeedSide = -0.075;
@@ -181,6 +184,7 @@ function keyDownHandler(event) {
 function keyUpHandler(event) {
 	if (event.keyCode === 87) {
 		// w
+		cameraAccelerationForward = 0;
 		cameraSpeedForward = 0;
 	} if (event.keyCode === 65) {
 		// a
@@ -198,6 +202,8 @@ function keyUpHandler(event) {
 	}
 }
 
+// camera movement
+
 let cameraAccelerationForward = 0;
 let cameraAccelerationSide = 0;
 let cameraAccelerationUp = -0.006;
@@ -206,19 +212,21 @@ let cameraSpeedForward = 0;
 let cameraSpeedSide = 0;
 let cameraSpeedUp = 0;
 
+let cameraMaxSpeedForward = 0.1;
+
 function moveCamera() {
 	cameraSpeedForward += cameraAccelerationForward;
 	cameraSpeedSide += cameraAccelerationSide;
 	cameraSpeedUp += cameraAccelerationUp;
 
-	let direction = new THREE.Vector3;
-	camera.getWorldDirection(direction);
-	let sideDirection = {'x': direction['z'], 'y': 0, 'z': direction['x']};
-	direction = {'x': direction['x'], 'y': 0, 'z': direction['z']};
+	if (cameraSpeedForward > cameraMaxSpeedForward) {
+		cameraSpeedForward = cameraMaxSpeedForward;
+	}
 
 	camera.translateZ(-cameraSpeedForward);
 	camera.translateX(cameraSpeedSide);
 
+	// check if we are on the floor level (y = 2 all the time atm)
 	if (camera.position.y + cameraSpeedUp <= 2) {
 		camera.position.y = 2;
 	} else {
@@ -232,7 +240,3 @@ function animate() {
 	renderer.render( scene, camera );
 }
 animate();
-
-
-
-
