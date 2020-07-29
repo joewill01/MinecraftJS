@@ -163,7 +163,7 @@ document.addEventListener('keyup', keyUpHandler, false);
 function keyDownHandler(event) {
 	if (event.keyCode === 87) {
 		// w
-		cameraAccelerationForward = 0.02;
+		cameraSpeedForward = 0.1;
 	} if (event.keyCode === 65) {
 		// a
 		cameraSpeedSide = -0.075;
@@ -184,7 +184,6 @@ function keyDownHandler(event) {
 function keyUpHandler(event) {
 	if (event.keyCode === 87) {
 		// w
-		cameraAccelerationForward = 0;
 		cameraSpeedForward = 0;
 	} if (event.keyCode === 65) {
 		// a
@@ -212,16 +211,11 @@ let cameraSpeedForward = 0;
 let cameraSpeedSide = 0;
 let cameraSpeedUp = 0;
 
-let cameraMaxSpeedForward = 0.1;
 
 function moveCamera() {
 	cameraSpeedForward += cameraAccelerationForward;
 	cameraSpeedSide += cameraAccelerationSide;
 	cameraSpeedUp += cameraAccelerationUp;
-
-	if (cameraSpeedForward > cameraMaxSpeedForward) {
-		cameraSpeedForward = cameraMaxSpeedForward;
-	}
 
 	camera.translateZ(-cameraSpeedForward);
 	camera.translateX(cameraSpeedSide);
