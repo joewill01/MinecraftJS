@@ -164,9 +164,9 @@ function keyDownHandler(event) {
 	} if (event.keyCode === 68) {
 		// d
 		cameraSpeedSide = 0.075;
-	} if (event.keyCode === 32) {
+	} if (event.keyCode === 32 && camera.position.y === 2) {
 		// space
-		cameraSpeedUp = 0.31;
+		cameraSpeedUp = 0.14;
 	} if (event.keyCode === 83) {
 		// l shift
 	}
@@ -210,8 +210,8 @@ function moveCamera() {
 	let sideDirection = {'x': direction['z'], 'y': 0, 'z': direction['x']};
 	direction = {'x': direction['x'], 'y': 0, 'z': direction['z']};
 
-	camera.translateZ(-cameraSpeedForward)
-	camera.translateX(cameraSpeedSide)
+	camera.translateZ(-cameraSpeedForward);
+	camera.translateX(cameraSpeedSide);
 
 	if (camera.position.y + cameraSpeedUp <= 2) {
 		camera.position.y = 2;
