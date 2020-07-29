@@ -6,6 +6,7 @@
 			html, body {
 				margin: 0;
 				border: 0;
+				overflow: hidden;
 			}
 
 			.crosshairx {
@@ -29,6 +30,18 @@
 				background-color: white;
 				z-index: 2;
 			}
+
+			.hotbar {
+				background-image: url("https://cdn140.picsart.com/318286813310211.png");
+				background-size: cover;
+				display: block;
+				position: fixed;
+				bottom: 0;
+				left: calc(50% - 200px);
+				height: 110px;
+				width: 400px;
+				z-index: 2;
+			}
 		</style>
 	</head>
 	<body>
@@ -37,5 +50,6 @@
 		<script src="app.js"></script>
 		<span class="crosshairx"></span>
 		<span class="crosshairy"></span>
+		<span class="hotbar"></span>
 	</body>
 </html>

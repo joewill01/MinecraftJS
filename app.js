@@ -1,4 +1,5 @@
 var scene = new THREE.Scene();
+scene.background = new THREE.Color( 0x99ccff );
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 camera.position.set(0,0,2);
 
@@ -147,6 +148,11 @@ function buildTree(x,y,z) {
 
 buildTree(4,1,4);
 
+blocks.push(new Block(0,1,0, 'dark_oak_planks.png'));
+blocks.push(new Block(-1,1,1, 'dark_oak_planks.png'));
+blocks.push(new Block(-2,1,1, 'dark_oak_planks.png'));
+blocks.push(new Block(-2,1,2, 'dark_oak_planks.png'));
+blocks.push(new Block(-2,1,3, 'dark_oak_planks.png'));
 
 document.addEventListener('keydown', keyDownHandler, false);
 document.addEventListener('keyup', keyUpHandler, false);
