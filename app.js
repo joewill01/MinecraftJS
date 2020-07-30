@@ -26,30 +26,6 @@ canvas.onclick = function() {
 	})
 };
 
-window.onbeforeunload = function (e) {
-    // Cancel the event
-    e.preventDefault();
-
-    // Chrome requires returnValue to be set
-    e.returnValue = 'Really want to quit the game?';
-};
-
-//Prevent Ctrl+S (and Ctrl+W for old browsers and Edge)
-document.onkeydown = function (e) {
-    e = e || window.event;//Get event
-
-    if (!e.ctrlKey) return;
-
-    var code = e.which || e.keyCode;//Get key code
-
-    switch (code) {
-        case 83://Block Ctrl+S
-        case 87://Block Ctrl+W -- Not work in Chrome and new Firefox
-            e.preventDefault();
-            e.stopPropagation();
-            break;
-    }
-};
 
 scene.add(controls.getObject());
 
@@ -64,7 +40,6 @@ class Block {
 		this.depth = 1;
 
 		var block = new THREE.Group();
-		block.scale.set(1,1,1);
 		block.position.x = this.x;
 		block.position.y = this.y;
 		block.position.z = this.z;
@@ -235,9 +210,13 @@ var canJump = true;
 var prevTime = performance.now();
 var sprinting = false;
 var ctlHeld = false;
+var prevSelected = null;
+var selected = null;
 
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
 
 var onKeyDown = function ( event ) {
 	switch ( event.keyCode ) {
@@ -274,6 +253,16 @@ var onKeyDown = function ( event ) {
 
 };
 
+document.onclick = function(e){
+	if(e.which == 1){// LEFT CLICK
+		console.log("LEFT")
+	}else if(e.which == 2){
+		console.log("MIDDLE")
+	}else if(e.which == 3){
+		console.log("RIGHT")
+	}
+}
+
 var onKeyUp = function ( event ) {
 
 	switch ( event.keyCode ) {
@@ -296,6 +285,21 @@ var onKeyUp = function ( event ) {
 			break;
 	}
 };
+
+function getSelected(raycaster, mouse){
+	mouse.x = ( (canvas.width/2) / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( (canvas.height/2) / window.innerHeight ) * 2 + 1;
+	raycaster.setFromCamera( mouse, camera );
+
+	// calculate objects intersecting the picking ray
+	var intersects = raycaster.intersectObjects( scene.children ,true);
+
+	if (intersects.length >= 1){
+		if (intersects[0].distance <= 6){
+			intersects[ 0 ].object.material.color.set( 0xff0000 );
+		}
+	}
+}
 
 document.addEventListener( 'keydown', onKeyDown, false );
 document.addEventListener( 'keyup', onKeyUp, false );
@@ -347,6 +351,7 @@ function moveCamera() {
 
 function animate() {
 	moveCamera();
+	getSelected(raycaster, mouse);
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
 }
