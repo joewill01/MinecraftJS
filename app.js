@@ -195,75 +195,111 @@ blocks.push(new Block(-2,1,3, oak_log_textures));
 
 // keypress detection and setting speeds
 
-document.addEventListener('keydown', keyDownHandler, false);
-document.addEventListener('keyup', keyUpHandler, false);
+var moveForward = false;
+var moveBackward = false;
+var moveLeft = false;
+var moveRight = false;
+var canJump = true;
+var prevTime = performance.now();
+var sprinting = false;
 
-function keyDownHandler(event) {
-	if (event.keyCode === 87) {
-		// w
-		cameraSpeedForward = 0.1;
-	} if (event.keyCode === 65) {
-		// a
-		cameraSpeedSide = -0.075;
-	} if (event.keyCode === 83) {
-		// s
-		cameraSpeedForward = -0.1;
-	} if (event.keyCode === 68) {
-		// d
-		cameraSpeedSide = 0.075;
-	} if (event.keyCode === 32 && camera.position.y === 2) {
-		// space
-		cameraSpeedUp = 0.14;
-	} if (event.keyCode === 83) {
-		// l shift
+var velocity = new THREE.Vector3();
+var direction = new THREE.Vector3();
+
+var onKeyDown = function ( event ) {
+	switch ( event.keyCode ) {
+		case 87: // w
+			moveForward = true;
+			break;
+		case 65: // a
+			moveLeft = true;
+			break;
+		case 83: // s
+			moveBackward = true;
+			break;
+		case 68: // d
+			moveRight = true;
+			break;
+		case 32: // space
+			if ( canJump === true ) velocity.y += 8;
+			canJump = false;
+			break;
+		case 17: //Left Ctl
+			sprinting = true;
 	}
-}
 
-function keyUpHandler(event) {
-	if (event.keyCode === 87) {
-		// w
-		cameraSpeedForward = 0;
-	} if (event.keyCode === 65) {
-		// a
-		cameraSpeedSide = 0;
-	} if (event.keyCode === 83) {
-		// s
-		cameraSpeedForward = 0;
-	} if (event.keyCode === 68) {
-		// d
-		cameraSpeedSide = 0;
-	} if (event.keyCode === 32) {
-		// space
-	} if (event.keyCode === 83) {
-		// l shift
+};
+
+var onKeyUp = function ( event ) {
+
+	switch ( event.keyCode ) {
+		case 87: // w
+			moveForward = false;
+			break;
+		case 65: // a
+			moveLeft = false;
+			break;
+		case 83: // s
+			moveBackward = false;
+			break;
+		case 68: // d
+			moveRight = false;
+			break;
+		case 17: //Left Ctl
+			sprinting = false;
 	}
-}
+};
 
-// camera movement
-
-let cameraAccelerationForward = 0;
-let cameraAccelerationSide = 0;
-let cameraAccelerationUp = -0.006;
-
-let cameraSpeedForward = 0;
-let cameraSpeedSide = 0;
-let cameraSpeedUp = 0;
-
+document.addEventListener( 'keydown', onKeyDown, false );
+document.addEventListener( 'keyup', onKeyUp, false );
 
 function moveCamera() {
-	cameraSpeedForward += cameraAccelerationForward;
-	cameraSpeedSide += cameraAccelerationSide;
-	cameraSpeedUp += cameraAccelerationUp;
 
-	camera.translateZ(-cameraSpeedForward);
-	camera.translateX(cameraSpeedSide);
+	var time = performance.now();
+	var delta = ( time - prevTime ) / 1000;
+
+	//Change speed if sprinting
+	if (!sprinting){
+		velocity.x -= velocity.x * 16.0 * delta;
+		velocity.z -= velocity.z * 16.0 * delta;
+	}else{
+		velocity.x -= velocity.x * 10.0 * delta;
+		velocity.z -= velocity.z * 10.0 * delta;
+	}
+	
+	//Change the FOV of the camera to show you are sprinting
+	if(sprinting && camera.fov < 80){
+		camera.fov ++;
+	}
+	if(!sprinting && camera.fov > 75){
+		camera.fov -= 0.5;
+	}
+	camera.updateProjectionMatrix();
+
+	velocity.y -= 9.8 * 2.5 * delta; // 100.0 = mass
+
+	direction.z = Number( moveForward ) - Number( moveBackward );
+	direction.x = Number( moveRight ) - Number( moveLeft );
+	direction.normalize(); // this ensures consistent movements in all directions
+
+	if ( moveForward || moveBackward ) velocity.z -= direction.z * 1 * delta;
+	if ( moveLeft || moveRight ) velocity.x -= direction.x * 1 * delta;
+
+	controls.moveRight( - velocity.x);
+	controls.moveForward( - velocity.z);
 
 	// check if we are on the floor level (y = 2 all the time atm)
-	if (camera.position.y + cameraSpeedUp <= 2) {
-		camera.position.y = 2;
-	} else {
-		camera.position.y += cameraSpeedUp;
+	controls.getObject().position.y += ( velocity.y * delta ); // new behavior
+	if ( controls.getObject().position.y < 2 ) {
+
+		velocity.y = 0;
+		controls.getObject().position.y = 2;
+
+		canJump = true;
+
 	}
+
+	prevTime = time;
 }
 
 function animate() {
