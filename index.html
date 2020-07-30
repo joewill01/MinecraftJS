@@ -32,17 +32,84 @@
 			}
 
 			.hotbar {
-				background-image: url("https://cdn140.picsart.com/318286813310211.png");
-				background-size: cover;
-				display: block;
 				position: fixed;
 				bottom: 0;
 				left: calc(50% - 200px);
 				height: 110px;
-				width: 400px;
+				width: 364px;
 				z-index: 2;
+				display: flex;
+				align-items: center;
+				flex-direction: column;
+			}
+
+			.widget {
+				position: absolute;
+				display: inline-block;
+				background-image: url("./minecraft/textures/gui/widgets.png");
+				background-size: 512px 512px;
+				image-rendering: pixelated;
+			}
+
+			.widget.items {
+				bottom: 0;
+				background-position: 0 0;
+				height: 44px;
+				width: 364px;
+			}
+
+			.widget.selected-item {
+				display: none;
+				bottom: -1px;
+				background-position: 0 -44px;
+				height: 48px;
+				width: 48px;
+			}
+
+			.widget.selected-item.active {
+				display: block;
 			}
 		</style>
+
+		<script>
+			function item_selector() {
+				// CALL ON WINDOW LOAD
+				let selected_item_spans = document.getElementsByClassName("selected-item");
+				let selected_item = 0;
+				selectItem(selected_item);
+
+				function selectItem (item_number) {
+					for (let i = 0; i < selected_item_spans.length; i++) {
+						if (i === item_number) {
+							selected_item_spans[i].classList.add("active")
+						} else {
+							selected_item_spans[i].classList.remove("active")
+						}
+					}
+				}
+
+				window.addEventListener("wheel", (e) => {
+					if (e.deltaY === -100) {
+						selected_item++;
+						if (selected_item >= 9) {
+							selected_item = 0;
+						}
+						selectItem(selected_item);
+					} else {
+						selected_item--;
+						if (selected_item <= -1) {
+							selected_item = 8;
+						}
+						selectItem(selected_item);
+					}
+				});
+			}
+
+			window.onload = function () {
+				item_selector();
+			}
+
+		</script>
 	</head>
 	<body>
 		<script src="three.js"></script>
@@ -50,6 +117,27 @@
 		<script src="app.js"></script>
 		<span class="crosshairx"></span>
 		<span class="crosshairy"></span>
-		<span class="hotbar"></span>
+		<div class="hotbar">
+			<span class="widget items"></span>
+
+			<span class="item"></span>
+			<span class="widget selected-item" style="left: -2px"></span>
+			<span class="item"></span>
+			<span class="widget selected-item" style="left: 38px"></span>
+			<span class="item"></span>
+			<span class="widget selected-item" style="left: 78px"></span>
+			<span class="item"></span>
+			<span class="widget selected-item" style="left: 118px"></span>
+			<span class="item"></span>
+			<span class="widget selected-item" style="left: 158px"></span>
+			<span class="item"></span>
+			<span class="widget selected-item" style="left: 198px"></span>
+			<span class="item"></span>
+			<span class="widget selected-item" style="left: 238px"></span>
+			<span class="item"></span>
+			<span class="widget selected-item" style="left: 278px"></span>
+			<span class="item"></span>
+			<span class="widget selected-item" style="left: 318px"></span>
+		</div>
 	</body>
 </html>
