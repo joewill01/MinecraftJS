@@ -1,6 +1,6 @@
 var scene = new THREE.Scene();
 scene.background = new THREE.Color( 0x99ccff );
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
 camera.position.set(0,0,2);
 
 var renderer = new THREE.WebGLRenderer();
@@ -16,6 +16,39 @@ document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLo
 canvas.onclick = function() {
   	controls.connect();
 	controls.lock();
+	document.documentElement.requestFullscreen().then(result => {
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		camera.width = window.innerWidth
+		camera.height = window.innerHeight
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		navigator.keyboard.lock();
+	})
+};
+
+window.onbeforeunload = function (e) {
+    // Cancel the event
+    e.preventDefault();
+
+    // Chrome requires returnValue to be set
+    e.returnValue = 'Really want to quit the game?';
+};
+
+//Prevent Ctrl+S (and Ctrl+W for old browsers and Edge)
+document.onkeydown = function (e) {
+    e = e || window.event;//Get event
+
+    if (!e.ctrlKey) return;
+
+    var code = e.which || e.keyCode;//Get key code
+
+    switch (code) {
+        case 83://Block Ctrl+S
+        case 87://Block Ctrl+W -- Not work in Chrome and new Firefox
+            e.preventDefault();
+            e.stopPropagation();
+            break;
+    }
 };
 
 scene.add(controls.getObject());
@@ -193,8 +226,7 @@ blocks.push(new Block(-2,1,1, oak_log_textures));
 blocks.push(new Block(-2,1,2, oak_log_textures));
 blocks.push(new Block(-2,1,3, oak_log_textures));
 
-// keypress detection and setting speeds
-
+// var setup
 var moveForward = false;
 var moveBackward = false;
 var moveLeft = false;
@@ -202,14 +234,22 @@ var moveRight = false;
 var canJump = true;
 var prevTime = performance.now();
 var sprinting = false;
+var ctlHeld = false;
 
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
 
 var onKeyDown = function ( event ) {
 	switch ( event.keyCode ) {
+		case 27: // esc
+			navigator.keyboard.unlock();
+			controls.unlock();
+			break;
 		case 87: // w
 			moveForward = true;
+			if(ctlHeld){
+				sprinting = true;
+			}
 			break;
 		case 65: // a
 			moveLeft = true;
@@ -225,7 +265,11 @@ var onKeyDown = function ( event ) {
 			canJump = false;
 			break;
 		case 17: //Left Ctl
-			sprinting = true;
+			ctlHeld = true;
+			if(moveForward && !moveBackward){
+				sprinting = true;
+			}
+			break;
 	}
 
 };
@@ -235,6 +279,7 @@ var onKeyUp = function ( event ) {
 	switch ( event.keyCode ) {
 		case 87: // w
 			moveForward = false;
+			sprinting = false;
 			break;
 		case 65: // a
 			moveLeft = false;
@@ -246,7 +291,9 @@ var onKeyUp = function ( event ) {
 			moveRight = false;
 			break;
 		case 17: //Left Ctl
+			ctlHeld = false;
 			sprinting = false;
+			break;
 	}
 };
 
@@ -271,7 +318,7 @@ function moveCamera() {
 	if(sprinting && camera.fov < 80){
 		camera.fov ++;
 	}
-	if(!sprinting && camera.fov > 75){
+	if(!sprinting && camera.fov > 70){
 		camera.fov -= 0.5;
 	}
 	camera.updateProjectionMatrix();
@@ -291,14 +338,10 @@ function moveCamera() {
 	// check if we are on the floor level (y = 2 all the time atm)
 	controls.getObject().position.y += ( velocity.y * delta ); // new behavior
 	if ( controls.getObject().position.y < 2 ) {
-
 		velocity.y = 0;
 		controls.getObject().position.y = 2;
-
 		canJump = true;
-
 	}
-
 	prevTime = time;
 }
 
