@@ -1,3 +1,6 @@
+import Hotbar from "./hotbar.js";
+let hotbar = new Hotbar(0, 20, 20, 20, 20);
+
 var scene = new THREE.Scene();
 scene.background = new THREE.Color( 0x99ccff );
 var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -249,6 +252,33 @@ var onKeyDown = function ( event ) {
 				sprinting = true;
 			}
 			break;
+		case 49: // 1
+			hotbar.selectItem(0);
+			break
+		case 50: // 2
+			hotbar.selectItem(1);
+			break
+		case 51: // 3
+			hotbar.selectItem(2);
+			break
+		case 52: // 4
+			hotbar.selectItem(3);
+			break
+		case 53: // 5
+			hotbar.selectItem(4);
+			break
+		case 54: // 6
+			hotbar.selectItem(5);
+			break
+		case 55: // 7
+			hotbar.selectItem(6);
+			break
+		case 56: // 8
+			hotbar.selectItem(7);
+			break
+		case 57: // 9
+			hotbar.selectItem(8);
+			break
 	}
 
 };
@@ -303,6 +333,15 @@ function getSelected(raycaster, mouse){
 
 document.addEventListener( 'keydown', onKeyDown, false );
 document.addEventListener( 'keyup', onKeyUp, false );
+
+window.addEventListener("wheel", (e) => {
+	if (e.deltaY < 0) {
+		hotbar.itemUp();
+	} else {
+		hotbar.itemDown();
+	}
+});
+
 
 function moveCamera() {
 
