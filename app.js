@@ -1,5 +1,4 @@
-import Hotbar from "./hotbar.js";
-let hotbar = new Hotbar(0, 20, 20, 20, 20);
+let hotbar = new Hotbar(0, 20, 14, 20, 17);
 
 var scene = new THREE.Scene();
 scene.background = new THREE.Color( 0x99ccff );
@@ -254,31 +253,31 @@ var onKeyDown = function ( event ) {
 			break;
 		case 49: // 1
 			hotbar.selectItem(0);
-			break
+			break;
 		case 50: // 2
 			hotbar.selectItem(1);
-			break
+			break;
 		case 51: // 3
 			hotbar.selectItem(2);
-			break
+			break;
 		case 52: // 4
 			hotbar.selectItem(3);
-			break
+			break;
 		case 53: // 5
 			hotbar.selectItem(4);
-			break
+			break;
 		case 54: // 6
 			hotbar.selectItem(5);
-			break
+			break;
 		case 55: // 7
 			hotbar.selectItem(6);
-			break
+			break;
 		case 56: // 8
 			hotbar.selectItem(7);
-			break
+			break;
 		case 57: // 9
 			hotbar.selectItem(8);
-			break
+			break;
 	}
 
 };
@@ -336,9 +335,9 @@ document.addEventListener( 'keyup', onKeyUp, false );
 
 window.addEventListener("wheel", (e) => {
 	if (e.deltaY < 0) {
-		hotbar.itemUp();
-	} else {
 		hotbar.itemDown();
+	} else {
+		hotbar.itemUp();
 	}
 });
 
