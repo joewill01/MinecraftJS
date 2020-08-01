@@ -9,24 +9,39 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-var controls = new THREE.PointerLockControls(camera, document.body);
+control_type = 'touch';
 
-var canvas = document.getElementsByTagName("canvas")[0];
-canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
-document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+var controls = new THREE.PointerLockControls(camera, renderer.domElement);
 
-canvas.onclick = function() {
-  	controls.connect();
-	controls.lock();
-	document.documentElement.requestFullscreen().then(result => {
-		renderer.setSize( window.innerWidth, window.innerHeight );
-		camera.width = window.innerWidth
-		camera.height = window.innerHeight
-		camera.aspect = window.innerWidth / window.innerHeight;
-		camera.updateProjectionMatrix();
-		navigator.keyboard.lock();
-	})
-};
+if (control_type === 'touch') {
+	// for touch controls
+	let hammer = new Hammer(renderer.domElement);
+
+	hammer.on("panleft panright panup pandown", function(e) {
+		if (e.type === 'panleft') {
+			camera.rotation.y += Math.PI / 180
+		} else if (e.type === 'panright') {
+			camera.rotation.y -= Math.PI / 180
+	});
+
+} else if (control_type === 'pointer') {
+	// for pointer controls
+	renderer.domElement.requestPointerLock = renderer.domElement.requestPointerLock || canvas.mozRequestPointerLock;
+	document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+
+	renderer.domElement.onclick = function() {
+		controls.connect();
+		controls.lock();
+		document.documentElement.requestFullscreen().then(result => {
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			camera.width = window.innerWidth
+			camera.height = window.innerHeight
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+			navigator.keyboard.lock();
+		})
+	};
+}
 
 
 scene.add(controls.getObject());
@@ -316,8 +331,8 @@ var onKeyUp = function ( event ) {
 };
 
 function getSelected(raycaster, mouse){
-	mouse.x = ( (canvas.width/2) / window.innerWidth ) * 2 - 1;
-	mouse.y = - ( (canvas.height/2) / window.innerHeight ) * 2 + 1;
+	mouse.x = ( (renderer.domElement.width/2) / window.innerWidth ) * 2 - 1;
+	mouse.y = - ( (renderer.domElement.height/2) / window.innerHeight ) * 2 + 1;
 	raycaster.setFromCamera( mouse, camera );
 
 	// calculate objects intersecting the picking ray
