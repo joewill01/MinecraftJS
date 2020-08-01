@@ -9,9 +9,9 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-control_type = 'touch';
-
 var controls = new THREE.PointerLockControls(camera, renderer.domElement);
+
+control_type = 'touch';
 
 if (control_type === 'touch') {
 	// for touch controls
@@ -22,11 +22,13 @@ if (control_type === 'touch') {
 			camera.rotation.y += Math.PI / 180
 		} else if (e.type === 'panright') {
 			camera.rotation.y -= Math.PI / 180
-	});
+		}
+	})
 
 } else if (control_type === 'pointer') {
 	// for pointer controls
-	renderer.domElement.requestPointerLock = renderer.domElement.requestPointerLock || canvas.mozRequestPointerLock;
+	canvas=document.getElementsByTagName("canvas")[0];
+	canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
 	document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
 
 	renderer.domElement.onclick = function() {
