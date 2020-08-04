@@ -9,9 +9,16 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
+var geom = new THREE.BoxBufferGeometry( 1.001, 1.001, 1.001);
+var edges = new THREE.EdgesGeometry( geom );
+var selectionCube = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
+selectionCube.visible = false;
+selectionCube.name = "selectionCube";
+scene.add( selectionCube );
+
 var controls = new THREE.PointerLockControls(camera, renderer.domElement);
 
-control_type = 'touch';
+control_type = 'pointer';
 
 if (control_type === 'touch') {
 	// for touch controls
@@ -48,177 +55,93 @@ if (control_type === 'touch') {
 
 scene.add(controls.getObject());
 
-class Block {
-	constructor(x,y,z,texture_names) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.texture_names = texture_names;
-		this.height = 1;
-		this.width = 1;
-		this.depth = 1;
-
-		var block = new THREE.Group();
-		block.position.x = this.x;
-		block.position.y = this.y;
-		block.position.z = this.z;
-		scene.add(block);
-
-		setPlane("y",  Math.PI * 0.5, this.texture_names["side1"]); //side
-		setPlane("y", -Math.PI * 0.5, this.texture_names["side2"]); //side
-		setPlane("x",  Math.PI * 0.5, this.texture_names["bottom"]); //bottom
-		setPlane("x", -Math.PI * 0.5, this.texture_names["top"]); //top
-		setPlane("y",  0, this.texture_names["side3"]); //side
-		setPlane("y",  Math.PI, this.texture_names["side4"]);// side
-
-		function setPlane(axis, angle, texture_name) {
-			var texture = new THREE.TextureLoader().load(`minecraft/textures/block/${texture_name}`);
-			texture.magFilter = THREE.NearestFilter;
-			texture.minFilter = THREE.NearestFilter;
-			var material = new THREE.MeshBasicMaterial( {map: texture,transparent: true} );
-
-			let planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
-			planeGeom.translate(0, 0, 0.5);
-			switch (axis) {
-		    	case 'y':
-		      		planeGeom.rotateY(angle);
-		      		break;
-		    	default:
-		      		planeGeom.rotateX(angle);
-		  	}
-		  let plane = new THREE.Mesh(planeGeom, material);
-		  block.add(plane);
-		}
-	}
-}
-
-/*
-let BLOCKNAME_textures = {
-	'side1': '.png',
-	'side2': '.png',
-	'side3': '.png',
-	'side4': '.png',
-	'top': '.png',
-	'bottom': '.png'
-};
- */
-
-let grass_block_textures = {
-	'side1': 'grass_block_side.png',
-	'side2': 'grass_block_side.png',
-	'side3': 'grass_block_side.png',
-	'side4': 'grass_block_side.png',
-	'top': 'grass_block_top-NORMAL-BY-JOE.png',
-	'bottom': 'dirt.png'
-};
-
-let oak_log_textures = {
-	'side1': 'oak_log.png',
-	'side2': 'oak_log.png',
-	'side3': 'oak_log.png',
-	'side4': 'oak_log.png',
-	'top': 'oak_log_top.png',
-	'bottom': 'oak_log_top.png'
-};
-
-let oak_leaves_textures = {
-	'side1': 'oak_leaves-NORMAL-BY-JOE.png',
-	'side2': 'oak_leaves-NORMAL-BY-JOE.png',
-	'side3': 'oak_leaves-NORMAL-BY-JOE.png',
-	'side4': 'oak_leaves-NORMAL-BY-JOE.png',
-	'top': 'oak_leaves-NORMAL-BY-JOE.png',
-	'bottom': 'oak_leaves-NORMAL-BY-JOE.png'
-};
-
 
 // world 'generation'
 let blocks = [];
 for (let x = -8; x < 8; x++) {
 	for (let z = -8; z < 8; z++) {
-		blocks.push(new Block(x, 0, z, grass_block_textures))
+		blocks.push(new GrassBlock(x, 0, z))
 	}
 }
 
 // random shit cause im bored
-
 function buildTree(x,y,z) {
-	blocks.push(new Block(x, y, z, oak_log_textures));
-	blocks.push(new Block(x, y+1, z, oak_log_textures));
-	blocks.push(new Block(x, y+2, z, oak_log_textures));
-	blocks.push(new Block(x, y+3, z, oak_log_textures));
-	blocks.push(new Block(x+2, y+3, z-2, oak_leaves_textures));
-	blocks.push(new Block(x+2, y+3, z-1, oak_leaves_textures));
-	blocks.push(new Block(x+2, y+3, z, oak_leaves_textures));
-	blocks.push(new Block(x+2, y+3, z+1, oak_leaves_textures));
-	blocks.push(new Block(x+2, y+3, z+2, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+3, z-2, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+3, z-1, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+3, z, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+3, z+1, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+3, z+2, oak_leaves_textures));
-	blocks.push(new Block(x, y+3, z-2, oak_leaves_textures));
-	blocks.push(new Block(x, y+3, z-1, oak_leaves_textures));
-	blocks.push(new Block(x, y+3, z+1, oak_leaves_textures));
-	blocks.push(new Block(x, y+3, z+2, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+3, z-2, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+3, z-1, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+3, z, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+3, z+1, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+3, z+2, oak_leaves_textures));
-	blocks.push(new Block(x-2, y+3, z-2, oak_leaves_textures));
-	blocks.push(new Block(x-2, y+3, z-1, oak_leaves_textures));
-	blocks.push(new Block(x-2, y+3, z, oak_leaves_textures));
-	blocks.push(new Block(x-2, y+3, z+1, oak_leaves_textures));
-	blocks.push(new Block(x-2, y+3, z+2, oak_leaves_textures));
-	blocks.push(new Block(x, y+4, z, oak_log_textures));
-	blocks.push(new Block(x+2, y+4, z-2, oak_leaves_textures));
-	blocks.push(new Block(x+2, y+4, z-1, oak_leaves_textures));
-	blocks.push(new Block(x+2, y+4, z, oak_leaves_textures));
-	blocks.push(new Block(x+2, y+4, z+1, oak_leaves_textures));
-	blocks.push(new Block(x+2, y+4, z+2, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+4, z-2, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+4, z-1, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+4, z, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+4, z+1, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+4, z+2, oak_leaves_textures));
-	blocks.push(new Block(x, y+4, z-2, oak_leaves_textures));
-	blocks.push(new Block(x, y+4, z-1, oak_leaves_textures));
-	blocks.push(new Block(x, y+4, z+1, oak_leaves_textures));
-	blocks.push(new Block(x, y+4, z+2, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+4, z-2, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+4, z-1, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+4, z, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+4, z+1, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+4, z+2, oak_leaves_textures));
-	blocks.push(new Block(x-2, y+4, z-2, oak_leaves_textures));
-	blocks.push(new Block(x-2, y+4, z-1, oak_leaves_textures));
-	blocks.push(new Block(x-2, y+4, z, oak_leaves_textures));
-	blocks.push(new Block(x-2, y+4, z+1, oak_leaves_textures));
-	blocks.push(new Block(x-2, y+4, z+2, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+5, z-1, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+5, z, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+5, z+1, oak_leaves_textures));
-	blocks.push(new Block(x, y+5, z-1, oak_leaves_textures));
-	blocks.push(new Block(x, y+5, z, oak_leaves_textures));
-	blocks.push(new Block(x, y+5, z+1, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+5, z-1, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+5, z, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+5, z+1, oak_leaves_textures));
-	blocks.push(new Block(x+1, y+6, z, oak_leaves_textures));
-	blocks.push(new Block(x, y+6, z+1, oak_leaves_textures));
-	blocks.push(new Block(x, y+6, z, oak_leaves_textures));
-	blocks.push(new Block(x, y+6, z-1, oak_leaves_textures));
-	blocks.push(new Block(x-1, y+6, z, oak_leaves_textures));
+	blocks.push(new OakLog(x, y, z));
+	blocks.push(new OakLog(x, y+1, z));
+	blocks.push(new OakLog(x, y+2, z));
+	blocks.push(new OakLog(x, y+3, z));
+	blocks.push(new OakLeaves(x+2, y+3, z-2));
+	blocks.push(new OakLeaves(x+2, y+3, z-1));
+	blocks.push(new OakLeaves(x+2, y+3, z));
+	blocks.push(new OakLeaves(x+2, y+3, z+1));
+	blocks.push(new OakLeaves(x+2, y+3, z+2));
+	blocks.push(new OakLeaves(x+1, y+3, z-2));
+	blocks.push(new OakLeaves(x+1, y+3, z-1));
+	blocks.push(new OakLeaves(x+1, y+3, z));
+	blocks.push(new OakLeaves(x+1, y+3, z+1));
+	blocks.push(new OakLeaves(x+1, y+3, z+2));
+	blocks.push(new OakLeaves(x, y+3, z-2));
+	blocks.push(new OakLeaves(x, y+3, z-1));
+	blocks.push(new OakLeaves(x, y+3, z+1));
+	blocks.push(new OakLeaves(x, y+3, z+2));
+	blocks.push(new OakLeaves(x-1, y+3, z-2));
+	blocks.push(new OakLeaves(x-1, y+3, z-1));
+	blocks.push(new OakLeaves(x-1, y+3, z));
+	blocks.push(new OakLeaves(x-1, y+3, z+1));
+	blocks.push(new OakLeaves(x-1, y+3, z+2));
+	blocks.push(new OakLeaves(x-2, y+3, z-2));
+	blocks.push(new OakLeaves(x-2, y+3, z-1));
+	blocks.push(new OakLeaves(x-2, y+3, z));
+	blocks.push(new OakLeaves(x-2, y+3, z+1));
+	blocks.push(new OakLeaves(x-2, y+3, z+2));
+	blocks.push(new OakLog(x, y+4, z));
+	blocks.push(new OakLeaves(x+2, y+4, z-2));
+	blocks.push(new OakLeaves(x+2, y+4, z-1));
+	blocks.push(new OakLeaves(x+2, y+4, z));
+	blocks.push(new OakLeaves(x+2, y+4, z+1));
+	blocks.push(new OakLeaves(x+2, y+4, z+2));
+	blocks.push(new OakLeaves(x+1, y+4, z-2));
+	blocks.push(new OakLeaves(x+1, y+4, z-1));
+	blocks.push(new OakLeaves(x+1, y+4, z));
+	blocks.push(new OakLeaves(x+1, y+4, z+1));
+	blocks.push(new OakLeaves(x+1, y+4, z+2));
+	blocks.push(new OakLeaves(x, y+4, z-2));
+	blocks.push(new OakLeaves(x, y+4, z-1));
+	blocks.push(new OakLeaves(x, y+4, z+1));
+	blocks.push(new OakLeaves(x, y+4, z+2));
+	blocks.push(new OakLeaves(x-1, y+4, z-2));
+	blocks.push(new OakLeaves(x-1, y+4, z-1));
+	blocks.push(new OakLeaves(x-1, y+4, z));
+	blocks.push(new OakLeaves(x-1, y+4, z+1));
+	blocks.push(new OakLeaves(x-1, y+4, z+2));
+	blocks.push(new OakLeaves(x-2, y+4, z-2));
+	blocks.push(new OakLeaves(x-2, y+4, z-1));
+	blocks.push(new OakLeaves(x-2, y+4, z));
+	blocks.push(new OakLeaves(x-2, y+4, z+1));
+	blocks.push(new OakLeaves(x-2, y+4, z+2));
+	blocks.push(new OakLeaves(x+1, y+5, z-1));
+	blocks.push(new OakLeaves(x+1, y+5, z));
+	blocks.push(new OakLeaves(x+1, y+5, z+1));
+	blocks.push(new OakLeaves(x, y+5, z-1));
+	blocks.push(new OakLeaves(x, y+5, z));
+	blocks.push(new OakLeaves(x, y+5, z+1));
+	blocks.push(new OakLeaves(x-1, y+5, z-1));
+	blocks.push(new OakLeaves(x-1, y+5, z));
+	blocks.push(new OakLeaves(x-1, y+5, z+1));
+	blocks.push(new OakLeaves(x+1, y+6, z));
+	blocks.push(new OakLeaves(x, y+6, z+1));
+	blocks.push(new OakLeaves(x, y+6, z));
+	blocks.push(new OakLeaves(x, y+6, z-1));
+	blocks.push(new OakLeaves(x-1, y+6, z));
 }
 
 buildTree(4,1,4);
 buildTree(-4,1,-4);
 
-blocks.push(new Block(0,1,0, oak_log_textures));
-blocks.push(new Block(-1,1,1, oak_log_textures));
-blocks.push(new Block(-2,1,1, oak_log_textures));
-blocks.push(new Block(-2,1,2, oak_log_textures));
-blocks.push(new Block(-2,1,3, oak_log_textures));
+blocks.push(new OakLog(-1,1,1));
+blocks.push(new OakLog(-2,1,1));
+blocks.push(new OakLog(-2,1,2));
+blocks.push(new OakLog(-2,1,3));
 
 // var setup
 var moveForward = false;
@@ -231,6 +154,7 @@ var sprinting = false;
 var ctlHeld = false;
 var prevSelected = null;
 var selected = null;
+var lookingAt = null;
 
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
@@ -301,7 +225,9 @@ var onKeyDown = function ( event ) {
 
 document.onclick = function(e){
 	if(e.which == 1){// LEFT CLICK
-		console.log("LEFT")
+		if(lookingAt != null){
+			console.log(lookingAt.parent)
+		}
 	}else if(e.which == 2){
 		console.log("MIDDLE")
 	}else if(e.which == 3){
@@ -341,9 +267,27 @@ function getSelected(raycaster, mouse){
 	var intersects = raycaster.intersectObjects( scene.children ,true);
 
 	if (intersects.length >= 1){
-		if (intersects[0].distance <= 6){
-			intersects[ 0 ].object.material.color.set( 0xff0000 );
+		intersects = intersects.filter((item) => !(item.object instanceof THREE.LineSegments))
+	}
+	
+	if (intersects.length >= 1){
+		if (intersects[0].distance <= 4){
+			lookingAt = intersects[ 0 ].object
+			let pos = lookingAt.parent.position
+			selectionCube.position.x = pos.x
+			selectionCube.position.y = pos.y
+			selectionCube.position.z = pos.z
+			selectionCube.visible = true;
+			//intersects[ 0 ].object.parent.children.forEach(element => 
+			//	element.material.color.set( 0xff0000 )
+			//);
+		}else{
+			lookingAt = null;
+			selectionCube.visible = false;
 		}
+	}else{
+		lookingAt = null;
+		selectionCube.visible = false;
 	}
 }
 
