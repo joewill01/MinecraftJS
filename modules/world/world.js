@@ -28,6 +28,7 @@ class World{
 				}
 			}
 		}
+		//END GEN
 		this.world[name] = chunk;
 		this.render_chunk(chunk,chunk_textures);
 	}
@@ -148,8 +149,8 @@ class World{
 				return 0
 			}else{
 				//console.log(pos_x*16+pos_z)
-				let ID = chunk[y*256+x*16+z].ID
-				if(chunk[y*256+x*16+z] == 0){
+				let ID = chunk[y*256+pos_x*16+pos_z].ID
+				if(chunk[y*256+pos_x*16+pos_z] == 0){
 					return 0
 				}
 				if (ID != undefined){
@@ -160,6 +161,32 @@ class World{
 			}
 		}catch(e){
 			return -1
+		}
+	}
+
+	get_block(x,y,z){
+
+		if(y<0 || y > 255){
+			return 0
+		}
+
+		let chunk_x = Math.floor(x/16)
+		let chunk_z = Math.floor(z/16)
+		
+		let pos_x = x%16
+		let pos_z = z%16
+
+		let chunk_name = chunk_x.toString() + "_" + chunk_z.toString()
+		let chunk = this.world[chunk_name]
+		try{
+			if (chunk == undefined){
+				return "undefined_chunk"
+			}else{
+				let block = chunk[(y*256)+(pos_x*16)+pos_z]
+				return block
+			}
+		}catch(e){
+			return null
 		}
 	}
 }

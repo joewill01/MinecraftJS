@@ -23,6 +23,11 @@ world.generate_chunk(0,0,"0_0");
 world.generate_chunk(1,0,"1_0");
 world.generate_chunk(0,1,"0_1");
 world.generate_chunk(1,1,"1_1");
+world.generate_chunk(1,-1,"1_-1");
+world.generate_chunk(0,-1,"0_-1");
+world.generate_chunk(-1,0,"-1_0");
+world.generate_chunk(-1,-1,"-1_-1");
+world.generate_chunk(-1,1,"-1_1");
 
 var controls = new THREE.PointerLockControls(camera, renderer.domElement);
 
@@ -146,7 +151,7 @@ var onKeyDown = function ( event ) {
 document.onclick = function(e){
 	if(e.which == 1){// LEFT CLICK
 		if(lookingAt != null){
-			console.log(lookingAt)
+			console.log(lookingAt.blockCoords)
 		}
 	}else if(e.which == 2){
 		console.log("MIDDLE")
@@ -236,10 +241,16 @@ function getSelected(raycaster, mouse){
 				pos.z += 0.5
 			}
 
+			//Fix spazzing
+			pos.x = Math.floor(pos.x + 0.00001)
+			pos.z = Math.floor(pos.z + 0.00001)
+			pos.y = Math.floor(pos.y + 0.00001)
+
 			selectionCube.position.x = pos.x
 			selectionCube.position.y = pos.y
 			selectionCube.position.z = pos.z
 			selectionCube.visible = true;
+			lookingAt.blockCoords = pos
 			//intersects[ 0 ].object.parent.children.forEach(element => 
 			//	element.material.color.set( 0xff0000 )
 			//);
