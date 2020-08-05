@@ -3,7 +3,12 @@ class World{
 		this.world = {};
 	}
 
-	generate_chunk(chunkx,chunkz,name){
+	get_chunk_name(x,z){
+		return x.toString() + "_" + z.toString()
+	}
+
+	generate_chunk(chunkx,chunkz){
+		let name = this.get_chunk_name(chunkx, chunkz);
 		let chunk = [];
 		let chunk_textures = [];
 
@@ -13,7 +18,7 @@ class World{
 		for (let y = 0; y < 257; y++){
 			for (let x = 0; x < 16; x++) {
 				for (let z = 0; z < 16; z++) {
-					if(y==24 & x==4 & z == 4){
+					if(y==24 & x==0 & z == 0){
 						chunk.push(new Bedrock(chunkx * 16 + x, y, chunkz * 16 + z,chunk_textures))
 					}
 					if (y == 0){
@@ -31,6 +36,14 @@ class World{
 		//END GEN
 		this.world[name] = chunk;
 		this.render_chunk(chunk,chunk_textures);
+
+		//let to_update = [[0,1],[0,-1],[1,0],[-1,0]]
+		//to_update.forEach((x) => {
+		//	let chunk = this.world[this.get_chunk_name(chunkx+x[0],chunkz+x[1])]
+		//	if(chunk != undefined){
+		//		chunk.render_chunk()
+		//	}
+		//}); 	
 	}
 
 	render_chunk(chunk_data, ctex){
@@ -139,11 +152,10 @@ class World{
 		let chunk_x = Math.floor(x/16)
 		let chunk_z = Math.floor(z/16)
 
-		let pos_x = x%16
-		let pos_z = z%16
+		let pos_x = Math.abs(x%16)
+		let pos_z = Math.abs(z%16)
 
-		let chunk_name = chunk_x.toString() + "_" + chunk_z.toString()
-		let chunk = this.world[chunk_name]
+		let chunk = this.world[this.get_chunk_name(chunk_x, chunk_z)]
 		try{
 			if (chunk == undefined){
 				return 0
@@ -175,9 +187,9 @@ class World{
 		
 		let pos_x = x%16
 		let pos_z = z%16
+		console.log(pos_x,pos_z)
 
-		let chunk_name = chunk_x.toString() + "_" + chunk_z.toString()
-		let chunk = this.world[chunk_name]
+		let chunk = this.world[this.get_chunk_name(chunk_x, chunk_z)]
 		try{
 			if (chunk == undefined){
 				return "undefined_chunk"

@@ -3,7 +3,7 @@ let hotbar = new Hotbar(0, 20, 14, 20, 17);
 var scene = new THREE.Scene();
 scene.background = new THREE.Color( 0x99ccff );
 var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.set(0,25,0);
+camera.position.set(0,100,0);
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -151,7 +151,7 @@ var onKeyDown = function ( event ) {
 document.onclick = function(e){
 	if(e.which == 1){// LEFT CLICK
 		if(lookingAt != null){
-			console.log(lookingAt.blockCoords)
+			console.log(world.get_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z))
 		}
 	}else if(e.which == 2){
 		console.log("MIDDLE")
