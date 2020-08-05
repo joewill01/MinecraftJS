@@ -19,15 +19,11 @@ scene.add( selectionCube );
 var registry = new Registry();
 
 var world = new World()
-world.generate_chunk(0,0,"0_0");
-world.generate_chunk(1,0,"1_0");
-world.generate_chunk(0,1,"0_1");
-world.generate_chunk(1,1,"1_1");
-world.generate_chunk(1,-1,"1_-1");
-world.generate_chunk(0,-1,"0_-1");
-world.generate_chunk(-1,0,"-1_0");
-world.generate_chunk(-1,-1,"-1_-1");
-world.generate_chunk(-1,1,"-1_1");
+for(let x=-4; x<=4; x++){
+	for(let z=-4; z<=4; z++){
+		world.generate_chunk(x,z);
+	}
+}
 
 var controls = new THREE.PointerLockControls(camera, renderer.domElement);
 
@@ -80,6 +76,7 @@ var ctlHeld = false;
 var prevSelected = null;
 var selected = null;
 var lookingAt = null;
+var setYHeight = 23;
 
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
@@ -87,6 +84,7 @@ var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
 var onKeyDown = function ( event ) {
+	console.log(event.keyCode)
 	switch ( event.keyCode ) {
 		case 27: // esc
 			navigator.keyboard.unlock();
@@ -144,9 +142,15 @@ var onKeyDown = function ( event ) {
 		case 57: // 9
 			hotbar.selectItem(8);
 			break;
-
 		case 191:
 			camera.position.y = 100;
+			break;
+		case 38:
+			setYHeight ++;
+			break;
+		case 40:
+			setYHeight --;
+			break;
 	}
 };
 
@@ -315,9 +319,9 @@ function moveCamera() {
 
 	// check if we are on the floor level (y = 2 all the time atm)
 	controls.getObject().position.y += ( velocity.y * delta ); // new behavior
-	if ( controls.getObject().position.y < 23 ) {
+	if ( controls.getObject().position.y < setYHeight ) {
 		velocity.y = 0;
-		controls.getObject().position.y = 23;
+		controls.getObject().position.y = setYHeight;
 		canJump = true;
 	}
 	prevTime = time;
