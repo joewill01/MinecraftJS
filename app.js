@@ -144,8 +144,10 @@ var onKeyDown = function ( event ) {
 		case 57: // 9
 			hotbar.selectItem(8);
 			break;
-	}
 
+		case 191:
+			camera.position.y = 100;
+	}
 };
 
 document.onclick = function(e){

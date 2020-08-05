@@ -8,7 +8,7 @@ class World{
 	}
 
 	generate_chunk(chunkx,chunkz){
-		let name = this.get_chunk_name(chunkx, chunkz);
+		this.name = this.get_chunk_name(chunkx, chunkz);
 		let chunk = [];
 		let chunk_textures = [];
 
@@ -34,14 +34,15 @@ class World{
 			}
 		}
 		//END GEN
-		this.world[name] = chunk;
+		this.world[this.name] = chunk;
 		this.render_chunk(chunk,chunk_textures);
 
 		//let to_update = [[0,1],[0,-1],[1,0],[-1,0]]
 		//to_update.forEach((x) => {
-		//	let chunk = this.world[this.get_chunk_name(chunkx+x[0],chunkz+x[1])]
+		//	let chunk_name = this.get_chunk_name(chunkx+x[0],chunkz+x[1])
+		//	let chunk = this.world[chunk_name]
 		//	if(chunk != undefined){
-		//		chunk.render_chunk()
+		//		scene.remove(scene.getObjectByName(chunk_name))
 		//	}
 		//}); 	
 	}
@@ -58,6 +59,7 @@ class World{
 		chunk.geometry.computeFaceNormals();
 		chunk.geometry.computeVertexNormals();
 
+		chunk.name = this.name
 		scene.add(chunk);
 	}
 
