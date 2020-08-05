@@ -1,5 +1,5 @@
 class OakLog extends Block{
-	constructor(x,y,z){
+	constructor(x,y,z,ctex){
 		let textures = {
 			'N': 'oak_log.png',
 			'S': 'oak_log.png',
@@ -8,10 +8,11 @@ class OakLog extends Block{
 			'U': 'oak_log_top.png',
 			'D': 'oak_log_top.png',
 		};
-		super(x,y,z,textures);
+		super(x,y,z,textures,ctex);
 
 		this.ID = 2;
 		this.name = "oak_log"
+		this.displayName = "Oak Log"
 		this.prefferedTool = "axe";
 
 		this.hardness = 4;
@@ -20,6 +21,5 @@ class OakLog extends Block{
 		this.rotatable = true;
 		this.allowedRotations = ["N","S","E","W","D","U"]
 
-		this.render();
 	}
 }

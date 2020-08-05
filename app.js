@@ -3,7 +3,7 @@ let hotbar = new Hotbar(0, 20, 14, 20, 17);
 var scene = new THREE.Scene();
 scene.background = new THREE.Color( 0x99ccff );
 var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.set(0,0,2);
+camera.position.set(0,25,0);
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -15,6 +15,15 @@ var selectionCube = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( 
 selectionCube.visible = false;
 selectionCube.name = "selectionCube";
 scene.add( selectionCube );
+
+var registry = new Registry();
+
+var world = new World()
+world.generate_chunk(0,0,"0_0");
+world.generate_chunk(1,0,"1_0");
+world.generate_chunk(0,1,"0_1");
+world.generate_chunk(1,1,"1_1");
+
 
 var controls = new THREE.PointerLockControls(camera, renderer.domElement);
 
@@ -54,94 +63,6 @@ if (control_type === 'touch') {
 
 
 scene.add(controls.getObject());
-
-
-// world 'generation'
-let blocks = [];
-for (let x = -8; x < 8; x++) {
-	for (let z = -8; z < 8; z++) {
-		blocks.push(new GrassBlock(x, 0, z))
-	}
-}
-
-// random shit cause im bored
-function buildTree(x,y,z) {
-	blocks.push(new OakLog(x, y, z));
-	blocks.push(new OakLog(x, y+1, z));
-	blocks.push(new OakLog(x, y+2, z));
-	blocks.push(new OakLog(x, y+3, z));
-	blocks.push(new OakLeaves(x+2, y+3, z-2));
-	blocks.push(new OakLeaves(x+2, y+3, z-1));
-	blocks.push(new OakLeaves(x+2, y+3, z));
-	blocks.push(new OakLeaves(x+2, y+3, z+1));
-	blocks.push(new OakLeaves(x+2, y+3, z+2));
-	blocks.push(new OakLeaves(x+1, y+3, z-2));
-	blocks.push(new OakLeaves(x+1, y+3, z-1));
-	blocks.push(new OakLeaves(x+1, y+3, z));
-	blocks.push(new OakLeaves(x+1, y+3, z+1));
-	blocks.push(new OakLeaves(x+1, y+3, z+2));
-	blocks.push(new OakLeaves(x, y+3, z-2));
-	blocks.push(new OakLeaves(x, y+3, z-1));
-	blocks.push(new OakLeaves(x, y+3, z+1));
-	blocks.push(new OakLeaves(x, y+3, z+2));
-	blocks.push(new OakLeaves(x-1, y+3, z-2));
-	blocks.push(new OakLeaves(x-1, y+3, z-1));
-	blocks.push(new OakLeaves(x-1, y+3, z));
-	blocks.push(new OakLeaves(x-1, y+3, z+1));
-	blocks.push(new OakLeaves(x-1, y+3, z+2));
-	blocks.push(new OakLeaves(x-2, y+3, z-2));
-	blocks.push(new OakLeaves(x-2, y+3, z-1));
-	blocks.push(new OakLeaves(x-2, y+3, z));
-	blocks.push(new OakLeaves(x-2, y+3, z+1));
-	blocks.push(new OakLeaves(x-2, y+3, z+2));
-	blocks.push(new OakLog(x, y+4, z));
-	blocks.push(new OakLeaves(x+2, y+4, z-2));
-	blocks.push(new OakLeaves(x+2, y+4, z-1));
-	blocks.push(new OakLeaves(x+2, y+4, z));
-	blocks.push(new OakLeaves(x+2, y+4, z+1));
-	blocks.push(new OakLeaves(x+2, y+4, z+2));
-	blocks.push(new OakLeaves(x+1, y+4, z-2));
-	blocks.push(new OakLeaves(x+1, y+4, z-1));
-	blocks.push(new OakLeaves(x+1, y+4, z));
-	blocks.push(new OakLeaves(x+1, y+4, z+1));
-	blocks.push(new OakLeaves(x+1, y+4, z+2));
-	blocks.push(new OakLeaves(x, y+4, z-2));
-	blocks.push(new OakLeaves(x, y+4, z-1));
-	blocks.push(new OakLeaves(x, y+4, z+1));
-	blocks.push(new OakLeaves(x, y+4, z+2));
-	blocks.push(new OakLeaves(x-1, y+4, z-2));
-	blocks.push(new OakLeaves(x-1, y+4, z-1));
-	blocks.push(new OakLeaves(x-1, y+4, z));
-	blocks.push(new OakLeaves(x-1, y+4, z+1));
-	blocks.push(new OakLeaves(x-1, y+4, z+2));
-	blocks.push(new OakLeaves(x-2, y+4, z-2));
-	blocks.push(new OakLeaves(x-2, y+4, z-1));
-	blocks.push(new OakLeaves(x-2, y+4, z));
-	blocks.push(new OakLeaves(x-2, y+4, z+1));
-	blocks.push(new OakLeaves(x-2, y+4, z+2));
-	blocks.push(new OakLeaves(x+1, y+5, z-1));
-	blocks.push(new OakLeaves(x+1, y+5, z));
-	blocks.push(new OakLeaves(x+1, y+5, z+1));
-	blocks.push(new OakLeaves(x, y+5, z-1));
-	blocks.push(new OakLeaves(x, y+5, z));
-	blocks.push(new OakLeaves(x, y+5, z+1));
-	blocks.push(new OakLeaves(x-1, y+5, z-1));
-	blocks.push(new OakLeaves(x-1, y+5, z));
-	blocks.push(new OakLeaves(x-1, y+5, z+1));
-	blocks.push(new OakLeaves(x+1, y+6, z));
-	blocks.push(new OakLeaves(x, y+6, z+1));
-	blocks.push(new OakLeaves(x, y+6, z));
-	blocks.push(new OakLeaves(x, y+6, z-1));
-	blocks.push(new OakLeaves(x-1, y+6, z));
-}
-
-buildTree(4,1,4);
-buildTree(-4,1,-4);
-
-blocks.push(new OakLog(-1,1,1));
-blocks.push(new OakLog(-2,1,1));
-blocks.push(new OakLog(-2,1,2));
-blocks.push(new OakLog(-2,1,3));
 
 // var setup
 var moveForward = false;
@@ -226,7 +147,7 @@ var onKeyDown = function ( event ) {
 document.onclick = function(e){
 	if(e.which == 1){// LEFT CLICK
 		if(lookingAt != null){
-			console.log(lookingAt.parent)
+			console.log(lookingAt)
 		}
 	}else if(e.which == 2){
 		console.log("MIDDLE")
@@ -273,7 +194,7 @@ function getSelected(raycaster, mouse){
 	if (intersects.length >= 1){
 		if (intersects[0].distance <= 4){
 			lookingAt = intersects[ 0 ].object
-			let pos = lookingAt.parent.position
+			let pos = lookingAt.position
 			selectionCube.position.x = pos.x
 			selectionCube.position.y = pos.y
 			selectionCube.position.z = pos.z
@@ -340,16 +261,33 @@ function moveCamera() {
 
 	// check if we are on the floor level (y = 2 all the time atm)
 	controls.getObject().position.y += ( velocity.y * delta ); // new behavior
-	if ( controls.getObject().position.y < 2 ) {
+	if ( controls.getObject().position.y < 23 ) {
 		velocity.y = 0;
-		controls.getObject().position.y = 2;
+		controls.getObject().position.y = 23;
 		canJump = true;
 	}
 	prevTime = time;
 }
 
+
+//REMOVE AFTER, THIS IS CODE FOR FPS COUNTER TO CHECK OPTIMISATIONS
+var stats;
+function createStats() {
+  var stats = new Stats();
+  stats.setMode(0);
+
+  stats.domElement.style.position = 'absolute';
+  stats.domElement.style.left = '0';
+  stats.domElement.style.top = '0';
+
+  return stats;
+}
+stats = createStats();
+document.body.appendChild( stats.domElement );
+
 function animate() {
 	moveCamera();
+	stats.update();
 	getSelected(raycaster, mouse);
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );

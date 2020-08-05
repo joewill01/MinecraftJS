@@ -1,13 +1,15 @@
 class Block {
-	constructor(x,y,z,texture_names) {
+	constructor(x,y,z,texture_names,ctex) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.texture_names = texture_names;
+		this.ctex = ctex;//chunk_textures list from world
 
 		//Must be changed for new blocks
 		this.ID = 0;
 		this.name = "base"
+		this.displayName = "Not Named"
 		this.prefferedTool = null; // shovel, axe, pickaxe, shears, hoe, sword
 
 		//Should be changed
@@ -27,36 +29,43 @@ class Block {
 		this.replaceableByWorldGenOres = false;
 		this.rotatable = false;
 		this.allowedRotations = []; //N,S,E,W,D,U Letter is where the old Top face will end up
-
-		
 	}
 
-	render(){
-		var block = new THREE.Group();
+	render(chunk_geom){
+
+		this.chunk_geom = chunk_geom;
+
+		let faces = world.get_block_faces(this.x, this.y, this.z)
+
+		var block = new THREE.Geometry();
 		block.name = this.texture_names["name"];
-		block.position.x = this.x;
-		block.position.y = this.y;
-		block.position.z = this.z;
-		scene.add(block);
-		block.blockClass = this;
 
-		setPlane("y",  Math.PI * 0.5, this.texture_names["S"], block, this, "S"); //side
-		setPlane("y", -Math.PI * 0.5, this.texture_names["N"], block , this, "N"); //side
-		setPlane("y",  0, this.texture_names["E"], block , this, "E"); //side
-		setPlane("y",  Math.PI, this.texture_names["W"], block , this, "W");// side
-		setPlane("x",  Math.PI * 0.5, this.texture_names["D"], block , this, "D"); //bottom
-		setPlane("x", -Math.PI * 0.5, this.texture_names["U"], block , this, "U"); //top
-
+		if(faces.S == 0){
+			setPlane("y",  Math.PI * 0.5, this.texture_names["S"], block, this, "S"); //side
+		}
+		if(faces.N == 0){
+			setPlane("y", -Math.PI * 0.5, this.texture_names["N"], block , this, "N"); //side
+		}
+		if(faces.E == 0){
+			setPlane("y",  0, this.texture_names["E"], block , this, "E"); //side
+		}
+		if(faces.W == 0){
+			setPlane("y",  Math.PI, this.texture_names["W"], block , this, "W");// side
+		}
+		if(faces.D == 0){
+			setPlane("x",  Math.PI * 0.5, this.texture_names["D"], block , this, "D"); //bottom
+		}
+		if(faces.U == 0){
+			setPlane("x", -Math.PI * 0.5, this.texture_names["U"], block , this, "U"); //top
+		}
+	
+		var block_mesh = new THREE.Mesh(block, registry.materials);
+	
 		function setPlane(axis, angle, texture_name, block, obj, name) {
-			var texture = new THREE.TextureLoader().load(`minecraft/textures/block/${texture_name}`);
-			texture.magFilter = THREE.NearestFilter;
-			texture.minFilter = THREE.NearestFilter;
-			if(obj.solid){
-				var material = new THREE.MeshBasicMaterial( {map: texture,transparent: false} );
-			}else{
-				var material = new THREE.MeshBasicMaterial( {map: texture,transparent: true} );
-			}
-		
+			let mat_index = registry.registerMaterial(texture_name, obj.solid)
+			var material = registry.materials[mat_index]
+			obj.ctex.push(material)
+
 			let planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
 			planeGeom.translate(0, 0, 0.5);
 			switch (axis) {
@@ -66,10 +75,16 @@ class Block {
 		    	default:
 		      		planeGeom.rotateX(angle);
 		  	}
-		  let plane = new THREE.Mesh(planeGeom, material);
-		  plane.name = name;
 
-		  block.add(plane);
+		  	let plane = new THREE.Mesh(planeGeom);
+		  	plane.position.x = obj.x;
+			plane.position.y = obj.y;
+			plane.position.z = obj.z;
+			plane.blockClass = obj;
+		  	plane.name = name;
+
+		  	plane.updateMatrix();
+		  	obj.chunk_geom.merge(plane.geometry, plane.matrix, mat_index);
 		}
 	}
 }
