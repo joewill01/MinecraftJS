@@ -24,7 +24,6 @@ world.generate_chunk(1,0,"1_0");
 world.generate_chunk(0,1,"0_1");
 world.generate_chunk(1,1,"1_1");
 
-
 var controls = new THREE.PointerLockControls(camera, renderer.domElement);
 
 control_type = 'pointer';
@@ -193,8 +192,50 @@ function getSelected(raycaster, mouse){
 	
 	if (intersects.length >= 1){
 		if (intersects[0].distance <= 4){
-			lookingAt = intersects[ 0 ].object
-			let pos = lookingAt.position
+			lookingAt = intersects[ 0 ]
+			let pos = lookingAt.point
+			let normal = lookingAt.face.normal
+			//console.log(pos.x,pos.y,pos.z)
+			normal.x = Math.round(normal.x)
+			normal.y = Math.round(normal.y)
+			normal.z = Math.round(normal.z)
+
+			if(normal.y == -0){
+				normal.y = 0;
+			}
+
+			if(normal.x==0 & normal.y==1 & normal.z==0){
+				//console.log("Top")
+				pos.y -= 0.5
+				pos.x = Math.floor(pos.x + 0.5)
+				pos.z = Math.floor(pos.z + 0.5)
+			}else if(normal.x==0 & normal.y==-1 & normal.z==0){
+				//console.log("Bottom")
+				pos.y += 0.5
+				pos.x = Math.floor(pos.x + 0.5)
+				pos.z = Math.floor(pos.z + 0.5)
+			}else if(normal.x==1 & normal.y==0 & normal.z==0){
+				//console.log("North")
+				pos.y = Math.floor(pos.y + 0.5)
+				pos.x -= 0.5
+				pos.z = Math.floor(pos.z + 0.5)
+			}else if(normal.x==-1 & normal.y==0 & normal.z==0){
+				//console.log("South")
+				pos.y = Math.floor(pos.y + 0.5)
+				pos.x += 0.5
+				pos.z = Math.floor(pos.z + 0.5)
+			}else if(normal.x==0 & normal.y==0 & normal.z==1){
+				//console.log("East")
+				pos.y = Math.floor(pos.y + 0.5)
+				pos.x = Math.floor(pos.x + 0.5)
+				pos.z -= 0.5
+			}else if(normal.x==0 & normal.y==0 & normal.z==-1){
+				//console.log("West")
+				pos.y = Math.floor(pos.y + 0.5)
+				pos.x = Math.floor(pos.x + 0.5)
+				pos.z += 0.5
+			}
+
 			selectionCube.position.x = pos.x
 			selectionCube.position.y = pos.y
 			selectionCube.position.z = pos.z

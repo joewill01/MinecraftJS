@@ -13,6 +13,9 @@ class World{
 		for (let y = 0; y < 257; y++){
 			for (let x = 0; x < 16; x++) {
 				for (let z = 0; z < 16; z++) {
+					if(y==24 & x==4 & z == 4){
+						chunk.push(new Bedrock(chunkx * 16 + x, y, chunkz * 16 + z,chunk_textures))
+					}
 					if (y == 0){
 						chunk.push(new Bedrock(chunkx * 16 + x, y, chunkz * 16 + z,chunk_textures))
 					}else if(y >= stone[0] && y <= stone[1]){
@@ -155,7 +158,7 @@ class World{
 					return -1
 				}
 			}
-		}catch{
+		}catch(e){
 			return -1
 		}
 	}
