@@ -33,37 +33,30 @@ class Block {
 
 	render(chunk_geom){
 
-		this.chunk_geom = chunk_geom;
-
 		let faces = world.get_block_faces(this.x, this.y, this.z)
 
-		var block = new THREE.Geometry();
-		block.name = this.texture_names["name"];
-
 		if(faces.S == 0){
-			setPlane("y",  Math.PI * 0.5, this.texture_names["S"], block, this, "S"); //side
+			setPlane("y",  Math.PI * 0.5, this.texture_names["S"], this, "S"); //side
 		}
 		if(faces.N == 0){
-			setPlane("y", -Math.PI * 0.5, this.texture_names["N"], block , this, "N"); //side
+			setPlane("y", -Math.PI * 0.5, this.texture_names["N"] , this, "N"); //side
 		}
 		if(faces.E == 0){
-			setPlane("y",  0, this.texture_names["E"], block , this, "E"); //side
+			setPlane("y",  0, this.texture_names["E"] , this, "E"); //side
 		}
 		if(faces.W == 0){
-			setPlane("y",  Math.PI, this.texture_names["W"], block , this, "W");// side
+			setPlane("y",  Math.PI, this.texture_names["W"] , this, "W");// side
 		}
 		if(faces.D == 0){
-			setPlane("x",  Math.PI * 0.5, this.texture_names["D"], block , this, "D"); //bottom
+			setPlane("x",  Math.PI * 0.5, this.texture_names["D"] , this, "D"); //bottom
 		}
 		if(faces.U == 0){
-			setPlane("x", -Math.PI * 0.5, this.texture_names["U"], block , this, "U"); //top
+			setPlane("x", -Math.PI * 0.5, this.texture_names["U"] , this, "U"); //top
 		}
 	
-		var block_mesh = new THREE.Mesh(block, registry.materials);
-	
-		function setPlane(axis, angle, texture_name, block, obj, name) {
+		function setPlane(axis, angle, texture_name, obj, name) {
 			let mat_index = registry.registerMaterial(texture_name, obj.solid)
-			var material = registry.materials[mat_index]
+			let material = registry.materials[mat_index]
 			obj.ctex.push(material)
 
 			let planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
@@ -84,7 +77,7 @@ class Block {
 		  	plane.name = name;
 
 		  	plane.updateMatrix();
-		  	obj.chunk_geom.merge(plane.geometry, plane.matrix, mat_index);
+		  	chunk_geom.merge(plane.geometry, plane.matrix, mat_index);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 let hotbar = new Hotbar(0, 20, 14, 20, 17);
 
 var scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x99ccff, 50, 70);
 scene.background = new THREE.Color( 0x99ccff );
 var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
 camera.position.set(0,100,0);
@@ -84,7 +85,7 @@ var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
 var onKeyDown = function ( event ) {
-	console.log(event.keyCode)
+	//console.log(event.keyCode)
 	switch ( event.keyCode ) {
 		case 27: // esc
 			navigator.keyboard.unlock();

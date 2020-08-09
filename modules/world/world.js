@@ -1,6 +1,7 @@
 class World{
 	constructor(){
 		this.world = {};
+		this.chunk_instances = {};
 	}
 
 	get_chunk_name(x,z){
@@ -8,59 +9,9 @@ class World{
 	}
 
 	generate_chunk(chunkx,chunkz){
-		this.name = this.get_chunk_name(chunkx, chunkz);
-		let chunk = [];
-		let chunk_textures = [];
-
-		//TEMPORARY GENERATION
-		let stone = [1,20];
-		let dirt = [21,24];
-		for (let y = 0; y < 257; y++){
-			for (let x = 0; x < 16; x++) {
-				for (let z = 0; z < 16; z++) {
-					if(y==24 & x==0 & z == 0){
-						chunk.push(new Bedrock(chunkx * 16 + x, y, chunkz * 16 + z,chunk_textures))
-					}
-					if (y == 0){
-						chunk.push(new Bedrock(chunkx * 16 + x, y, chunkz * 16 + z,chunk_textures))
-					}else if(y >= stone[0] && y <= stone[1]){
-						chunk.push(new Stone(chunkx * 16 + x, y, chunkz * 16 + z,chunk_textures))
-					}else if(y == stone[1]+1){
-						chunk.push(new GrassBlock(chunkx * 16 + x, y, chunkz * 16 + z,chunk_textures))
-					}else{
-						chunk.push(0)
-					}
-				}
-			}
-		}
-		//END GEN
-		this.world[this.name] = chunk;
-		this.render_chunk(chunk,chunk_textures);
-
-		//let to_update = [[0,1],[0,-1],[1,0],[-1,0]]
-		//to_update.forEach((x) => {
-		//	let chunk_name = this.get_chunk_name(chunkx+x[0],chunkz+x[1])
-		//	let chunk = this.world[chunk_name]
-		//	if(chunk != undefined){
-		//		scene.remove(scene.getObjectByName(chunk_name))
-		//	}
-		//}); 	
-	}
-
-	render_chunk(chunk_data, ctex){
-		let chunk_geom = new THREE.Geometry();
-		chunk_data.forEach(function(block,e) {
-	    	if(block != 0){
-	    		block.render(chunk_geom)
-	    	}
-		});
-
-		let chunk = new THREE.Mesh(chunk_geom, registry.materials);
-		chunk.geometry.computeFaceNormals();
-		chunk.geometry.computeVertexNormals();
-
-		chunk.name = this.name
-		scene.add(chunk);
+		let chunk_instance = new Chunk(chunkx,chunkz)
+		this.chunk_instances[chunk_instance.name] = chunk_instance
+		chunk_instance.generate()
 	}
 
 	buildTree(x,y,z) {
@@ -160,10 +111,9 @@ class World{
 		let chunk = this.world[this.get_chunk_name(chunk_x, chunk_z)]
 		try{
 			if (chunk == undefined){
-				return 0
+				return -1
 			}else{
-				//console.log(pos_x*16+pos_z)
-				let ID = chunk[y*256+pos_x*16+pos_z].ID
+				let ID = chunk[y*256+pos_x*16+pos_z]
 				if(chunk[y*256+pos_x*16+pos_z] == 0){
 					return 0
 				}
@@ -202,5 +152,46 @@ class World{
 		}catch(e){
 			return null
 		}
+	}
+
+	set_id(x, y, z, id){
+		let chunk_x = Math.floor(x/16)
+		let chunk_z = Math.floor(z/16)
+		
+		let pos_x = x%16
+		let pos_z = z%16
+
+		let index = (y*256) + (pos_x*16) + pos_z;
+		world.world[world.get_chunk_name(chunk_x,chunk_z)][index] = id
+	}
+
+	reload_chunk(x, z){
+		scene.remove(scene.getObjectByName(world.get_chunk_name(x,z)))
+		world.chunk_instances[world.get_chunk_name(x,z)].render()
+	}
+
+	set_block(x, y, z, id){
+		let chunk_x = Math.floor(x/16)
+		let chunk_z = Math.floor(z/16)
+
+		this.set_id(x, y, z, id)
+		this.reload_chunk(chunk_x, chunk_z);
+	}
+
+	batch_set_block(data){// MAKE THIS UPDATE CHUNK BORDER BLOCKS
+		let to_update = [];
+		for(let i=0; i<data.length;i++){
+			this.set_id(data[i].x, data[i].y, data[i].z, data[i].id);
+			let chunk_x = Math.floor(data[i].x/16)
+			let chunk_z = Math.floor(data[i].z/16)
+			let coords = [chunk_x, chunk_z]
+			if(!arrayInArray(coords, to_update)){
+				to_update.push(coords)
+			} 
+		};
+		
+		to_update.forEach(function(chunk) {
+			this.reload_chunk(chunk[0], chunk[1])
+		}, this);
 	}
 }

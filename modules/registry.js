@@ -31,4 +31,27 @@ class Registry{
 			return this.materialRegister[texture_name]
 		}
 	}
+
+	getBlockInstanceFromId(id, x, y, z, ctex){ // MAKE THIS FIND THE BLOCK FROM A LIST OF REGISTERED BLOCKS
+		switch(id){
+			case 0:
+				return 0;
+				break;
+			case 1:
+				return new GrassBlock(x, y, z, ctex);
+				break;
+			case 2:
+				return new OakLog(x, y, z, ctex);
+				break;
+			case 3:
+				return new OakLeaves(x, y, z, ctex);
+				break;
+			case 4:
+				return new Bedrock(x, y, z, ctex);
+				break;
+			case 5:
+				return new Stone(x, y, z, ctex);
+				break;
+		}
+	}
 }
