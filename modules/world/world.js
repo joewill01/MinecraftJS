@@ -14,6 +14,30 @@ class World{
 		chunk_instance.generate()
 	}
 
+	world_to_chunk_coords(x, y, z){
+		let chunk_x = Math.floor(x/16)
+		let chunk_z = Math.floor(z/16)
+
+		let pos_x = null;
+		let pos_z = null;
+
+		if(x < 0){
+			pos_x = (16 - Math.abs(x%16))%16
+		}else{
+			pos_x = Math.abs(x%16)
+		}
+		
+		if(z < 0){
+			pos_z = (16 - Math.abs(z%16))%16
+		}else{
+			pos_z = Math.abs(z%16)
+		}
+
+		let index = y*256+pos_x*16+pos_z
+
+		return {"chunk_x":chunk_x, "chunk_z":chunk_z, "pos_z":pos_z, "pos_x":pos_x, "index":index}
+	}
+
 	buildTree(x,y,z) {
 		blocks.push(new OakLog(x, y, z));
 		blocks.push(new OakLog(x, y+1, z));
@@ -102,19 +126,15 @@ class World{
 			return 0
 		}
 
-		let chunk_x = Math.floor(x/16)
-		let chunk_z = Math.floor(z/16)
+		let coords = this.world_to_chunk_coords(x,y,z)
 
-		let pos_x = Math.abs(x%16)
-		let pos_z = Math.abs(z%16)
-
-		let chunk = this.world[this.get_chunk_name(chunk_x, chunk_z)]
+		let chunk = this.world[this.get_chunk_name(coords.chunk_x, coords.chunk_z)]
 		try{
 			if (chunk == undefined){
 				return -1
 			}else{
-				let ID = chunk[y*256+pos_x*16+pos_z]
-				if(chunk[y*256+pos_x*16+pos_z] == 0){
+				let ID = chunk[coords.index]
+				if(chunk[coords.index] == 0){
 					return 0
 				}
 				if (ID != undefined){
@@ -134,19 +154,14 @@ class World{
 			return 0
 		}
 
-		let chunk_x = Math.floor(x/16)
-		let chunk_z = Math.floor(z/16)
-		
-		let pos_x = x%16
-		let pos_z = z%16
-		console.log(pos_x,pos_z)
+		coords = this.world_to_chunk_coords(x,y,z)
 
-		let chunk = this.world[this.get_chunk_name(chunk_x, chunk_z)]
+		let chunk = this.world[this.get_chunk_name(coords.chunk_x, coords.chunk_z)]
 		try{
 			if (chunk == undefined){
 				return "undefined_chunk"
 			}else{
-				let block = chunk[(y*256)+(pos_x*16)+pos_z]
+				let block = chunk[coords.index]
 				return block
 			}
 		}catch(e){
@@ -155,14 +170,8 @@ class World{
 	}
 
 	set_id(x, y, z, id){
-		let chunk_x = Math.floor(x/16)
-		let chunk_z = Math.floor(z/16)
-		
-		let pos_x = x%16
-		let pos_z = z%16
-
-		let index = (y*256) + (pos_x*16) + pos_z;
-		world.world[world.get_chunk_name(chunk_x,chunk_z)][index] = id
+		let coords = this.world_to_chunk_coords(x,y,z)
+		world.world[world.get_chunk_name(coords.chunk_x,coords.chunk_z)][coords.index] = id
 	}
 
 	reload_chunk(x, z){
@@ -171,22 +180,58 @@ class World{
 	}
 
 	set_block(x, y, z, id){
-		let chunk_x = Math.floor(x/16)
-		let chunk_z = Math.floor(z/16)
-
+		let coords = this.world_to_chunk_coords(x,y,z)
 		this.set_id(x, y, z, id)
-		this.reload_chunk(chunk_x, chunk_z);
+		this.reload_chunk(coords.chunk_x, coords.chunk_z);
+
+		if(coords.pos_x == 0){
+			this.reload_chunk(coords.chunk_x-1, coords.chunk_z);
+		}
+		if(coords.pos_x == 15){
+			this.reload_chunk(coords.chunk_x+1, coords.chunk_z);
+		}
+		if(coords.pos_z == 0){
+			this.reload_chunk(coords.chunk_x, coords.chunk_z-1);
+		}
+		if(coords.pos_z == 15){
+			this.reload_chunk(coords.chunk_x, coords.chunk_z+1);
+		}
 	}
 
-	batch_set_block(data){// MAKE THIS UPDATE CHUNK BORDER BLOCKS
+	batch_set_block(data){
 		let to_update = [];
 		for(let i=0; i<data.length;i++){
+			let coords = this.world_to_chunk_coords(data[i].x,data[i].y,data[i].z)
+
 			this.set_id(data[i].x, data[i].y, data[i].z, data[i].id);
-			let chunk_x = Math.floor(data[i].x/16)
-			let chunk_z = Math.floor(data[i].z/16)
-			let coords = [chunk_x, chunk_z]
-			if(!arrayInArray(coords, to_update)){
-				to_update.push(coords)
+			let chunk_coords = [coords.chunk_x, coords.chunk_z]
+			if(!arrayInArray(chunk_coords, to_update)){
+				to_update.push(chunk_coords)
+			}
+
+			if(coords.pos_x == 0){
+				chunk_coords = [coords.chunk_x-1, coords.chunk_z]
+				if(!arrayInArray(chunk_coords, to_update)){
+					to_update.push(chunk_coords)
+				}
+			}
+			if(coords.pos_x == 15){
+				chunk_coords = [coords.chunk_x+1, coords.chunk_z]
+				if(!arrayInArray(chunk_coords, to_update)){
+					to_update.push(chunk_coords)
+				}
+			}
+			if(coords.pos_z == 0){
+				chunk_coords = [coords.chunk_x, coords.chunk_z-1]
+				if(!arrayInArray(chunk_coords, to_update)){
+					to_update.push(chunk_coords)
+				}
+			}
+			if(coords.pos_z == 15){
+				chunk_coords = [coords.chunk_x, coords.chunk_z+1]
+				if(!arrayInArray(chunk_coords, to_update)){
+					to_update.push(chunk_coords)
+				}
 			} 
 		};
 		

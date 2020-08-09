@@ -78,6 +78,7 @@ var prevSelected = null;
 var selected = null;
 var lookingAt = null;
 var setYHeight = 23;
+var blockToPlace = 4;
 
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
@@ -158,12 +159,31 @@ var onKeyDown = function ( event ) {
 document.onclick = function(e){
 	if(e.which == 1){// LEFT CLICK
 		if(lookingAt != null){
-			console.log(world.get_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z))
+			world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z,0)
 		}
 	}else if(e.which == 2){
 		console.log("MIDDLE")
 	}else if(e.which == 3){
-		console.log("RIGHT")
+		switch(lookingAt.face){
+			case "T":
+				world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y+1,lookingAt.blockCoords.z,blockToPlace)
+				break;
+			case "B":
+				world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y-1,lookingAt.blockCoords.z,blockToPlace)
+				break;
+			case "N":
+				world.set_block(lookingAt.blockCoords.x+1,lookingAt.blockCoords.y,lookingAt.blockCoords.z,blockToPlace)
+				break;
+			case "S":
+				world.set_block(lookingAt.blockCoords.x-1,lookingAt.blockCoords.y,lookingAt.blockCoords.z,blockToPlace)
+				break;
+			case "E":
+				world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z+1,blockToPlace)
+				break;
+			case "W":
+				world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z-1,blockToPlace)
+				break;
+		}
 	}
 }
 
@@ -217,32 +237,37 @@ function getSelected(raycaster, mouse){
 			}
 
 			if(normal.x==0 & normal.y==1 & normal.z==0){
-				//console.log("Top")
+				lookingAt.face = "T"
 				pos.y -= 0.5
 				pos.x = Math.floor(pos.x + 0.5)
 				pos.z = Math.floor(pos.z + 0.5)
 			}else if(normal.x==0 & normal.y==-1 & normal.z==0){
 				//console.log("Bottom")
+				lookingAt.face = "B"
 				pos.y += 0.5
 				pos.x = Math.floor(pos.x + 0.5)
 				pos.z = Math.floor(pos.z + 0.5)
 			}else if(normal.x==1 & normal.y==0 & normal.z==0){
 				//console.log("North")
+				lookingAt.face = "N"
 				pos.y = Math.floor(pos.y + 0.5)
 				pos.x -= 0.5
 				pos.z = Math.floor(pos.z + 0.5)
 			}else if(normal.x==-1 & normal.y==0 & normal.z==0){
 				//console.log("South")
+				lookingAt.face = "S"
 				pos.y = Math.floor(pos.y + 0.5)
 				pos.x += 0.5
 				pos.z = Math.floor(pos.z + 0.5)
 			}else if(normal.x==0 & normal.y==0 & normal.z==1){
 				//console.log("East")
+				lookingAt.face = "E"
 				pos.y = Math.floor(pos.y + 0.5)
 				pos.x = Math.floor(pos.x + 0.5)
 				pos.z -= 0.5
 			}else if(normal.x==0 & normal.y==0 & normal.z==-1){
 				//console.log("West")
+				lookingAt.face = "W"
 				pos.y = Math.floor(pos.y + 0.5)
 				pos.x = Math.floor(pos.x + 0.5)
 				pos.z += 0.5
