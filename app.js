@@ -26,8 +26,6 @@ for(let x=-4; x<=4; x++){
 	}
 }
 
-var controls = new THREE.PointerLockControls(camera, renderer.domElement);
-
 control_type = 'pointer';
 
 if (control_type === 'touch') {
@@ -144,14 +142,17 @@ var onKeyDown = function ( event ) {
 		case 57: // 9
 			hotbar.selectItem(8);
 			break;
-		case 191:
+		case 191:// slash
 			player.tp("~",100,"~")
 			break;
-		case 38:
+		case 38: // up
 			setYHeight ++;
 			break;
-		case 40:
+		case 40: // down
 			setYHeight --;
+			break;
+		case 116: //f5
+			player.thirdPerson = !player.thirdPerson;
 			break;
 	}
 };
@@ -382,6 +383,6 @@ function animate() {
 	stats.update();
 	getSelected(raycaster, mouse);
 	requestAnimationFrame( animate );
-	renderer.render( scene, player.camera );
+	renderer.render( scene, player.getCamera() );
 }
 animate();

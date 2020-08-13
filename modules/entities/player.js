@@ -1,8 +1,11 @@
 class Player extends Entity{
 	constructor(){
-		super(0.6, 1.8, 1.7, 0, 100, 0);
+		super(0.6, 1.8, 1.6, 0, 100, 0);
+
+		this.thirdPerson = false;
 
 		this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		this.thirdPersonCamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		this.camera.position.set(this.x,this.y,this.z);
 		this.controls = new THREE.PointerLockControls(this.camera, renderer.domElement);
 	}
@@ -76,5 +79,29 @@ class Player extends Entity{
 			canJump = true;
 		}
 		prevTime = time;
+
+		this.hitbox.position.x = this.camera.position.x
+		this.hitbox.position.y = this.camera.position.y - this.hitboxHeight/2 + (this.hitboxHeight - this.eyeLevel)
+		this.hitbox.position.z = this.camera.position.z
+
+		this.eyeLevelHitbox.position.x = this.camera.position.x
+		this.eyeLevelHitbox.position.y = this.camera.position.y
+		this.eyeLevelHitbox.position.z = this.camera.position.z
+
+		this.thirdPersonCamera.position.x = this.camera.position.x
+		this.thirdPersonCamera.position.y = this.camera.position.y + 2
+		this.thirdPersonCamera.position.z = this.camera.position.z
+
+		this.thirdPersonCamera.rotation.x = this.camera.rotation.x
+		this.thirdPersonCamera.rotation.y = this.camera.rotation.y 
+		this.thirdPersonCamera.rotation.z = this.camera.rotation.z  
+	}
+
+	getCamera(){
+		if(!this.thirdPerson){
+			return this.camera;
+		}else{
+			return this.thirdPersonCamera;
+		}
 	}
 }
