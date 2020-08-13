@@ -9,7 +9,7 @@ class Entity {
 
 		let geom = new THREE.BoxBufferGeometry( this.hitboxWidth, this.hitboxHeight, this.hitboxWidth);
 		let edges = new THREE.EdgesGeometry( geom );
-		this.hitbox = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
+		this.hitbox = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xFFFFFF } ) );
 		this.hitbox.visible = renderHitboxes;
 		scene.add( this.hitbox );
 

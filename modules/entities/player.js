@@ -2,12 +2,18 @@ class Player extends Entity{
 	constructor(){
 		super(0.6, 1.8, 1.6, 0, 100, 0);
 
-		this.thirdPerson = false;
+		this.perspective = 1;
 
 		this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		this.thirdPersonCamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		this.secondPersonCamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		this.camera.position.set(this.x,this.y,this.z);
 		this.controls = new THREE.PointerLockControls(this.camera, renderer.domElement);
+
+		// this.move = this.move.bind(this);
+		// document.addEventListener("mousemove", this.move, true);
+		this.camera.add(this.thirdPersonCamera)
+		this.camera.add(this.secondPersonCamera)
 	}
 
 	tp(x,y,z){
@@ -88,20 +94,24 @@ class Player extends Entity{
 		this.eyeLevelHitbox.position.y = this.camera.position.y
 		this.eyeLevelHitbox.position.z = this.camera.position.z
 
-		this.thirdPersonCamera.position.x = this.camera.position.x
-		this.thirdPersonCamera.position.y = this.camera.position.y + 2
-		this.thirdPersonCamera.position.z = this.camera.position.z
+		this.thirdPersonCamera.position.z = 5
+		this.thirdPersonCamera.lookAt(this.camera.position)
 
-		this.thirdPersonCamera.rotation.x = this.camera.rotation.x
-		this.thirdPersonCamera.rotation.y = this.camera.rotation.y 
-		this.thirdPersonCamera.rotation.z = this.camera.rotation.z  
+		this.secondPersonCamera.position.z = -5
+		this.secondPersonCamera.lookAt(this.camera.position)
+
 	}
 
 	getCamera(){
-		if(!this.thirdPerson){
+		if(this.perspective == 1){
 			return this.camera;
-		}else{
+		}else if (this.perspective == 3){
 			return this.thirdPersonCamera;
+		}else{
+			return this.secondPersonCamera;
 		}
 	}
 }
+
+
+

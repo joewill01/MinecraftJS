@@ -13,6 +13,7 @@ var lookingAt = null;
 var setYHeight = 23;
 var blockToPlace = 4;
 var renderHitboxes = false;
+var locked = false;
 
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
@@ -74,6 +75,7 @@ if (control_type === 'touch') {
 	renderer.domElement.onclick = function() {
 		player.controls.connect();
 		player.controls.lock();
+		locked = true;
 		document.documentElement.requestFullscreen().then(result => {
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			player.camera.width = window.innerWidth
@@ -97,6 +99,7 @@ var onKeyDown = function ( event ) {
 		case 27: // esc
 			navigator.keyboard.unlock();
 			player.controls.unlock();
+			locked = false;
 			break;
 		case 87: // w
 			moveForward = true;
@@ -160,7 +163,13 @@ var onKeyDown = function ( event ) {
 			setYHeight --;
 			break;
 		case 116: //f5
-			player.thirdPerson = !player.thirdPerson;
+			if(player.perspective == 1){
+				player.perspective = 3;
+			}else if(player.perspective == 3){
+				player.perspective = 2;
+			}else{
+				player.perspective = 1;
+			}
 			break;
 		case 66:
 			renderHitboxes = !renderHitboxes;
