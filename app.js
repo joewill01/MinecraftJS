@@ -10,12 +10,30 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-var geom = new THREE.BoxBufferGeometry( 1.001, 1.001, 1.001);
-var edges = new THREE.EdgesGeometry( geom );
+let geom = new THREE.BoxBufferGeometry( 1.001, 1.001, 1.001);
+let edges = new THREE.EdgesGeometry( geom );
 var selectionCube = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
 selectionCube.visible = false;
 selectionCube.name = "selectionCube";
 scene.add( selectionCube );
+
+geom = new THREE.BoxBufferGeometry( 0.6, 1.8, 0.6);
+edges = new THREE.EdgesGeometry( geom );
+var hitbox = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
+hitbox.visible = true;
+hitbox.position.set(0,30,0)
+hitbox.name = "hitbox";
+scene.add( hitbox );
+
+geom = new THREE.BoxBufferGeometry( 0.6, 0.02, 0.6);
+edges = new THREE.EdgesGeometry( geom );
+var eyeLevel = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xFF0000 } ) );
+eyeLevel.visible = true;
+eyeLevel.position.x = hitbox.position.x
+eyeLevel.position.y = hitbox.position.y
+eyeLevel.position.z = hitbox.position.z
+eyeLevel.name = "hitbox";
+scene.add( eyeLevel );
 
 var registry = new Registry();
 
@@ -162,7 +180,8 @@ document.onclick = function(e){
 			world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z,0)
 		}
 	}else if(e.which == 2){
-		console.log("MIDDLE")
+		console.log("Middle")
+		console.log(hitbox.position.y-0.9)
 	}else if(e.which == 3){
 		switch(lookingAt.face){
 			case "T":
@@ -345,12 +364,20 @@ function moveCamera() {
 
 	// check if we are on the floor level (y = 2 all the time atm)
 	controls.getObject().position.y += ( velocity.y * delta ); // new behavior
-	if ( controls.getObject().position.y < setYHeight ) {
+	if ( controls.getObject().position.y  < setYHeight ) {
 		velocity.y = 0;
 		controls.getObject().position.y = setYHeight;
 		canJump = true;
 	}
 	prevTime = time;
+
+	hitbox.position.x = controls.getObject().position.x
+	hitbox.position.y = controls.getObject().position.y - 0.9 + 0.2
+	hitbox.position.z = controls.getObject().position.z
+
+	eyeLevel.position.x = controls.getObject().position.x
+	eyeLevel.position.y = controls.getObject().position.y
+	eyeLevel.position.z = controls.getObject().position.z
 }
 
 
