@@ -3,12 +3,12 @@ let hotbar = new Hotbar(0, 20, 14, 20, 17);
 var scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x99ccff, 50, 70);
 scene.background = new THREE.Color( 0x99ccff );
-var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.set(0,100,0);
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
+
+var player = new Player()
 
 var geom = new THREE.BoxBufferGeometry( 1.001, 1.001, 1.001);
 var edges = new THREE.EdgesGeometry( geom );
@@ -26,8 +26,6 @@ for(let x=-4; x<=4; x++){
 	}
 }
 
-var controls = new THREE.PointerLockControls(camera, renderer.domElement);
-
 control_type = 'pointer';
 
 if (control_type === 'touch') {
@@ -36,9 +34,9 @@ if (control_type === 'touch') {
 
 	hammer.on("panleft panright panup pandown", function(e) {
 		if (e.type === 'panleft') {
-			camera.rotation.y += Math.PI / 180
+			player.camera.rotation.y += Math.PI / 180
 		} else if (e.type === 'panright') {
-			camera.rotation.y -= Math.PI / 180
+			player.camera.rotation.y -= Math.PI / 180
 		}
 	})
 
@@ -49,21 +47,21 @@ if (control_type === 'touch') {
 	document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
 
 	renderer.domElement.onclick = function() {
-		controls.connect();
-		controls.lock();
+		player.controls.connect();
+		player.controls.lock();
 		document.documentElement.requestFullscreen().then(result => {
 			renderer.setSize( window.innerWidth, window.innerHeight );
-			camera.width = window.innerWidth
-			camera.height = window.innerHeight
-			camera.aspect = window.innerWidth / window.innerHeight;
-			camera.updateProjectionMatrix();
+			player.camera.width = window.innerWidth
+			player.camera.height = window.innerHeight
+			player.camera.aspect = window.innerWidth / window.innerHeight;
+			player.camera.updateProjectionMatrix();
 			navigator.keyboard.lock();
 		})
 	};
 }
 
 
-scene.add(controls.getObject());
+scene.add(player.controls.getObject());
 
 // var setup
 var moveForward = false;
@@ -90,7 +88,7 @@ var onKeyDown = function ( event ) {
 	switch ( event.keyCode ) {
 		case 27: // esc
 			navigator.keyboard.unlock();
-			controls.unlock();
+			player.controls.unlock();
 			break;
 		case 87: // w
 			moveForward = true;
@@ -145,7 +143,7 @@ var onKeyDown = function ( event ) {
 			hotbar.selectItem(8);
 			break;
 		case 191:
-			camera.position.y = 100;
+			player.tp("~",100,"~")
 			break;
 		case 38:
 			setYHeight ++;
@@ -213,7 +211,7 @@ var onKeyUp = function ( event ) {
 function getSelected(raycaster, mouse){
 	mouse.x = ( (renderer.domElement.width/2) / window.innerWidth ) * 2 - 1;
 	mouse.y = - ( (renderer.domElement.height/2) / window.innerHeight ) * 2 + 1;
-	raycaster.setFromCamera( mouse, camera );
+	raycaster.setFromCamera( mouse, player.camera );
 
 	// calculate objects intersecting the picking ray
 	var intersects = raycaster.intersectObjects( scene.children ,true);
@@ -307,53 +305,6 @@ window.addEventListener("wheel", (e) => {
 	}
 });
 
-
-function moveCamera() {
-
-	var time = performance.now();
-	var delta = ( time - prevTime ) / 1000;
-
-	//Change speed if sprinting
-	if (!sprinting){
-		velocity.x -= velocity.x * 16.0 * delta;
-		velocity.z -= velocity.z * 16.0 * delta;
-	}else{
-		velocity.x -= velocity.x * 10.0 * delta;
-		velocity.z -= velocity.z * 10.0 * delta;
-	}
-	
-	//Change the FOV of the camera to show you are sprinting
-	if(sprinting && camera.fov < 80){
-		camera.fov ++;
-	}
-	if(!sprinting && camera.fov > 70){
-		camera.fov -= 0.5;
-	}
-	camera.updateProjectionMatrix();
-
-	velocity.y -= 9.8 * 2.5 * delta; // 100.0 = mass
-
-	direction.z = Number( moveForward ) - Number( moveBackward );
-	direction.x = Number( moveRight ) - Number( moveLeft );
-	direction.normalize(); // this ensures consistent movements in all directions
-
-	if ( moveForward || moveBackward ) velocity.z -= direction.z * 1 * delta;
-	if ( moveLeft || moveRight ) velocity.x -= direction.x * 1 * delta;
-
-	controls.moveRight( - velocity.x);
-	controls.moveForward( - velocity.z);
-
-	// check if we are on the floor level (y = 2 all the time atm)
-	controls.getObject().position.y += ( velocity.y * delta ); // new behavior
-	if ( controls.getObject().position.y < setYHeight ) {
-		velocity.y = 0;
-		controls.getObject().position.y = setYHeight;
-		canJump = true;
-	}
-	prevTime = time;
-}
-
-
 //REMOVE AFTER, THIS IS CODE FOR FPS COUNTER TO CHECK OPTIMISATIONS
 var stats;
 function createStats() {
@@ -370,10 +321,10 @@ stats = createStats();
 document.body.appendChild( stats.domElement );
 
 function animate() {
-	moveCamera();
+	player.moveCamera();
 	stats.update();
 	getSelected(raycaster, mouse);
 	requestAnimationFrame( animate );
-	renderer.render( scene, camera );
+	renderer.render( scene, player.camera );
 }
 animate();
