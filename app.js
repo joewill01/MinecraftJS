@@ -3,37 +3,19 @@ let hotbar = new Hotbar(0, 20, 14, 20, 17);
 var scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x99ccff, 50, 70);
 scene.background = new THREE.Color( 0x99ccff );
-var camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
-camera.position.set(0,100,0);
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-let geom = new THREE.BoxBufferGeometry( 1.001, 1.001, 1.001);
-let edges = new THREE.EdgesGeometry( geom );
+var player = new Player()
+
+var geom = new THREE.BoxBufferGeometry( 1.001, 1.001, 1.001);
+var edges = new THREE.EdgesGeometry( geom );
 var selectionCube = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
 selectionCube.visible = false;
 selectionCube.name = "selectionCube";
 scene.add( selectionCube );
-
-geom = new THREE.BoxBufferGeometry( 0.6, 1.8, 0.6);
-edges = new THREE.EdgesGeometry( geom );
-var hitbox = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
-hitbox.visible = true;
-hitbox.position.set(0,30,0)
-hitbox.name = "hitbox";
-scene.add( hitbox );
-
-geom = new THREE.BoxBufferGeometry( 0.6, 0.02, 0.6);
-edges = new THREE.EdgesGeometry( geom );
-var eyeLevel = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xFF0000 } ) );
-eyeLevel.visible = true;
-eyeLevel.position.x = hitbox.position.x
-eyeLevel.position.y = hitbox.position.y
-eyeLevel.position.z = hitbox.position.z
-eyeLevel.name = "hitbox";
-scene.add( eyeLevel );
 
 var registry = new Registry();
 
@@ -54,9 +36,9 @@ if (control_type === 'touch') {
 
 	hammer.on("panleft panright panup pandown", function(e) {
 		if (e.type === 'panleft') {
-			camera.rotation.y += Math.PI / 180
+			player.camera.rotation.y += Math.PI / 180
 		} else if (e.type === 'panright') {
-			camera.rotation.y -= Math.PI / 180
+			player.camera.rotation.y -= Math.PI / 180
 		}
 	})
 
@@ -67,21 +49,21 @@ if (control_type === 'touch') {
 	document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
 
 	renderer.domElement.onclick = function() {
-		controls.connect();
-		controls.lock();
+		player.controls.connect();
+		player.controls.lock();
 		document.documentElement.requestFullscreen().then(result => {
 			renderer.setSize( window.innerWidth, window.innerHeight );
-			camera.width = window.innerWidth
-			camera.height = window.innerHeight
-			camera.aspect = window.innerWidth / window.innerHeight;
-			camera.updateProjectionMatrix();
+			player.camera.width = window.innerWidth
+			player.camera.height = window.innerHeight
+			player.camera.aspect = window.innerWidth / window.innerHeight;
+			player.camera.updateProjectionMatrix();
 			navigator.keyboard.lock();
 		})
 	};
 }
 
 
-scene.add(controls.getObject());
+scene.add(player.controls.getObject());
 
 // var setup
 var moveForward = false;
@@ -108,7 +90,7 @@ var onKeyDown = function ( event ) {
 	switch ( event.keyCode ) {
 		case 27: // esc
 			navigator.keyboard.unlock();
-			controls.unlock();
+			player.controls.unlock();
 			break;
 		case 87: // w
 			moveForward = true;
@@ -163,7 +145,7 @@ var onKeyDown = function ( event ) {
 			hotbar.selectItem(8);
 			break;
 		case 191:
-			camera.position.y = 100;
+			player.tp("~",100,"~")
 			break;
 		case 38:
 			setYHeight ++;
@@ -180,8 +162,7 @@ document.onclick = function(e){
 			world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z,0)
 		}
 	}else if(e.which == 2){
-		console.log("Middle")
-		console.log(hitbox.position.y-0.9)
+		console.log("MIDDLE")
 	}else if(e.which == 3){
 		switch(lookingAt.face){
 			case "T":
@@ -232,7 +213,7 @@ var onKeyUp = function ( event ) {
 function getSelected(raycaster, mouse){
 	mouse.x = ( (renderer.domElement.width/2) / window.innerWidth ) * 2 - 1;
 	mouse.y = - ( (renderer.domElement.height/2) / window.innerHeight ) * 2 + 1;
-	raycaster.setFromCamera( mouse, camera );
+	raycaster.setFromCamera( mouse, player.camera );
 
 	// calculate objects intersecting the picking ray
 	var intersects = raycaster.intersectObjects( scene.children ,true);
@@ -397,10 +378,10 @@ stats = createStats();
 document.body.appendChild( stats.domElement );
 
 function animate() {
-	moveCamera();
+	player.moveCamera();
 	stats.update();
 	getSelected(raycaster, mouse);
 	requestAnimationFrame( animate );
-	renderer.render( scene, camera );
+	renderer.render( scene, player.camera );
 }
 animate();
