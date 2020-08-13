@@ -1,3 +1,26 @@
+// var setup
+var moveForward = false;
+var moveBackward = false;
+var moveLeft = false;
+var moveRight = false;
+var canJump = true;
+var prevTime = performance.now();
+var sprinting = false;
+var ctlHeld = false;
+var prevSelected = null;
+var selected = null;
+var lookingAt = null;
+var setYHeight = 23;
+var blockToPlace = 4;
+var renderHitboxes = false;
+
+var velocity = new THREE.Vector3();
+var direction = new THREE.Vector3();
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+
+var pressed = [];
+
 let hotbar = new Hotbar(0, 20, 14, 20, 17);
 
 var scene = new THREE.Scene();
@@ -18,6 +41,8 @@ selectionCube.name = "selectionCube";
 scene.add( selectionCube );
 
 var registry = new Registry();
+
+registry.registerEntity(player)
 
 var world = new World()
 for(let x=-4; x<=4; x++){
@@ -63,28 +88,11 @@ if (control_type === 'touch') {
 
 scene.add(player.controls.getObject());
 
-// var setup
-var moveForward = false;
-var moveBackward = false;
-var moveLeft = false;
-var moveRight = false;
-var canJump = true;
-var prevTime = performance.now();
-var sprinting = false;
-var ctlHeld = false;
-var prevSelected = null;
-var selected = null;
-var lookingAt = null;
-var setYHeight = 23;
-var blockToPlace = 4;
-
-var velocity = new THREE.Vector3();
-var direction = new THREE.Vector3();
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2();
-
 var onKeyDown = function ( event ) {
 	//console.log(event.keyCode)
+	if(pressed.indexOf(event.keyCode) == -1){
+		pressed.push(event.keyCode)
+	}
 	switch ( event.keyCode ) {
 		case 27: // esc
 			navigator.keyboard.unlock();
@@ -154,6 +162,15 @@ var onKeyDown = function ( event ) {
 		case 116: //f5
 			player.thirdPerson = !player.thirdPerson;
 			break;
+		case 66:
+			renderHitboxes = !renderHitboxes;
+			if(pressed.indexOf(114)!=-1){
+				registry.entityBuffer.forEach(function(entity){
+				    entity.hitbox.visible = renderHitboxes;
+					entity.eyeLevelHitbox.visible = renderHitboxes;
+				})
+			}
+			break;
 	}
 };
 
@@ -189,7 +206,9 @@ document.onclick = function(e){
 }
 
 var onKeyUp = function ( event ) {
-
+	if(pressed.indexOf(event.keyCode) != -1){
+		pressed.pop(pressed.indexOf(event.keyCode))
+	}
 	switch ( event.keyCode ) {
 		case 87: // w
 			moveForward = false;
@@ -284,9 +303,6 @@ function getSelected(raycaster, mouse){
 			selectionCube.position.z = pos.z
 			selectionCube.visible = true;
 			lookingAt.blockCoords = pos
-			//intersects[ 0 ].object.parent.children.forEach(element => 
-			//	element.material.color.set( 0xff0000 )
-			//);
 		}else{
 			lookingAt = null;
 			selectionCube.visible = false;

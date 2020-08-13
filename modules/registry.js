@@ -5,6 +5,8 @@ class Registry{
 		this.materials = [];
 		this.materialRegister = {};
 		this.itemRegister = {};
+
+		this.entityBuffer = [];
 	}
 
 	_registerBlockTexture(texName){
@@ -53,5 +55,9 @@ class Registry{
 				return new Stone(x, y, z, ctex);
 				break;
 		}
+	}
+
+	registerEntity(entity){
+		this.entityBuffer.push(entity);
 	}
 }
