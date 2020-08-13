@@ -94,6 +94,7 @@ class Player extends Entity{
 		this.eyeLevelHitbox.position.y = this.camera.position.y
 		this.eyeLevelHitbox.position.z = this.camera.position.z
 
+		//Do a raycast here to see how far away the nearset block is and then set the z to that if its less than 5
 		this.thirdPersonCamera.position.z = 5
 		this.thirdPersonCamera.lookAt(this.camera.position)
 
