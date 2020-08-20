@@ -11,7 +11,7 @@ var prevSelected = null;
 var selected = null;
 var lookingAt = null;
 var setYHeight = 23;
-var blockToPlace = 4;
+var blockToPlace = 6;
 var renderHitboxes = false;
 var locked = false;
 
@@ -186,30 +186,33 @@ var onKeyDown = function ( event ) {
 document.onclick = function(e){
 	if(e.which == 1){// LEFT CLICK
 		if(lookingAt != null){
-			world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z,0)
+			world.get_looking_at_block().break();
 		}
 	}else if(e.which == 2){
 		console.log("MIDDLE")
+		console.log(world.get_looking_at_block())
 	}else if(e.which == 3){
-		switch(lookingAt.face){
-			case "T":
-				world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y+1,lookingAt.blockCoords.z,blockToPlace)
-				break;
-			case "B":
-				world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y-1,lookingAt.blockCoords.z,blockToPlace)
-				break;
-			case "N":
-				world.set_block(lookingAt.blockCoords.x+1,lookingAt.blockCoords.y,lookingAt.blockCoords.z,blockToPlace)
-				break;
-			case "S":
-				world.set_block(lookingAt.blockCoords.x-1,lookingAt.blockCoords.y,lookingAt.blockCoords.z,blockToPlace)
-				break;
-			case "E":
-				world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z+1,blockToPlace)
-				break;
-			case "W":
-				world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z-1,blockToPlace)
-				break;
+		if(lookingAt != null){
+			switch(lookingAt.face){
+				case "T":
+					world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y+1,lookingAt.blockCoords.z,blockToPlace)
+					break;
+				case "B":
+					world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y-1,lookingAt.blockCoords.z,blockToPlace)
+					break;
+				case "N":
+					world.set_block(lookingAt.blockCoords.x+1,lookingAt.blockCoords.y,lookingAt.blockCoords.z,blockToPlace)
+					break;
+				case "S":
+					world.set_block(lookingAt.blockCoords.x-1,lookingAt.blockCoords.y,lookingAt.blockCoords.z,blockToPlace)
+					break;
+				case "E":
+					world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z+1,blockToPlace)
+					break;
+				case "W":
+					world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z-1,blockToPlace)
+					break;
+			}
 		}
 	}
 }
@@ -240,86 +243,91 @@ var onKeyUp = function ( event ) {
 };
 
 function getSelected(raycaster, mouse){
-	mouse.x = ( (renderer.domElement.width/2) / window.innerWidth ) * 2 - 1;
-	mouse.y = - ( (renderer.domElement.height/2) / window.innerHeight ) * 2 + 1;
-	raycaster.setFromCamera( mouse, player.camera );
+	try{
+		mouse.x = ( (renderer.domElement.width/2) / window.innerWidth ) * 2 - 1;
+		mouse.y = - ( (renderer.domElement.height/2) / window.innerHeight ) * 2 + 1;
+		raycaster.setFromCamera( mouse, player.camera );
 
-	// calculate objects intersecting the picking ray
-	var intersects = raycaster.intersectObjects( scene.children ,true);
+		// calculate objects intersecting the picking ray
+		var intersects = raycaster.intersectObjects( scene.children ,true);
 
-	if (intersects.length >= 1){
-		intersects = intersects.filter((item) => !(item.object instanceof THREE.LineSegments))
-	}
-	
-	if (intersects.length >= 1){
-		if (intersects[0].distance <= 4){
-			lookingAt = intersects[ 0 ]
-			let pos = lookingAt.point
-			let normal = lookingAt.face.normal
-			//console.log(pos.x,pos.y,pos.z)
-			normal.x = Math.round(normal.x)
-			normal.y = Math.round(normal.y)
-			normal.z = Math.round(normal.z)
+		if (intersects.length >= 1){
+			intersects = intersects.filter((item) => !(item.object instanceof THREE.LineSegments))
+		}
+		
+		if (intersects.length >= 1){
+			if (intersects[0].distance <= 4){
+				lookingAt = intersects[ 0 ]
+				let pos = lookingAt.point
+				let normal = lookingAt.face.normal
+				//console.log(pos.x,pos.y,pos.z)
+				normal.x = Math.round(normal.x)
+				normal.y = Math.round(normal.y)
+				normal.z = Math.round(normal.z)
 
-			if(normal.y == -0){
-				normal.y = 0;
+				if(normal.y == -0){
+					normal.y = 0;
+				}
+
+				if(normal.x==0 & normal.y==1 & normal.z==0){
+					lookingAt.face = "T"
+					pos.y -= 0.5
+					pos.x = Math.floor(pos.x + 0.5)
+					pos.z = Math.floor(pos.z + 0.5)
+				}else if(normal.x==0 & normal.y==-1 & normal.z==0){
+					//console.log("Bottom")
+					lookingAt.face = "B"
+					pos.y += 0.5
+					pos.x = Math.floor(pos.x + 0.5)
+					pos.z = Math.floor(pos.z + 0.5)
+				}else if(normal.x==1 & normal.y==0 & normal.z==0){
+					//console.log("North")
+					lookingAt.face = "N"
+					pos.y = Math.floor(pos.y + 0.5)
+					pos.x -= 0.5
+					pos.z = Math.floor(pos.z + 0.5)
+				}else if(normal.x==-1 & normal.y==0 & normal.z==0){
+					//console.log("South")
+					lookingAt.face = "S"
+					pos.y = Math.floor(pos.y + 0.5)
+					pos.x += 0.5
+					pos.z = Math.floor(pos.z + 0.5)
+				}else if(normal.x==0 & normal.y==0 & normal.z==1){
+					//console.log("East")
+					lookingAt.face = "E"
+					pos.y = Math.floor(pos.y + 0.5)
+					pos.x = Math.floor(pos.x + 0.5)
+					pos.z -= 0.5
+				}else if(normal.x==0 & normal.y==0 & normal.z==-1){
+					//console.log("West")
+					lookingAt.face = "W"
+					pos.y = Math.floor(pos.y + 0.5)
+					pos.x = Math.floor(pos.x + 0.5)
+					pos.z += 0.5
+				}
+
+				//Fix spazzing
+				pos.x = Math.floor(pos.x + 0.00001)
+				pos.z = Math.floor(pos.z + 0.00001)
+				pos.y = Math.floor(pos.y + 0.00001)
+
+				selectionCube.position.x = pos.x
+				selectionCube.position.y = pos.y
+				selectionCube.position.z = pos.z
+				selectionCube.visible = true;
+				lookingAt.blockCoords = pos
+			}else{
+				lookingAt = null;
+				selectionCube.visible = false;
 			}
-
-			if(normal.x==0 & normal.y==1 & normal.z==0){
-				lookingAt.face = "T"
-				pos.y -= 0.5
-				pos.x = Math.floor(pos.x + 0.5)
-				pos.z = Math.floor(pos.z + 0.5)
-			}else if(normal.x==0 & normal.y==-1 & normal.z==0){
-				//console.log("Bottom")
-				lookingAt.face = "B"
-				pos.y += 0.5
-				pos.x = Math.floor(pos.x + 0.5)
-				pos.z = Math.floor(pos.z + 0.5)
-			}else if(normal.x==1 & normal.y==0 & normal.z==0){
-				//console.log("North")
-				lookingAt.face = "N"
-				pos.y = Math.floor(pos.y + 0.5)
-				pos.x -= 0.5
-				pos.z = Math.floor(pos.z + 0.5)
-			}else if(normal.x==-1 & normal.y==0 & normal.z==0){
-				//console.log("South")
-				lookingAt.face = "S"
-				pos.y = Math.floor(pos.y + 0.5)
-				pos.x += 0.5
-				pos.z = Math.floor(pos.z + 0.5)
-			}else if(normal.x==0 & normal.y==0 & normal.z==1){
-				//console.log("East")
-				lookingAt.face = "E"
-				pos.y = Math.floor(pos.y + 0.5)
-				pos.x = Math.floor(pos.x + 0.5)
-				pos.z -= 0.5
-			}else if(normal.x==0 & normal.y==0 & normal.z==-1){
-				//console.log("West")
-				lookingAt.face = "W"
-				pos.y = Math.floor(pos.y + 0.5)
-				pos.x = Math.floor(pos.x + 0.5)
-				pos.z += 0.5
-			}
-
-			//Fix spazzing
-			pos.x = Math.floor(pos.x + 0.00001)
-			pos.z = Math.floor(pos.z + 0.00001)
-			pos.y = Math.floor(pos.y + 0.00001)
-
-			selectionCube.position.x = pos.x
-			selectionCube.position.y = pos.y
-			selectionCube.position.z = pos.z
-			selectionCube.visible = true;
-			lookingAt.blockCoords = pos
 		}else{
 			lookingAt = null;
 			selectionCube.visible = false;
 		}
-	}else{
+	}catch{
 		lookingAt = null;
-		selectionCube.visible = false;
 	}
+	
 }
 
 document.addEventListener( 'keydown', onKeyDown, false );

@@ -80,4 +80,12 @@ class Block {
 		  	chunk_geom.merge(plane.geometry, plane.matrix, mat_index);
 		}
 	}
+
+	onBreak(){
+		world.set_block(this.x,this.y,this.z,0)
+	}
+
+	break(){//Overwrite this function and call break then add custom functions
+		this.onBreak();
+	}
 }

@@ -54,6 +54,9 @@ class Registry{
 			case 5:
 				return new Stone(x, y, z, ctex);
 				break;
+			case 6:
+				return new StructureBlock(x, y, z, ctex);
+				break;
 		}
 	}
 

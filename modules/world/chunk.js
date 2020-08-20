@@ -35,22 +35,22 @@ class Chunk{
 
 	render(){
 
-		let chunk = [];
+		this.chunk = [];
 		let chunk_geom = new THREE.Geometry();
 		this.uuid = chunk_geom.uuid
 
 		this.cdata.forEach(function(id, e) {
 			if(id == 0){
-				chunk.push(0)
+				this.chunk.push(0)
 			}else{
 				let y = Math.floor(e/256)
 				let x = Math.floor((e - (256*y)) / 16)
 				let z = (e - (256*y) - (x*16))
-				chunk.push(registry.getBlockInstanceFromId(id, this.x * 16 + x, y, this.z * 16 + z, this.ctextures))
+				this.chunk.push(registry.getBlockInstanceFromId(id, this.x * 16 + x, y, this.z * 16 + z, this.ctextures))
 			}
 		}, this);
 
-		chunk.forEach(function(block, e) {
+		this.chunk.forEach(function(block, e) {
 			if(block != 0){
 	    		block.render(chunk_geom)
 	    	}

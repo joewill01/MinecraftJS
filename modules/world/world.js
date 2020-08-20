@@ -154,7 +154,7 @@ class World{
 			return 0
 		}
 
-		coords = this.world_to_chunk_coords(x,y,z)
+		let coords = this.world_to_chunk_coords(x,y,z)
 
 		let chunk = this.world[this.get_chunk_name(coords.chunk_x, coords.chunk_z)]
 		try{
@@ -238,5 +238,10 @@ class World{
 		to_update.forEach(function(chunk) {
 			this.reload_chunk(chunk[0], chunk[1])
 		}, this);
+	}
+
+	get_looking_at_block(){
+		let coords = this.world_to_chunk_coords(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z)
+		return this.chunk_instances[this.get_chunk_name(coords.chunk_x, coords.chunk_z)].chunk[coords.index]
 	}
 }
