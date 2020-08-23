@@ -86,7 +86,6 @@ if (control_type === 'touch') {
 
 
 ui.releaseCursor = (() => {
-	navigator.keyboard.unlock();
 	player.controls.unlock();
 	locked = false;
 });
