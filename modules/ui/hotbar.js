@@ -1,5 +1,7 @@
 class Hotbar {
-    constructor(selected_item=0, maxHealth=20, health=20, maxHunger=20, hunger=20) {
+    constructor(ui, selected_item=0, maxHealth=20, health=20, maxHunger=20, hunger=20) {
+        this.ui = ui;
+
         this.selected_item = selected_item;
         this.maxHealth = maxHealth;
         this.maxHunger = maxHunger;
@@ -216,10 +218,10 @@ class Hotbar {
         .icon.active {
             visibility: visible;
         }`;
-        document.getElementById("body").appendChild(this.style_element);
+        this.element.appendChild(this.style_element);
 
         // append main element to body
-        document.getElementById("body").appendChild(this.element);
+        this.ui.dom_element.appendChild(this.element);
         this.selectItem(selected_item);
 
         this.updateHealth(health);
