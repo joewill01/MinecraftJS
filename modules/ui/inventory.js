@@ -9,7 +9,7 @@ class Inventory extends UIBase {
         this.addEl();
 
         // temp
-        this.element.classList.add("active");
+        // this.element.classList.add("active");
     }
 
     extraCreate() {

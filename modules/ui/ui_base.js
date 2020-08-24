@@ -2,6 +2,7 @@ class UIBase {
     constructor(ui) {
         this.ui = ui;
         this.state = false;
+        this.screens = [];
     }
 
     createEl(name, dom = this.ui.dom) {
@@ -58,5 +59,16 @@ class UIBase {
         } else {
             this.show();
         }
+    }
+
+    closeAllScreens() {
+        for (let screen of this.screens) {
+            screen.classList.remove("active");
+        }
+    }
+
+    openScreen(screen) {
+        this.closeAllScreens();
+        screen.classList.add("active");
     }
 }

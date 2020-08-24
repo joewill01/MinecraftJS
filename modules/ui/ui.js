@@ -92,6 +92,10 @@ class UI {
                 background-position-y: -172px;
             }
             
+            .standard_button .standard_text {
+                margin-bottom: 2px;
+            }
+            
             .standard_item {
                 position: absolute;
                 display: block;
@@ -224,7 +228,9 @@ class UI {
         text_el.classList.add("standard_text");
         parentElement.appendChild(text_el);
 
-        return text_el
+        function test() {
+            console.log("test")
+        }
     }
 
     releaseCursor() {
