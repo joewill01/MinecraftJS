@@ -103,7 +103,7 @@ class PauseMenu extends UIBase {
         this.main_screen_statistics_btn = this.ui.createButton(this.main_screen, 0, 0, 195,"pause_menu-main_screen-statistics", "Statistics");
         this.main_screen_options_btn = this.ui.createButton(this.main_screen, 0, 0, 400,"pause_menu-main_screen-options", "Options...");
         this.main_screen_quit_btn = this.ui.createButton(this.main_screen, 0, 0, 400,"pause_menu-main_screen-quit", "Save and Quit to Title");
-        this.main_screen_title_text = this.ui.createText(this.main_screen, 153, -60, "pause_menu-main_screen-title", "Game menu");
+        this.main_screen_title_text = this.ui.createText(this.main_screen, 150, -60, "pause_menu-main_screen-title", "Game menu");
 
         this.main_screen_back_to_game_btn.onclick = () => {this.hide()};
         this.main_screen_quit_btn.onclick = () => {this.ui.exitFullscreen()};

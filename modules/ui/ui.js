@@ -41,14 +41,13 @@ class UI {
                 display: block;
             }
             
-            .craft-text {
+            .standard_text {
                 position: absolute;
                 z-index: 2;
                 color: white;
                 padding: 0;
                 margin: 0;
-                margin-bottom: 2px;
-                font-size: 18px;
+                font-size: 20px;
                 text-shadow: 2px 2px #444
             }
             
@@ -61,7 +60,7 @@ class UI {
             }
             
             .standard_button {
-                position: relative;
+                position: absolute;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -93,8 +92,82 @@ class UI {
                 background-position-y: -172px;
             }
             
+            .standard_item {
+                position: absolute;
+                display: block;
+                height: 32px;
+                width: 32px;
+            }
+            
+            .standard_item .item_hover_overlay {
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                background-color: #bbb;
+                visibility: hidden;
+            }
+            
+            .standard_item:hover .item_hover_overlay {
+                visibility: visible;
+            }
+            
+            .standard_item .item_image {
+                position: absolute;
+                top: 0;
+                left: 0;
+                display: inline-block;
+                background-size: cover;
+                height: 32px;
+                width: 32px;
+                image-rendering: pixelated;
+            }
+            
+            .standard_item .item_amount {
+                position: absolute;
+                bottom: -6px;
+                right: -2px;
+                margin: 0;
+                padding: 0;
+            }
         `;
         this.element.appendChild(this.stylesheet);
+    }
+
+    createItem(parentElement, x, y, id="", amount = 1, texture="") {
+        let item_el = this.dom.createElement("div");
+        item_el.classList.add("standard_item");
+        item_el.id = id;
+        item_el.style.left = `${x}px`;
+        item_el.style.top = `${y}px`;
+
+        let item_hover_overlay = this.dom.createElement("span");
+        item_hover_overlay.id = `${id}:item_hover_overlay`;
+        item_hover_overlay.classList.add("item_hover_overlay");
+        item_el.appendChild(item_hover_overlay);
+
+        let item_image = this.dom.createElement("span");
+        item_image.id = `${id}:item_image`;
+        item_image.classList.add("item_image");
+        item_image.style.backgroundImage = `url(minecraft/textures/item/${texture}.png)`;
+        item_el.appendChild(item_image);
+
+        let item_amount = this.dom.createElement("p");
+        item_amount.id = `${id}:item_amount`;
+        item_amount.classList.add("item_amount");
+        item_amount.classList.add("standard_text");
+        
+        if (amount === 1) {
+            item_amount.innerHTML = "";
+        } else {
+            item_amount.innerHTML = amount.toString();
+        }
+
+        item_el.appendChild(item_amount);
+
+        parentElement.appendChild(item_el);
+        return item_el
     }
 
     createBlackOverlay() {
@@ -115,15 +188,15 @@ class UI {
     createButton(parentElement, x, y, width, id="", text="") {
         let button = this.dom.createElement("div");
         button.classList.add("standard_button");
-        button.style.top = y;
-        button.style.left = x;
+        button.style.top = `${y}px`;
+        button.style.left = `${x}px`;
         button.style.width = `${width}px`;
         button.style.height = '40px';
         button.id = id;
 
         let button_text = this.dom.createElement("p");
         button_text.innerText = text;
-        button_text.classList.add("craft-text");
+        button_text.classList.add("standard_text");
         button.appendChild(button_text);
 
         let button_bg_left = this.dom.createElement("span");
@@ -148,7 +221,7 @@ class UI {
         text_el.id = id;
         text_el.style.top = `${y}px`;
         text_el.style.left = `${x}px`;
-        text_el.classList.add("craft-text");
+        text_el.classList.add("standard_text");
         parentElement.appendChild(text_el);
 
         return text_el
