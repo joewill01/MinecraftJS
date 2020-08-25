@@ -81,13 +81,6 @@ class Player extends Entity{
 		this.controls.move( - this.velocity.z, false, false);
 		this.controls.move(   this.velocity.y * delta, false, true);
 
-		// check if we are on the floor level (y = 2 all the time atm)
-		// this.controls.getObject().position.y += ( this.velocity.y * delta );
-		// if ( this.controls.getObject().position.y < setYHeight ) {
-		// 	this.velocity.y = 0;
-		// 	this.controls.getObject().position.y = setYHeight;
-		// 	canJump = true;
-		// }
 		prevTime = time;
 
 		this.eyeLevelHitbox.position.x = this.camera.position.x

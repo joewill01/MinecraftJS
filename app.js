@@ -10,7 +10,6 @@ var ctlHeld = false;
 var prevSelected = null;
 var selected = null;
 var lookingAt = null;
-var setYHeight = 27.1;
 var blockToPlace = 6;
 var renderHitboxes = false;
 var locked = false;
@@ -174,13 +173,8 @@ var onKeyDown = function ( event ) {
 			hotbar.selectItem(8);
 			break;
 		case 191:// slash
-			player.tp("~",100,"~")
-			break;
-		case 38: // up
-			setYHeight ++;
-			break;
-		case 40: // down
-			setYHeight --;
+			player.velocity.y = 0;
+			player.tp(0,100,0)
 			break;
 		case 116: //f5
 			if(player.perspective == 1){
