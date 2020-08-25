@@ -9,19 +9,21 @@ class Chunk{
 	}
 
 	generate(){
-		let stone = [1,20];
-		let dirt = [21,24];
+		let stone = [1,21];
+		let dirt = [22,24];
 		for (let y = 0; y < 257; y++){
 			for (let x = 0; x < 16; x++) {
 				for (let z = 0; z < 16; z++) {
-					if(y==24 & x==0 & z == 0){
+					if(y==dirt[1]+4 & x==0 & z == 0){
 						this.cdata.push(4)
 					}
 					if (y == 0){
 						this.cdata.push(4)
 					}else if(y >= stone[0] && y <= stone[1]){
 						this.cdata.push(5)
-					}else if(y == stone[1]+1){
+					}else if(y >= dirt[0] && y <= dirt[1]){
+						this.cdata.push(7)
+					}else if(y == dirt[1]+1){
 						this.cdata.push(1)
 					}else{
 						this.cdata.push(0)

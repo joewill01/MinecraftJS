@@ -57,6 +57,9 @@ class Registry{
 			case 6:
 				return new StructureBlock(x, y, z, ctex);
 				break;
+			case 7:
+				return new Dirt(x, y, z, ctex);
+				break;
 		}
 	}
 
