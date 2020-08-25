@@ -21,7 +21,12 @@ var mouse = new THREE.Vector2();
 
 var pressed = [];
 
-let hotbar = new Hotbar(0, 20, 14, 20, 17);
+let ui = new UI(document, document.getElementById("body"));
+
+let pause_menu = new PauseMenu(ui);
+let inventory = new Inventory(ui);
+let hotbar = new Hotbar(ui,0, 20, 14, 20, 17);
+
 
 var scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x99ccff, 50, 70);
@@ -45,8 +50,8 @@ var registry = new Registry();
 registry.registerEntity(player)
 
 var world = new World()
-for(let x=-4; x<=4; x++){
-	for(let z=-4; z<=4; z++){
+for(let x=0; x<=0; x++){
+	for(let z=0; z<=0; z++){
 		world.generate_chunk(x,z);
 	}
 }
@@ -71,20 +76,33 @@ if (control_type === 'touch') {
 	canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
 	document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
 
+	player.controls.connect();
+
 	renderer.domElement.onclick = function() {
-		player.controls.connect();
-		player.controls.lock();
-		locked = true;
-		document.documentElement.requestFullscreen().then(result => {
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			player.camera.width = window.innerWidth
-			player.camera.height = window.innerHeight
-			player.camera.aspect = window.innerWidth / window.innerHeight;
-			player.camera.updateProjectionMatrix();
-			navigator.keyboard.lock();
-		})
+		ui.captureCursor();
 	};
 }
+
+
+ui.releaseCursor = (() => {
+	player.controls.unlock();
+	locked = false;
+});
+
+
+ui.captureCursor = (() => {
+	player.controls.lock();
+	locked = true;
+});
+
+ui.updateSize = (() => {
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	player.camera.width = window.innerWidth;
+	player.camera.height = window.innerHeight;
+	player.camera.aspect = window.innerWidth / window.innerHeight;
+	player.camera.updateProjectionMatrix();
+	navigator.keyboard.lock();
+});
 
 
 scene.add(player.controls.getObject());
@@ -95,10 +113,14 @@ var onKeyDown = function ( event ) {
 		pressed.push(event.keyCode)
 	}
 	switch ( event.keyCode ) {
-		case 27: // esc
-			navigator.keyboard.unlock();
-			player.controls.unlock();
-			locked = false;
+		case 80: // esc but p for now
+			pause_menu.toggle();
+			break;
+		case 70: // f
+			ui.toggleFullscreen();
+			break;
+		case 69: //e
+			inventory.toggle();
 			break;
 		case 87: // w
 			moveForward = true;
