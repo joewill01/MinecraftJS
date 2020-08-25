@@ -172,8 +172,12 @@ class World{
 	}
 
 	reload_chunk(x, z){
-		scene.remove(scene.getObjectByName(world.get_chunk_name(x,z)));
-		world.chunk_instances[world.get_chunk_name(x,z)].render();
+		if(scene.getObjectByName(world.get_chunk_name(x,z)+"_mesh") != undefined){
+			scene.remove(scene.getObjectByName(world.get_chunk_name(x,z)+"_mesh"));
+			world.chunk_instances[world.get_chunk_name(x,z)].render();
+		}else{
+			console.warn("Tryed to update chunk " + world.get_chunk_name(x,z) + ", Failed as chunk does not exist")
+		}
 	}
 
 	set_block(x, y, z, id){
@@ -240,5 +244,13 @@ class World{
 	get_looking_at_block(){
 		let coords = this.world_to_chunk_coords(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z);
 		return this.chunk_instances[this.get_chunk_name(coords.chunk_x, coords.chunk_z)].chunk[coords.index];
+	}
+
+	get_chunk_instances_array(){
+		let meshs = [];
+		for (const [key, value] of Object.entries(this.chunk_instances)) {
+		  meshs.push(value.chunk_mesh);
+		}
+		return meshs
 	}
 }

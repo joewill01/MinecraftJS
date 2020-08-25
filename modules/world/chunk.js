@@ -60,7 +60,8 @@ class Chunk{
 		chunk_mesh.geometry.computeFaceNormals();
 		chunk_mesh.geometry.computeVertexNormals();
 
-		chunk_mesh.name = this.name
+		chunk_mesh.name = this.name + "_mesh"
+		this.chunk_mesh = chunk_mesh
 		scene.add(chunk_mesh);
 	}
 }

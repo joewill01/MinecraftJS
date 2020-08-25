@@ -39,6 +39,7 @@ class StructureBlock extends Block{
 		edges = new THREE.EdgesGeometry( geom );
 		this.scanSpace = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x0000FF } ) );
 		this.scanSpace.visible = true;
+		this.scanSpace.name= "scanSpace"
 		scene.add( this.scanSpace );
 
 		this.scanSpace.position.x = this.x + this.scanSizeX/2 + 0.5 + this.offsetX;

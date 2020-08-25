@@ -269,7 +269,7 @@ function getSelected(raycaster, mouse){
 		raycaster.setFromCamera( mouse, player.camera );
 
 		// calculate objects intersecting the picking ray
-		var intersects = raycaster.intersectObjects( scene.children ,true);
+		var intersects = raycaster.intersectObjects( world.get_chunk_instances_array() ,true);
 
 		if (intersects.length >= 1){
 			intersects = intersects.filter((item) => !(item.object instanceof THREE.LineSegments))
