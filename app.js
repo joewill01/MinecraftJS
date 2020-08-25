@@ -104,7 +104,6 @@ ui.updateSize = (() => {
 	navigator.keyboard.lock();
 });
 
-
 scene.add(player.controls.getObject());
 
 var onKeyDown = function ( event ) {

@@ -148,6 +148,6 @@ class PauseMenu extends UIBase {
 
         this.options_screen_done_btn.onclick = () => {this.openScreen(this.main_screen)};
 
-        this.options_screen_title_text.test()
+        //this.options_screen_title_text.test()
     }
 }
