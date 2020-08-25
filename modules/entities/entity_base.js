@@ -7,15 +7,15 @@ class Entity {
 		this.y = y;
 		this.z = z;
 
-		let geom = new THREE.BoxBufferGeometry( this.hitboxWidth, this.hitboxHeight, this.hitboxWidth);
-		let edges = new THREE.EdgesGeometry( geom );
-		this.hitbox = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xFFFFFF } ) );
+		let geom = new THREE.CubeGeometry( this.hitboxWidth, this.hitboxHeight, this.hitboxWidth);
+		let wireMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF, wireframe:true } );
+		this.hitbox = new THREE.Mesh( geom, wireMaterial);
 		this.hitbox.visible = renderHitboxes;
 		scene.add( this.hitbox );
 
-		geom = new THREE.BoxBufferGeometry( this.hitboxWidth+0.0001, 0.02, this.hitboxWidth+0.0001);
-		edges = new THREE.EdgesGeometry( geom );
-		this.eyeLevelHitbox = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0xFF0000 } ) );
+		geom = new THREE.CubeGeometry( this.hitboxWidth+0.0001, 0.02, this.hitboxWidth+0.0001);
+		wireMaterial = new THREE.MeshBasicMaterial( { color: 0xFF0000, wireframe:true } );
+		this.eyeLevelHitbox = new THREE.Mesh( geom, wireMaterial);
 		this.eyeLevelHitbox.visible = renderHitboxes;
 		scene.add( this.eyeLevelHitbox );
 	}

@@ -4,6 +4,8 @@ class Player extends Entity{
 
 		this.perspective = 1;
 
+		this.velocity = new THREE.Vector3();
+
 		this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		this.thirdPersonCamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		this.secondPersonCamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -42,6 +44,7 @@ class Player extends Entity{
 		}
 	}
 
+
 	moveCamera() {
 
 		var time = performance.now();
@@ -49,11 +52,11 @@ class Player extends Entity{
 
 		//Change speed if sprinting
 		if (!sprinting){
-			velocity.x -= velocity.x * 16.0 * delta;
-			velocity.z -= velocity.z * 16.0 * delta;
+			this.velocity.x -= this.velocity.x * 16.0 * delta;
+			this.velocity.z -= this.velocity.z * 16.0 * delta;
 		}else{
-			velocity.x -= velocity.x * 10.0 * delta;
-			velocity.z -= velocity.z * 10.0 * delta;
+			this.velocity.x -= this.velocity.x * 10.0 * delta;
+			this.velocity.z -= this.velocity.z * 10.0 * delta;
 		}
 		
 		//Change the FOV of the camera to show you are sprinting
@@ -65,41 +68,45 @@ class Player extends Entity{
 		}
 		this.camera.updateProjectionMatrix();
 
-		velocity.y -= 9.8 * 2.5 * delta; // 100.0 = mass
+		this.velocity.y -= 9.8 * 2.5 * delta; // 100.0 = mass
 
 		direction.z = Number( moveForward ) - Number( moveBackward );
 		direction.x = Number( moveRight ) - Number( moveLeft );
 		direction.normalize(); // this ensures consistent movements in all directions
 
-		if ( moveForward || moveBackward ) velocity.z -= direction.z * 1 * delta;
-		if ( moveLeft || moveRight ) velocity.x -= direction.x * 1 * delta;
+		if ( moveForward || moveBackward ) this.velocity.z -= direction.z * 1 * delta;
+		if ( moveLeft || moveRight ) this.velocity.x -= direction.x * 1 * delta;
 
-		this.controls.moveRight( - velocity.x);
-		this.controls.moveForward( - velocity.z);
+		this.controls.moveForward( - this.velocity.x , true);
+		this.controls.moveForward( - this.velocity.z );
 
 		// check if we are on the floor level (y = 2 all the time atm)
-		this.controls.getObject().position.y += ( velocity.y * delta ); // new behavior
+		this.controls.getObject().position.y += ( this.velocity.y * delta );
 		if ( this.controls.getObject().position.y < setYHeight ) {
-			velocity.y = 0;
+			this.velocity.y = 0;
 			this.controls.getObject().position.y = setYHeight;
 			canJump = true;
 		}
 		prevTime = time;
 
-		this.hitbox.position.x = this.camera.position.x
-		this.hitbox.position.y = this.camera.position.y - this.hitboxHeight/2 + (this.hitboxHeight - this.eyeLevel)
-		this.hitbox.position.z = this.camera.position.z
-
 		this.eyeLevelHitbox.position.x = this.camera.position.x
 		this.eyeLevelHitbox.position.y = this.camera.position.y
 		this.eyeLevelHitbox.position.z = this.camera.position.z
 
-		//Do a raycast here to see how far away the nearset block is and then set the z to that if its less than 5
+		this.hitbox.position.x = this.camera.position.x
+		this.hitbox.position.y = this.camera.position.y - this.hitboxHeight/2 + (this.hitboxHeight - this.eyeLevel)
+		this.hitbox.position.z = this.camera.position.z
+
+		//Do a raycast here to see how far away the nearsest block is and then set the z to that if its less than 5
 		this.thirdPersonCamera.position.z = 5
 		this.thirdPersonCamera.lookAt(this.camera.position)
 
 		this.secondPersonCamera.position.z = -5
 		this.secondPersonCamera.lookAt(this.camera.position)
+
+		this.x = this.camera.position.x
+		this.y = this.camera.position.y
+		this.z = this.camera.position.z
 
 	}
 
@@ -111,6 +118,23 @@ class Player extends Entity{
 		}else{
 			return this.secondPersonCamera;
 		}
+	}
+
+	getSurroundingChunks(){
+		let coords = world.world_to_chunk_coords(this.x,this.y,this.z)
+		let surrounding = [];
+
+		surrounding.push(world.get_chunk_name(coords.chunk_x, coords.chunk_z))
+		if(Math.floor(coords.pos_x) == 0){
+			surrounding.push(world.get_chunk_name(coords.chunk_x-1, coords.chunk_z))
+		}else if(Math.floor(coords.pos_x) == 15){
+			surrounding.push(world.get_chunk_name(coords.chunk_x+1, coords.chunk_z))
+		}if(Math.floor(coords.pos_z) == 0){
+			surrounding.push(world.get_chunk_name(coords.chunk_x, coords.chunk_z-1))
+		}if(Math.floor(coords.pos_z) == 15){
+			surrounding.push(world.get_chunk_name(coords.chunk_x, coords.chunk_z+1))
+		}
+		return surrounding
 	}
 }
 

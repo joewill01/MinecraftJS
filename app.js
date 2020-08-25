@@ -10,12 +10,11 @@ var ctlHeld = false;
 var prevSelected = null;
 var selected = null;
 var lookingAt = null;
-var setYHeight = 23;
+var setYHeight = 23.1;
 var blockToPlace = 6;
 var renderHitboxes = false;
 var locked = false;
 
-var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
 var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
@@ -117,7 +116,7 @@ var onKeyDown = function ( event ) {
 			moveRight = true;
 			break;
 		case 32: // space
-			if ( canJump === true ) velocity.y += 8;
+			if ( canJump === true ) player.velocity.y += 8;
 			canJump = false;
 			break;
 		case 17: //Left Ctl
@@ -340,61 +339,6 @@ window.addEventListener("wheel", (e) => {
 		hotbar.itemUp();
 	}
 });
-
-
-function moveCamera() {
-
-	var time = performance.now();
-	var delta = ( time - prevTime ) / 1000;
-
-	//Change speed if sprinting
-	if (!sprinting){
-		velocity.x -= velocity.x * 16.0 * delta;
-		velocity.z -= velocity.z * 16.0 * delta;
-	}else{
-		velocity.x -= velocity.x * 10.0 * delta;
-		velocity.z -= velocity.z * 10.0 * delta;
-	}
-	
-	//Change the FOV of the camera to show you are sprinting
-	if(sprinting && camera.fov < 80){
-		camera.fov ++;
-	}
-	if(!sprinting && camera.fov > 70){
-		camera.fov -= 0.5;
-	}
-	camera.updateProjectionMatrix();
-
-	velocity.y -= 9.8 * 2.5 * delta; // 100.0 = mass
-
-	direction.z = Number( moveForward ) - Number( moveBackward );
-	direction.x = Number( moveRight ) - Number( moveLeft );
-	direction.normalize(); // this ensures consistent movements in all directions
-
-	if ( moveForward || moveBackward ) velocity.z -= direction.z * 1 * delta;
-	if ( moveLeft || moveRight ) velocity.x -= direction.x * 1 * delta;
-
-	controls.moveRight( - velocity.x);
-	controls.moveForward( - velocity.z);
-
-	// check if we are on the floor level (y = 2 all the time atm)
-	controls.getObject().position.y += ( velocity.y * delta ); // new behavior
-	if ( controls.getObject().position.y  < setYHeight ) {
-		velocity.y = 0;
-		controls.getObject().position.y = setYHeight;
-		canJump = true;
-	}
-	prevTime = time;
-
-	hitbox.position.x = controls.getObject().position.x
-	hitbox.position.y = controls.getObject().position.y - 0.9 + 0.2
-	hitbox.position.z = controls.getObject().position.z
-
-	eyeLevel.position.x = controls.getObject().position.x
-	eyeLevel.position.y = controls.getObject().position.y
-	eyeLevel.position.z = controls.getObject().position.z
-}
-
 
 //REMOVE AFTER, THIS IS CODE FOR FPS COUNTER TO CHECK OPTIMISATIONS
 var stats;
