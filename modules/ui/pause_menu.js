@@ -1,6 +1,7 @@
 class PauseMenu extends UIBase {
     constructor(ui) {
         super(ui);
+        this.UIelements = {};
 
         this.createEl("pause_menu");
 
@@ -28,7 +29,6 @@ class PauseMenu extends UIBase {
         // this runs AS WELL AS hiding this.element
         this.closeAllScreens()
     }
-
 
     createStylesheet() {
         this.stylesheet = this.ui.dom.createElement("style");
@@ -113,16 +113,25 @@ class PauseMenu extends UIBase {
         this.main_screen.classList.add("main");
         this.screens.push(this.main_screen);
 
-        this.main_screen_back_to_game_btn = this.ui.createButton(this.main_screen, 0, 0, 400,"pause_menu-main_screen-back_to_game", "Back to Game");
-        this.main_screen_achievements_btn = this.ui.createButton(this.main_screen, 0, 50, 195,"pause_menu-main_screen-achievements", "Achievements");
-        this.main_screen_statistics_btn = this.ui.createButton(this.main_screen, 205, 50, 195,"pause_menu-main_screen-statistics", "Statistics");
-        this.main_screen_options_btn = this.ui.createButton(this.main_screen, 0, 150, 400,"pause_menu-main_screen-options", "Options...");
-        this.main_screen_quit_btn = this.ui.createButton(this.main_screen, 0, 200, 400,"pause_menu-main_screen-quit", "Save and Quit to Title");
-        this.main_screen_title_text = this.ui.createText(this.main_screen, 150, -60, "pause_menu-main_screen-title", "Game menu");
 
-        this.main_screen_back_to_game_btn.onclick = () => {this.hide()};
-        this.main_screen_quit_btn.onclick = () => {this.ui.exitFullscreen()};
-        this.main_screen_options_btn.onclick = () => {this.openScreen(this.options_screen)};
+        this.UIelements["main_screen"] = {};
+
+        //make ui buttons
+        this.UIelements["main_screen"]["buttons"] = {};
+        this.UIelements["main_screen"]["buttons"]["back_to_game"] = new UIButton(this.main_screen, 0, 0, 400,"pause_menu-main_screen-back_to_game", "Back to Game");
+        this.UIelements["main_screen"]["buttons"]["achievements"] = new UIButton(this.main_screen, 0, 50, 195,"pause_menu-main_screen-achievements", "Achievements");
+        this.UIelements["main_screen"]["buttons"]["statistics"]  = new UIButton(this.main_screen, 205, 50, 195,"pause_menu-main_screen-statistics", "Statistics");
+        this.UIelements["main_screen"]["buttons"]["options"]  = new UIButton(this.main_screen, 0, 150, 400,"pause_menu-main_screen-options", "Options...");
+        this.UIelements["main_screen"]["buttons"]["quit"]  = new UIButton(this.main_screen, 0, 200, 400,"pause_menu-main_screen-quit", "Save and Quit to Title");
+
+        //make ui texts
+        this.UIelements["main_screen"]["texts"] = {};
+        this.UIelements["main_screen"]["texts"]["title"]  = new UIText(this.main_screen, 150, -60, "pause_menu-main_screen-title", "Game menu");
+
+        //set onclick/onchange/hover functions
+        this.UIelements["main_screen"]["buttons"]["back_to_game"].onclick = () => {this.hide()};
+        this.UIelements["main_screen"]["buttons"]["quit"].onclick = () => {this.ui.exitFullscreen()};
+        this.UIelements["main_screen"]["buttons"]["options"].onclick = () => {this.openScreen(this.options_screen)};
     }
 
     createOptionsScreen() {
@@ -133,21 +142,31 @@ class PauseMenu extends UIBase {
         this.options_screen.classList.add("options");
         this.screens.push(this.options_screen);
 
-        this.options_screen_fov_slider = this.ui.createButton(this.options_screen, 0, 0, 295,"pause_menu-options_screen-fov", "FOV");
-        this.options_screen_difficulty_btn = this.ui.createButton(this.options_screen, 305, 0, 295,"pause_menu-options_screen-difficulty", "Difficulty: Easy");
-        this.options_screen_skin_customization_btn = this.ui.createButton(this.options_screen, 0, 100, 295,"pause_menu-options_screen-skin_customization", "Skin Customization...");
-        this.options_screen_music_and_sounds_btn = this.ui.createButton(this.options_screen, 305, 100, 295,"pause_menu-options_screen-music_and_sounds", "Music & Sounds...");
-        this.options_screen_video_settings_btn = this.ui.createButton(this.options_screen, 0, 150, 295,"pause_menu-options_screen-video_settings", "Video Settings...");
-        this.options_screen_controls_btn = this.ui.createButton(this.options_screen, 305, 150, 295,"pause_menu-options_screen-controls", "Controls...");
-        this.options_screen_language_btn = this.ui.createButton(this.options_screen, 0, 200, 295,"pause_menu-options_screen-language", "Language...");
-        this.options_screen_chat_settings_btn = this.ui.createButton(this.options_screen, 305, 200, 295,"pause_menu-options_screen-chat_settings", "Chat Settings...");
-        this.options_screen_resource_packs_btn = this.ui.createButton(this.options_screen, 0, 250, 295,"pause_menu-options_screen-resource_packs", "Resource Packs...");
-        this.options_screen_accessibility_settings_btn = this.ui.createButton(this.options_screen, 305, 250, 295,"pause_menu-options_screen-accessibility_settings", "Accessibility Settings...");
-        this.options_screen_done_btn = this.ui.createButton(this.options_screen, 100, 350, 400,"pause_menu-options_screen-done", "Done");
-        this.options_screen_title_text = this.ui.createText(this.options_screen, 265, -60, "pause_menu-main_screen-title", "Options");
+        this.UIelements["options_screen"] = {};
 
-        this.options_screen_done_btn.onclick = () => {this.openScreen(this.main_screen)};
+        //make ui buttons
+        this.UIelements["options_screen"]["buttons"] = {};
+        this.UIelements["options_screen"]["buttons"]["difficulty"] = new UIButton(this.options_screen, 305, 0, 295,"pause_menu-options_screen-difficulty", "Difficulty: Easy");
+        this.UIelements["options_screen"]["buttons"]["skin_customization"] = new UIButton(this.options_screen, 0, 100, 295,"pause_menu-options_screen-skin_customization", "Skin Customization...");
+        this.UIelements["options_screen"]["buttons"]["music_and_sounds"] = new UIButton(this.options_screen, 305, 100, 295,"pause_menu-options_screen-music_and_sounds", "Music & Sounds...");
+        this.UIelements["options_screen"]["buttons"]["video_settings"] = new UIButton(this.options_screen, 0, 150, 295,"pause_menu-options_screen-video_settings", "Video Settings...");
+        this.UIelements["options_screen"]["buttons"]["controls"] = new UIButton(this.options_screen, 305, 150, 295,"pause_menu-options_screen-controls", "Controls...");
+        this.UIelements["options_screen"]["buttons"]["language"] = new UIButton(this.options_screen, 0, 200, 295,"pause_menu-options_screen-language", "Language...");
+        this.UIelements["options_screen"]["buttons"]["chat_settings"] = new UIButton(this.options_screen, 305, 200, 295,"pause_menu-options_screen-chat_settings", "Chat Settings...");
+        this.UIelements["options_screen"]["buttons"]["resource_packs"] = new UIButton(this.options_screen, 0, 250, 295,"pause_menu-options_screen-resource_packs", "Resource Packs...");
+        this.UIelements["options_screen"]["buttons"]["accessibility_settings"] = new UIButton(this.options_screen, 305, 250, 295,"pause_menu-options_screen-accessibility_settings", "Accessibility Settings...");
+        this.UIelements["options_screen"]["buttons"]["done"] = new UIButton(this.options_screen, 100, 350, 400,"pause_menu-options_screen-done", "Done");
 
-        //this.options_screen_title_text.test()
+        //make ui texts
+        this.UIelements["options_screen"]["texts"] = {};
+        this.UIelements["options_screen"]["texts"]["title"] =  new UIText(this.options_screen, 265, -60, "pause_menu-main_screen-title", "Options");
+
+        //make ui sliders
+        this.UIelements["options_screen"]["sliders"] = {};
+        this.UIelements["options_screen"]["sliders"]["fov"] = new UISlider(this.options_screen, 0, 0, 295, 30, 110, 70, "pause_menu-options_screen-fov", "FOV: ^//^");
+
+        //set onclick/onchange/hover functions
+        this.UIelements["options_screen"]["buttons"]["done"].onclick = () => {this.openScreen(this.main_screen)};
+        this.UIelements["options_screen"]["sliders"]["fov"].onchange = (value) => {console.log(`FOV set to ${value.toString()}`)}
     }
 }

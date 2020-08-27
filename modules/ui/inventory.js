@@ -93,7 +93,7 @@ class Inventory extends UIBase {
         this.items.push(this.ui.createItem(this.itemsContainer, 196, 284, 400));
         this.items.push(this.ui.createItem(this.itemsContainer, 232, 284, 400));
         this.items.push(this.ui.createItem(this.itemsContainer, 268, 284, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 304, 284, 400, 64, "diamond"));
+        this.items.push(this.ui.createItem(this.itemsContainer, 304, 284, 400, 65, "diamond"));
     }
 
     createStylesheet() {

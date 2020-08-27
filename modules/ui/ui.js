@@ -41,6 +41,16 @@ class UI {
                 display: block;
             }
             
+            .widget {
+                position: absolute;
+                display: inline-block;
+                background-image: url(minecraft/textures/gui/widgets.png);
+                background-size: 512px 512px;
+                image-rendering: pixelated;
+            }
+            
+            /* text css */
+            
             .standard_text {
                 position: absolute;
                 z-index: 2;
@@ -51,19 +61,14 @@ class UI {
                 text-shadow: 2px 2px #444
             }
             
-            .widget {
-                position: absolute;
-                display: inline-block;
-                background-image: url(minecraft/textures/gui/widgets.png);
-                background-size: 512px 512px;
-                image-rendering: pixelated;
-            }
+            /* button css */
             
             .standard_button {
                 position: absolute;
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                cursor: pointer;
             }
             
             .widget.standard_button_bg_left {
@@ -95,6 +100,77 @@ class UI {
             .standard_button .standard_text {
                 margin-bottom: 2px;
             }
+            
+            /* slider css */
+            
+            .standard_slider {
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            .widget.standard_slider_bg_left {
+                position: absolute;
+                top: 0;
+                left: 0;
+                background-position-y: -92px;
+                height: 40px;
+                width: 51%;
+            }
+            
+            .widget.standard_slider_bg_right {
+                position: absolute;
+                top: 0;
+                right: 0;
+                background-position-y: -92px;
+                height: 40px;
+                width: 50%;
+            }
+            
+            .standard_slider:hover .standard_button .standard_button_bg_left {
+                background-position-y: -172px;
+            }
+        
+            .standard_slider:hover .standard_button .standard_button_bg_right {
+                background-position-y: -172px;
+            }
+            
+            .standard_slider .standard_text {
+                margin-bottom: 2px;
+            }
+            
+            .standard_slider .standard_button {
+                z-index: 1;
+            }
+            
+            .standard_slider_input {
+                -webkit-appearance: none;  /* Override default CSS styles */
+                appearance: none;
+                z-index: 1;
+                width: 100%;
+                background: none;
+                height: 100%;
+        
+                cursor: pointer; /* Cursor on hover */
+            }
+        
+            .standard_slider_input p {
+                z-index: 5;
+            }
+        
+            .standard_slider_input::-webkit-slider-thumb {
+                z-index: 1;
+        
+                height: 40px;
+                width: 15px;
+        
+                -webkit-appearance: none; /* Override default look */
+                appearance: none;
+                visibility: hidden;
+            }
+            
+            /* item css */
             
             .standard_item {
                 position: absolute;
@@ -219,19 +295,6 @@ class UI {
         return button
     }
 
-    createText(parentElement, x=0, y=0, id="", text="") {
-        let text_el = this.dom.createElement("p");
-        text_el.innerText = text;
-        text_el.id = id;
-        text_el.style.top = `${y}px`;
-        text_el.style.left = `${x}px`;
-        text_el.classList.add("standard_text");
-        parentElement.appendChild(text_el);
-
-        function test() {
-            console.log("test")
-        }
-    }
 
     releaseCursor() {
 
