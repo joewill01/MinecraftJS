@@ -110,6 +110,7 @@ document.addEventListener('mousemove', function(event) {
     ui.hand.updatePosition(event.clientX - 16, event.clientY - 16);
 }, true);
 
+document.addEventListener('contextmenu', event => event.preventDefault());
 
 var onKeyDown = function ( event ) {
 	//console.log(event.keyCode)

@@ -8,12 +8,14 @@ class UIItem {
         this.amount = amount;
         this.texture = texture;
         this.onclick = () => {};
+        this.oncontextmenu = () => {};
         this.createItem()
     }
 
     createItem() {
         this.element = this.dom.createElement("div");
         this.element.onclick = () => {this.onclickInternal()};
+        this.element.oncontextmenu = () => {this.oncontextmenuInternal()};
         this.element.classList.add("standard_item");
         this.element.id = this.id;
 
@@ -51,6 +53,18 @@ class UIItem {
         }
     }
 
+    getAmount() {
+        return this.amount;
+    }
+
+    getTexture() {
+        return this.texture;
+    }
+
+    isEmpty() {
+        return (this.texture === "")
+    }
+
     updateTexture(texture=this.texture) {
         this.texture = texture;
         this.item_image.style.backgroundImage = `url(minecraft/textures/item/${texture}.png)`;
@@ -60,7 +74,7 @@ class UIItem {
         return {"texture": this.texture, "amount": this.amount}
     }
 
-    addItem(item={"texture": "", "amount": 0}) {
+    changeItem(item={"texture": "", "amount": 0}) {
         this.updateAmount(item.amount);
         this.updateTexture(item.texture);
     }
@@ -75,28 +89,80 @@ class UIItem {
         this.element.style.top = `${y}px`;
     }
 
-    onclickInternal() {
-        // do something before running user specified onclick function
-        if (this.texture === "") {
+    moveItemTo(UIItem) {
+        UIItem.changeItem(this.getItem());
+        this.removeItem();
+    }
+
+    getItemFrom(UIItem) {
+        UIItem.moveItemTo(this);
+    }
+
+    moveItemsTo(UIItem, amount=1) {
+        if (this.getTexture() === UIItem.getTexture() || UIItem.isEmpty()) {
+            // if UIItem has item type OR is empty
+            if (this.getAmount() >= amount) {
+                // if there are enough items to move
+                UIItem.updateAmount(UIItem.getAmount() + amount);
+                UIItem.updateTexture(this.getTexture());
+                this.updateAmount(this.getAmount() - amount);
+            } else {
+                console.error(`UIItem (id: ${this.id}): Attempt to move more items than available.`)
+            }
+        }
+    }
+
+    getItemsFrom(UIItem, amount=1) {
+        UIItem.moveItemsTo(this, amount)
+    }
+
+    swapItemWith(UIItem) {
+        let temp_item = UIItem.getItem();
+        this.moveItemTo(UIItem);
+        this.changeItem(temp_item);
+    }
+
+    oncontextmenuInternal() {
+        if (this.isEmpty()) {
             // if this item slot is empty
-            if (ui.hand.texture !== "") {
+
+            if (!ui.hand.isEmpty()) {
                 // if the hand is not empty
-                this.addItem(ui.hand.getItem());
-                ui.hand.removeItem();
+                this.getItemsFrom(ui.hand, 1);
             }
         } else {
             // if this item slot is not empty
-            if (ui.hand.texture === "") {
+            if (ui.hand.isEmpty()) {
                 // if the hand is empty
-                ui.hand.addItem(this.getItem());
-                this.removeItem();
+
             } else {
                 // if the hand is not empty
-                let temp_item = this.getItem();
-                this.addItem(ui.hand.getItem());
-                ui.hand.addItem(temp_item);
+
             }
         }
+
+        this.oncontextmenu();
+    }
+
+    onclickInternal() {
+        // do something before running user specified onclick function
+        if (this.isEmpty()) {
+            // if this item slot is empty
+            if (!ui.hand.isEmpty()) {
+                // if the hand is not empty
+                this.getItemFrom(ui.hand);
+            }
+        } else {
+            // if this item slot is not empty
+            if (ui.hand.isEmpty()) {
+                // if the hand is empty
+                this.moveItemTo(ui.hand)
+            } else {
+                // if the hand is not empty
+                this.swapItemWith(ui.hand);
+            }
+        }
+
         this.onclick();
     }
 }
