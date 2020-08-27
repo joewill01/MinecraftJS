@@ -7,6 +7,13 @@ class UI {
         this.createBlackOverlay();
 
         this.appendUI(parent_element);
+
+        this.hand = new UIItem(this.element, 0, 0, "hand", 1, "diamond");
+        this.hand.element.style.pointerEvents = "none";
+        this.hand.element.style.zIndex = "99";
+
+        this.hand.item_image.style.zIndex = "99";
+        this.hand.item_hover_overlay.style.visibility = 'hidden';
     }
 
     createUI() {
@@ -35,7 +42,7 @@ class UI {
                 width: 100%;
                 background-color: black;
                 opacity: 0.5;
-                z-index: 98;
+                z-index: 3;
             }
             .black_overlay.active {
                 display: block;
@@ -145,7 +152,7 @@ class UI {
             }
             
             .standard_slider_input {
-                -webkit-appearance: none;  /* Override default CSS styles */
+                -webkit-appearance: none;
                 appearance: none;
                 z-index: 1;
                 width: 100%;
@@ -154,7 +161,7 @@ class UI {
                 
                 z-index: 3;
         
-                cursor: pointer; /* Cursor on hover */
+                cursor: pointer;
             }
         
             .standard_slider_input p {
@@ -167,7 +174,7 @@ class UI {
                 height: 40px;
                 width: 15px;
         
-                -webkit-appearance: none; /* Override default look */
+                -webkit-appearance: none;
                 appearance: none;
                 visibility: hidden;
             }
@@ -179,6 +186,7 @@ class UI {
                 display: block;
                 height: 32px;
                 width: 32px;
+                z-index: 10;
             }
             
             .standard_item .item_hover_overlay {
@@ -204,6 +212,7 @@ class UI {
                 height: 32px;
                 width: 32px;
                 image-rendering: pixelated;
+                z-index: 10;
             }
             
             .standard_item .item_amount {
@@ -212,44 +221,22 @@ class UI {
                 right: -2px;
                 margin: 0;
                 padding: 0;
+                z-index: 10
             }
         `;
         this.element.appendChild(this.stylesheet);
     }
 
-    createItem(parentElement, x, y, id="", amount = 1, texture="") {
-        let item_el = this.dom.createElement("div");
-        item_el.classList.add("standard_item");
-        item_el.id = id;
-        item_el.style.left = `${x}px`;
-        item_el.style.top = `${y}px`;
+    addToHand() {
 
-        let item_hover_overlay = this.dom.createElement("span");
-        item_hover_overlay.id = `${id}:item_hover_overlay`;
-        item_hover_overlay.classList.add("item_hover_overlay");
-        item_el.appendChild(item_hover_overlay);
+    }
 
-        let item_image = this.dom.createElement("span");
-        item_image.id = `${id}:item_image`;
-        item_image.classList.add("item_image");
-        item_image.style.backgroundImage = `url(minecraft/textures/item/${texture}.png)`;
-        item_el.appendChild(item_image);
+    getFromHand() {
 
-        let item_amount = this.dom.createElement("p");
-        item_amount.id = `${id}:item_amount`;
-        item_amount.classList.add("item_amount");
-        item_amount.classList.add("standard_text");
-        
-        if (amount === 1) {
-            item_amount.innerHTML = "";
-        } else {
-            item_amount.innerHTML = amount.toString();
-        }
+    }
 
-        item_el.appendChild(item_amount);
+    emptyHand() {
 
-        parentElement.appendChild(item_el);
-        return item_el
     }
 
     createBlackOverlay() {
@@ -266,37 +253,6 @@ class UI {
     hideBlackOverlay() {
         this.dom.getElementById("black_overlay").classList.remove("active");
     }
-
-    createButton(parentElement, x, y, width, id="", text="") {
-        let button = this.dom.createElement("div");
-        button.classList.add("standard_button");
-        button.style.top = `${y}px`;
-        button.style.left = `${x}px`;
-        button.style.width = `${width}px`;
-        button.style.height = '40px';
-        button.id = id;
-
-        let button_text = this.dom.createElement("p");
-        button_text.innerText = text;
-        button_text.classList.add("standard_text");
-        button.appendChild(button_text);
-
-        let button_bg_left = this.dom.createElement("span");
-        button_bg_left.classList.add("widget");
-        button_bg_left.classList.add("standard_button_bg_left");
-        button.appendChild(button_bg_left);
-
-        let button_bg_right = this.dom.createElement("span");
-        button_bg_right.classList.add("widget");
-        button_bg_right.classList.add("standard_button_bg_right");
-        button_bg_right.style.backgroundPositionX = `${-400 + width/2}px`;
-        button.appendChild(button_bg_right);
-
-        parentElement.appendChild(button);
-
-        return button
-    }
-
 
     releaseCursor() {
 

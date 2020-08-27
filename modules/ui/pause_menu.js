@@ -43,7 +43,7 @@ class PauseMenu extends UIBase {
             width: 100vw;
             display: flex;
             justify-content: center;
-            z-index: 99;
+            z-index: 5;
         }
         
         .pause_menu.active {

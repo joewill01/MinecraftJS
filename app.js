@@ -105,6 +105,12 @@ ui.updateSize = (() => {
 
 scene.add(player.controls.getObject());
 
+document.addEventListener('mousemove', function(event) {
+    event.preventDefault();
+    ui.hand.updatePosition(event.clientX - 16, event.clientY - 16);
+}, true);
+
+
 var onKeyDown = function ( event ) {
 	//console.log(event.keyCode)
 	if(pressed.indexOf(event.keyCode) == -1){

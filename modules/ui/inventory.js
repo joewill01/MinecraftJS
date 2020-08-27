@@ -34,66 +34,66 @@ class Inventory extends UIBase {
 
     createItems() {
         // armor
-        this.items.push(this.ui.createItem(this.itemsContainer, 16, 16, 400, 1, "diamond_helmet"));
-        this.items.push(this.ui.createItem(this.itemsContainer, 16, 52, 400, 1, "diamond_chestplate"));
-        this.items.push(this.ui.createItem(this.itemsContainer, 16, 88, 400, 1, "diamond_leggings"));
-        this.items.push(this.ui.createItem(this.itemsContainer, 16, 124, 400, 1, "diamond_boots"));
+        this.items.push(new UIItem(this.itemsContainer, 16, 16, 400, 1, "diamond_helmet"));
+        this.items.push(new UIItem(this.itemsContainer, 16, 52, 400, 1, "diamond_chestplate"));
+        this.items.push(new UIItem(this.itemsContainer, 16, 88, 400, 1, "diamond_leggings"));
+        this.items.push(new UIItem(this.itemsContainer, 16, 124, 400, 1, "diamond_boots"));
 
         // shield
-        this.items.push(this.ui.createItem(this.itemsContainer, 154, 124, 400));
+        this.items.push(new UIItem(this.itemsContainer, 154, 124, 400));
 
         // crafting
-        this.items.push(this.ui.createItem(this.itemsContainer, 196, 36, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 232, 36, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 196, 72, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 232, 72, 400));
+        this.items.push(new UIItem(this.itemsContainer, 196, 36, 400));
+        this.items.push(new UIItem(this.itemsContainer, 232, 36, 400));
+        this.items.push(new UIItem(this.itemsContainer, 196, 72, 400));
+        this.items.push(new UIItem(this.itemsContainer, 232, 72, 400));
 
         // crafting result
-        this.items.push(this.ui.createItem(this.itemsContainer, 308, 56, 400));
+        this.items.push(new UIItem(this.itemsContainer, 308, 56, 400));
 
         // item row 1
-        this.items.push(this.ui.createItem(this.itemsContainer, 16, 168, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 52, 168, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 88, 168, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 124, 168, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 160, 168, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 196, 168, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 232, 168, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 268, 168, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 304, 168, 400));
+        this.items.push(new UIItem(this.itemsContainer, 16, 168, 400));
+        this.items.push(new UIItem(this.itemsContainer, 52, 168, 400));
+        this.items.push(new UIItem(this.itemsContainer, 88, 168, 400));
+        this.items.push(new UIItem(this.itemsContainer, 124, 168, 400));
+        this.items.push(new UIItem(this.itemsContainer, 160, 168, 400));
+        this.items.push(new UIItem(this.itemsContainer, 196, 168, 400));
+        this.items.push(new UIItem(this.itemsContainer, 232, 168, 400));
+        this.items.push(new UIItem(this.itemsContainer, 268, 168, 400));
+        this.items.push(new UIItem(this.itemsContainer, 304, 168, 400));
 
         // item row 2
-        this.items.push(this.ui.createItem(this.itemsContainer, 16, 204, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 52, 204, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 88, 204, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 124, 204, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 160, 204, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 196, 204, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 232, 204, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 268, 204, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 304, 204, 400));
+        this.items.push(new UIItem(this.itemsContainer, 16, 204, 400));
+        this.items.push(new UIItem(this.itemsContainer, 52, 204, 400));
+        this.items.push(new UIItem(this.itemsContainer, 88, 204, 400));
+        this.items.push(new UIItem(this.itemsContainer, 124, 204, 400));
+        this.items.push(new UIItem(this.itemsContainer, 160, 204, 400));
+        this.items.push(new UIItem(this.itemsContainer, 196, 204, 400));
+        this.items.push(new UIItem(this.itemsContainer, 232, 204, 400));
+        this.items.push(new UIItem(this.itemsContainer, 268, 204, 400));
+        this.items.push(new UIItem(this.itemsContainer, 304, 204, 400));
 
         // item row 3
-        this.items.push(this.ui.createItem(this.itemsContainer, 16, 240, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 52, 240, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 88, 240, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 124, 240, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 160, 240, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 196, 240, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 232, 240, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 268, 240, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 304, 240, 400));
+        this.items.push(new UIItem(this.itemsContainer, 16, 240, 400));
+        this.items.push(new UIItem(this.itemsContainer, 52, 240, 400));
+        this.items.push(new UIItem(this.itemsContainer, 88, 240, 400));
+        this.items.push(new UIItem(this.itemsContainer, 124, 240, 400));
+        this.items.push(new UIItem(this.itemsContainer, 160, 240, 400));
+        this.items.push(new UIItem(this.itemsContainer, 196, 240, 400));
+        this.items.push(new UIItem(this.itemsContainer, 232, 240, 400));
+        this.items.push(new UIItem(this.itemsContainer, 268, 240, 400));
+        this.items.push(new UIItem(this.itemsContainer, 304, 240, 400));
 
         // item row 4 (hot bar)
-        this.items.push(this.ui.createItem(this.itemsContainer, 16, 284, 400, 1, "diamond_pickaxe"));
-        this.items.push(this.ui.createItem(this.itemsContainer, 52, 284, 400, 1, "diamond_sword"));
-        this.items.push(this.ui.createItem(this.itemsContainer, 88, 284, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 124, 284, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 160, 284, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 196, 284, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 232, 284, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 268, 284, 400));
-        this.items.push(this.ui.createItem(this.itemsContainer, 304, 284, 400, 65, "diamond"));
+        this.items.push(new UIItem(this.itemsContainer, 16, 284, 400, 1, "diamond_pickaxe"));
+        this.items.push(new UIItem(this.itemsContainer, 52, 284, 400, 1, "diamond_sword"));
+        this.items.push(new UIItem(this.itemsContainer, 88, 284, 400));
+        this.items.push(new UIItem(this.itemsContainer, 124, 284, 400));
+        this.items.push(new UIItem(this.itemsContainer, 160, 284, 400));
+        this.items.push(new UIItem(this.itemsContainer, 196, 284, 400));
+        this.items.push(new UIItem(this.itemsContainer, 232, 284, 400));
+        this.items.push(new UIItem(this.itemsContainer, 268, 284, 400));
+        this.items.push(new UIItem(this.itemsContainer, 304, 284, 400, 65, "diamond"));
     }
 
     createStylesheet() {
