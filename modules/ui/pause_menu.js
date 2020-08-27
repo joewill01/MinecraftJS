@@ -163,7 +163,7 @@ class PauseMenu extends UIBase {
 
         //make ui sliders
         this.UIelements["options_screen"]["sliders"] = {};
-        this.UIelements["options_screen"]["sliders"]["fov"] = new UISlider(this.options_screen, 0, 0, 295, 30, 110, 70, "pause_menu-options_screen-fov", "FOV: ^//^");
+        this.UIelements["options_screen"]["sliders"]["fov"] = new UISlider(this.options_screen, 0, 0, 295, 30, 110, 70, "pause_menu-options_screen-fov", "FOV: ^//^", {70: "Normal", 110: "Quake Pro"});
 
         //set onclick/onchange/hover functions
         this.UIelements["options_screen"]["buttons"]["done"].onclick = () => {this.openScreen(this.main_screen)};

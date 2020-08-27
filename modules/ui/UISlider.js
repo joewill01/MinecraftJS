@@ -1,5 +1,5 @@
 class UISlider {
-    constructor(parentElement, x=0, y=0, width=400, minValue=0, maxValue=100, value=0, id="", text="") {
+    constructor(parentElement, x=0, y=0, width=400, minValue=0, maxValue=100, value=0, id="", text="", texts={} ) {
         this.dom = document;
         this.parentElement = parentElement;
         this.x = x;
@@ -11,6 +11,7 @@ class UISlider {
         this.value = value;
         this.id = id;
         this.text = text;
+        this.texts = texts;
         this.onclick = () => {};
         this.onchange = () => {};
         this.createButton()
@@ -77,7 +78,11 @@ class UISlider {
     }
 
     getText() {
-        return this.text.replace("^//^", this.getValue().toString());
+        if (this.getValue() in this.texts) {
+            return this.text.replace("^//^", this.texts[this.getValue()]);
+        } else {
+            return this.text.replace("^//^", this.getValue().toString());
+        }
     }
 
     updateHandlePos() {
