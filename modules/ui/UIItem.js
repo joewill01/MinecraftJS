@@ -46,10 +46,13 @@ class UIItem {
 
     updateAmount(amount=this.amount) {
         this.amount = amount;
-        if (amount === 1 || amount === 0) {
+        if (amount <= 1) {
             this.item_amount.innerHTML = "";
         } else {
             this.item_amount.innerHTML = amount.toString();
+        }
+        if (amount <= 0) {
+            this.updateTexture("");
         }
     }
 
@@ -100,15 +103,17 @@ class UIItem {
 
     moveItemsTo(UIItem, amount=1) {
         if (this.getTexture() === UIItem.getTexture() || UIItem.isEmpty()) {
-            // if UIItem has item type OR is empty
+            // if UIItem has same item type OR is empty
             if (this.getAmount() >= amount) {
                 // if there are enough items to move
-                UIItem.updateAmount(UIItem.getAmount() + amount);
                 UIItem.updateTexture(this.getTexture());
+                UIItem.updateAmount(UIItem.getAmount() + amount);
                 this.updateAmount(this.getAmount() - amount);
             } else {
                 console.error(`UIItem (id: ${this.id}): Attempt to move more items than available.`)
             }
+        } else {
+            console.error(`UIItem (id: ${this.id}): Attempt to move item(s) to different item type.`)
         }
     }
 
@@ -120,6 +125,10 @@ class UIItem {
         let temp_item = UIItem.getItem();
         this.moveItemTo(UIItem);
         this.changeItem(temp_item);
+    }
+
+    getMaxToMoveInTo(UIItem) {
+
     }
 
     oncontextmenuInternal() {
@@ -134,10 +143,10 @@ class UIItem {
             // if this item slot is not empty
             if (ui.hand.isEmpty()) {
                 // if the hand is empty
-
+                this.moveItemsTo(ui.hand, Math.ceil(this.amount / 2))
             } else {
                 // if the hand is not empty
-
+                this.getItemsFrom(ui.hand, 1);
             }
         }
 
@@ -159,7 +168,12 @@ class UIItem {
                 this.moveItemTo(ui.hand)
             } else {
                 // if the hand is not empty
-                this.swapItemWith(ui.hand);
+                if (ui.hand.getTexture() === this.getTexture()) {
+                    // if the item in slot is same as item in hand
+                    ui.hand.moveItemsTo(this, ui.hand.getAmount());
+                } else {
+                    this.swapItemWith(ui.hand);
+                }
             }
         }
 

@@ -8,7 +8,7 @@ class UI {
 
         this.appendUI(parent_element);
 
-        this.hand = new UIItem(this.element, 0, 0, "hand", 1, "");
+        this.hand = new UIItem(this.element, 0, 0, "hand", 0, "");
         this.hand.element.style.pointerEvents = "none";
         this.hand.item_hover_overlay.style.visibility = 'hidden';
     }
