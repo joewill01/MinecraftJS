@@ -151,6 +151,8 @@ class UI {
                 width: 100%;
                 background: none;
                 height: 100%;
+                
+                z-index: 3;
         
                 cursor: pointer; /* Cursor on hover */
             }
