@@ -104,7 +104,7 @@ class Inventory extends UIBase {
                 visibility: hidden;
                 height: 100vh;
                 width: 100vw;
-                z-index: 99;
+                z-index: 5;
             }
             
             .inventory.active {
@@ -118,7 +118,7 @@ class Inventory extends UIBase {
                 left: calc(50vw - 176px);
                 width: 352px;
                 height: 332px;
-                z-index: 99;
+                z-index: 5;
             }
             
             .inventory_container-image {

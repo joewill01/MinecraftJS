@@ -1,5 +1,5 @@
 class UIItem {
-    constructor(parentElement, x=0, y=0, id="", amount=1, texture="") {
+    constructor(parentElement, x=0, y=0, id="", amount=0, texture="") {
         this.dom = document;
         this.parentElement = parentElement;
         this.x = x;
@@ -43,7 +43,8 @@ class UIItem {
     }
 
     updateAmount(amount=this.amount) {
-        if (amount === 1) {
+        this.amount = amount;
+        if (amount === 1 || amount === 0) {
             this.item_amount.innerHTML = "";
         } else {
             this.item_amount.innerHTML = amount.toString();
@@ -51,7 +52,22 @@ class UIItem {
     }
 
     updateTexture(texture=this.texture) {
+        this.texture = texture;
         this.item_image.style.backgroundImage = `url(minecraft/textures/item/${texture}.png)`;
+    }
+
+    getItem() {
+        return {"texture": this.texture, "amount": this.amount}
+    }
+
+    addItem(item={"texture": "", "amount": 0}) {
+        this.updateAmount(item.amount);
+        this.updateTexture(item.texture);
+    }
+
+    removeItem() {
+        this.updateAmount(0);
+        this.updateTexture("")
     }
 
     updatePosition(x=this.x, y=this.y) {
@@ -61,7 +77,26 @@ class UIItem {
 
     onclickInternal() {
         // do something before running user specified onclick function
-
+        if (this.texture === "") {
+            // if this item slot is empty
+            if (ui.hand.texture !== "") {
+                // if the hand is not empty
+                this.addItem(ui.hand.getItem());
+                ui.hand.removeItem();
+            }
+        } else {
+            // if this item slot is not empty
+            if (ui.hand.texture === "") {
+                // if the hand is empty
+                ui.hand.addItem(this.getItem());
+                this.removeItem();
+            } else {
+                // if the hand is not empty
+                let temp_item = this.getItem();
+                this.addItem(ui.hand.getItem());
+                ui.hand.addItem(temp_item);
+            }
+        }
         this.onclick();
     }
 }

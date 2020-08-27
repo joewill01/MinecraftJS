@@ -8,11 +8,8 @@ class UI {
 
         this.appendUI(parent_element);
 
-        this.hand = new UIItem(this.element, 0, 0, "hand", 1, "diamond");
+        this.hand = new UIItem(this.element, 0, 0, "hand", 1, "");
         this.hand.element.style.pointerEvents = "none";
-        this.hand.element.style.zIndex = "99";
-
-        this.hand.item_image.style.zIndex = "99";
         this.hand.item_hover_overlay.style.visibility = 'hidden';
     }
 
@@ -197,6 +194,7 @@ class UI {
                 width: 100%;
                 background-color: #bbb;
                 visibility: hidden;
+                z-index: 10;
             }
             
             .standard_item:hover .item_hover_overlay {
@@ -227,8 +225,9 @@ class UI {
         this.element.appendChild(this.stylesheet);
     }
 
-    addToHand() {
-
+    addToHand(texture=0, amount=0) {
+        this.hand.updateTexture(texture);
+        this.hand.updateAmount(amount);
     }
 
     getFromHand() {
