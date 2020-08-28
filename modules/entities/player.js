@@ -99,7 +99,6 @@ class Player extends Entity{
 		this.x = this.camera.position.x
 		this.y = this.camera.position.y
 		this.z = this.camera.position.z
-
 	}
 
 	getCamera(){
