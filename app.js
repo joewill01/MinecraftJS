@@ -49,8 +49,8 @@ var registry = new Registry();
 registry.registerEntity(player)
 
 var world = new World()
-for(let x=0; x<=0; x++){
-	for(let z=0; z<=0; z++){
+for(let x=-3; x<=3; x++){
+	for(let z=-3; z<=3; z++){
 		world.generate_chunk(x,z);
 	}
 }

@@ -2,6 +2,7 @@ class World{
 	constructor(){
 		this.world = {};
 		this.chunk_instances = {};
+		noise.seed(Math.random())
 	}
 
 	get_chunk_name(x,z){
@@ -12,6 +13,10 @@ class World{
 		let chunk_instance = new Chunk(chunkx,chunkz);
 		this.chunk_instances[chunk_instance.name] = chunk_instance;
 		chunk_instance.generate()
+		this.reload_chunk(chunkx+1,chunkz);
+		this.reload_chunk(chunkx-1,chunkz);
+		this.reload_chunk(chunkx,chunkz+1);
+		this.reload_chunk(chunkx,chunkz-1);
 	}
 
 	world_to_chunk_coords(x, y, z){
@@ -172,11 +177,11 @@ class World{
 	}
 
 	reload_chunk(x, z){
-		if(scene.getObjectByName(world.get_chunk_name(x,z)+"_mesh") != undefined){
-			scene.remove(scene.getObjectByName(world.get_chunk_name(x,z)+"_mesh"));
-			world.chunk_instances[world.get_chunk_name(x,z)].render();
+		if(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh") != undefined){
+			scene.remove(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh"));
+			this.chunk_instances[this.get_chunk_name(x,z)].render();
 		}else{
-			console.warn("Tryed to update chunk " + world.get_chunk_name(x,z) + ", Failed as chunk does not exist")
+			console.warn("Tryed to update chunk " + this.get_chunk_name(x,z) + ", Failed as chunk does not exist")
 		}
 	}
 

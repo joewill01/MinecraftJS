@@ -9,28 +9,35 @@ class Chunk{
 	}
 
 	generate(){
-		let stone = [1,21];
-		let dirt = [22,24];
+		let zoom = 100
+		let scale = 10
+		let raise = 40
+
 		for (let y = 0; y < 257; y++){
 			for (let x = 0; x < 16; x++) {
 				for (let z = 0; z < 16; z++) {
-					if(y==dirt[1]+4 & x==0 & z == 0){
-						this.cdata.push(4)
-					}
-					if (y == 0){
-						this.cdata.push(4)
-					}else if(y >= stone[0] && y <= stone[1]){
-						this.cdata.push(5)
-					}else if(y >= dirt[0] && y <= dirt[1]){
-						this.cdata.push(7)
-					}else if(y == dirt[1]+1){
-						this.cdata.push(1)
+					this.cdata.push(0);
+					//console.log({"x":this.x*16 + x, "y":y, "z":this.z*16 + z})
+				}
+			}
+		}
+		for (let x = 0; x < 16; x++) {
+			for (let z = 0; z < 16; z++) {
+				let height = Math.ceil(Math.abs(noise.perlin2((this.x*16+x) / zoom, (this.z*16 + z) / zoom)) * scale) + raise
+				for (let y = 0; y <= height; y++){
+					if(y==height){
+						this.cdata[y*256 + x*16 + z] = 1
+					}else if(y==height-1 || y==height-2 || y==height-3){
+						this.cdata[y*256 + x*16 + z] = 7
+					}else if(y==0){
+						this.cdata[y*256 + x*16 + z] = 4
 					}else{
-						this.cdata.push(0)
+						this.cdata[y*256 + x*16 + z] = 5
 					}
 				}
 			}
 		}
+
 		world.world[this.name] = this.cdata
 		this.render()
 	}
