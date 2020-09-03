@@ -67,7 +67,7 @@ for (var i = 0; i < breaktextures.length; i++) {
 	breaktextures[i].minFilter = THREE.NearestFilter;
 }
 
-let breakCubeMat = new THREE.MeshPhongMaterial({"map":breaktextures[0],"opacity":0.3})
+let breakCubeMat = new THREE.MeshPhongMaterial({"map":breaktextures[0],"opacity":0.5})
 breakCubeMat.transparent = true;
 var breakCube = new THREE.Mesh(breakCubeGeometry, breakCubeMat);
 breakCube.needsUpdate = true;
