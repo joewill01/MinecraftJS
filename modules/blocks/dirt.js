@@ -15,7 +15,7 @@ class Dirt extends Block{
 		this.displayName = "Dirt Block"
 		this.prefferedTool = "shovel";
 
-		this.hardness = 2;
+		this.hardness = 0.5;
 		this.resistance = 0.2;
 	}
 }

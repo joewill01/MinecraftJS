@@ -1,24 +1,28 @@
-// var setup
+//Vars for movement
 var moveForward = false;
 var moveBackward = false;
 var moveLeft = false;
 var moveRight = false;
 var canJump = true;
+var direction = new THREE.Vector3();
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+var pressed = [];
+
+//Misc Vars
 var prevTime = performance.now();
 var sprinting = false;
 var ctlHeld = false;
 var prevSelected = null;
 var selected = null;
 var lookingAt = null;
-var blockToPlace = 6;
+var blockToPlace = 6;// will call hotbar.selected
 var renderHitboxes = false;
 var locked = false;
 
-var direction = new THREE.Vector3();
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2();
-
-var pressed = [];
+//Vars for breaking blocks
+var m1Pressed = false;
+var currentItem = null;
 
 let ui = new UI(document, document.getElementById("body"));
 
@@ -37,12 +41,40 @@ document.body.appendChild( renderer.domElement );
 
 var player = new Player()
 
+
+//SELECTION CUBE AND BREAK ANIMATION
 var geom = new THREE.BoxBufferGeometry( 1.001, 1.001, 1.001);
 var edges = new THREE.EdgesGeometry( geom );
 var selectionCube = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
 selectionCube.visible = false;
 selectionCube.name = "selectionCube";
+
+let breakCubeGeometry = new THREE.CubeGeometry(1.0009, 1.0009, 1.0009);
+var breaktextures = [];
+breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_0.png"))
+breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_1.png"))
+breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_2.png"))
+breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_3.png"))
+breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_4.png"))
+breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_5.png"))
+breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_6.png"))
+breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_7.png"))
+breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_8.png"))
+breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_9.png"))
+
+for (var i = 0; i < breaktextures.length; i++) {
+    breaktextures[i].magFilter = THREE.NearestFilter;
+	breaktextures[i].minFilter = THREE.NearestFilter;
+}
+
+let breakCubeMat = new THREE.MeshPhongMaterial({"map":breaktextures[0],"opacity":0.3})
+breakCubeMat.transparent = true;
+var breakCube = new THREE.Mesh(breakCubeGeometry, breakCubeMat);
+breakCube.needsUpdate = true;
+breakCube.visible = false;
+selectionCube.add(breakCube);
 scene.add( selectionCube );
+
 
 var registry = new Registry();
 
@@ -204,11 +236,9 @@ var onKeyDown = function ( event ) {
 	}
 };
 
-document.onclick = function(e){
+document.onmousedown = function(e){
 	if(e.which == 1){// LEFT CLICK
-		if(lookingAt != null){
-			world.get_looking_at_block().break();
-		}
+		m1Pressed = true;
 	}else if(e.which == 2){
 		console.log("MIDDLE")
 		console.log(world.get_looking_at_block())
@@ -235,6 +265,12 @@ document.onclick = function(e){
 					break;
 			}
 		}
+	}
+}
+
+document.onmouseup = function(e){
+	if(e.which == 1){// LEFT CLICK
+		m1Pressed = false;
 	}
 }
 
@@ -379,8 +415,10 @@ document.body.appendChild( stats.domElement );
 
 function animate() {
 	player.moveCamera();
-	stats.update();
+	player.stepBreakSequence()
 	getSelected(raycaster, mouse);
+
+	stats.update();
 	requestAnimationFrame( animate );
 	renderer.render( scene, player.getCamera() );
 }

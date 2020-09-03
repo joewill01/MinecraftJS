@@ -15,7 +15,7 @@ class Stone extends Block{
 		this.displayName = "Stone"
 		this.prefferedTool = "pickaxe";
 
-		this.hardness = 4;
+		this.hardness = 1.5;
 		this.resistance = 0.4;
 		this.replaceableByWorldGenOres = true;
 		this.harvestLevel = 1; 

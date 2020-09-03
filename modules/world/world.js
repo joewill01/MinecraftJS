@@ -247,8 +247,10 @@ class World{
 	}
 
 	get_looking_at_block(){
-		let coords = this.world_to_chunk_coords(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z);
-		return this.chunk_instances[this.get_chunk_name(coords.chunk_x, coords.chunk_z)].chunk[coords.index];
+		if(lookingAt != null){
+			let coords = this.world_to_chunk_coords(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z);
+			return this.chunk_instances[this.get_chunk_name(coords.chunk_x, coords.chunk_z)].chunk[coords.index];
+		}
 	}
 
 	get_chunk_instances_array(){

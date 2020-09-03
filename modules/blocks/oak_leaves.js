@@ -18,5 +18,6 @@ class OakLeaves extends Block{
 		this.solid = false;
 		this.replaceableByLeaves = true;
 		this.needsRandomTick = true;
+		this.hardness = 0.2
 	}
 }

@@ -15,7 +15,7 @@ class GrassBlock extends Block{
 		this.displayName = "Grass"
 		this.prefferedTool = "shovel";
 
-		this.hardness = 2;
+		this.hardness = 0.6;
 		this.resistance = 0.2;
 	}
 }

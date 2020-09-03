@@ -15,7 +15,7 @@ class OakLog extends Block{
 		this.displayName = "Oak Log"
 		this.prefferedTool = "axe";
 
-		this.hardness = 4;
+		this.hardness = 2;
 		this.resistance = 0.4;
 
 		this.rotatable = true;

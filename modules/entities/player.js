@@ -16,6 +16,11 @@ class Player extends Entity{
 		// document.addEventListener("mousemove", this.move, true);
 		this.camera.add(this.thirdPersonCamera)
 		this.camera.add(this.secondPersonCamera)
+
+		this.lastLookedAt = null;
+		this.breaktime = 0;
+		this.startedBreakSequenceAt = null;
+		this.lastStage = 0;
 	}
 
 	tp(x,y,z){
@@ -126,6 +131,117 @@ class Player extends Entity{
 			surrounding.push(world.get_chunk_name(coords.chunk_x, coords.chunk_z+1))
 		}
 		return surrounding
+	}
+
+	stepBreakSequence(){
+		if(m1Pressed){
+			breakCube.visible = true;
+			let currentLookingAt = world.get_looking_at_block()
+			let stage = 0;
+			if(currentLookingAt != this.lastLookedAt){
+				this.lastLookedAt = currentLookingAt;
+				//Reset Break Sequence
+				//this.breaktime = this.calc_break_time(this.lastLookedAt,{"name":"Diamond_Pickaxe","type":"tool","toolType":"pickaxe","speedMultiplier":8,"harvestLevel":4});
+				//this.breaktime = this.calc_break_time(this.lastLookedAt,{"name":"Diamond_Shovel","type":"tool","toolType":"shovel","speedMultiplier":8,"harvestLevel":4});
+				this.breaktime = this.calc_break_time(this.lastLookedAt,0);
+				this.startedBreakSequenceAt = performance.now();
+			}else{
+				//Continue Break Sequence
+				if(this.lastLookedAt != null){
+					let secondsPassed = (performance.now() - this.startedBreakSequenceAt)/1000
+					let percentageBroken = secondsPassed / this.breaktime * 100
+
+					if(percentageBroken >=0 && percentageBroken < 10){
+						stage = 0	
+					}else if(percentageBroken >=10 && percentageBroken < 20){
+						stage = 1
+					}else if(percentageBroken >=20 && percentageBroken < 30){
+						stage = 2
+					}else if(percentageBroken >=30 && percentageBroken < 40){
+						stage = 3
+					}else if(percentageBroken >=40 && percentageBroken < 50){
+						stage = 4
+					}else if(percentageBroken >=50 && percentageBroken < 60){
+						stage = 5
+					}else if(percentageBroken >=60 && percentageBroken < 70){
+						stage = 6
+					}else if(percentageBroken >=70 && percentageBroken < 80){
+						stage = 7
+					}else if(percentageBroken >=80 && percentageBroken < 90){
+						stage = 8
+					}else if(percentageBroken >=90 && percentageBroken < 100){
+						stage = 9
+					}else{
+						this.lastLookedAt.break()
+						stage = 0
+						breakCube.visible = false;
+					}
+					if(this.lastStage != stage){
+						breakCube.material.map = breaktextures[stage]
+						breakCube.material.map.needsUpdate = true;
+					}
+					this.lastStage = stage
+				}
+			}
+		}else{
+			//Stop Break Sequence if in progress
+			breakCube.visible = false;
+			breakCube.material.map = breaktextures[0]
+			breakCube.material.map.needsUpdate = true;
+			this.lastLookedAt = null;
+		}
+	}
+
+	calc_break_time(block,item){
+		if(block != 0 && block != undefined){
+			//CanHarvest
+			let seconds = 10000
+			let harvestLevel = null
+			let speedMultiplier = 1;
+			let itemType = (item == 0) ? 0 : item.type;
+			if(itemType == "tool"){
+				if(item == 0){
+					harvestLevel = 0
+				}else{
+					harvestLevel = item.harvestLevel
+				}
+			}else{
+				harvestLevel = 0;
+			}
+			if(harvestLevel >= block.harvestLevel){
+				seconds = block.hardness * 1.5
+			}else{
+				seconds = block.hardness * 5
+			}
+
+			//Best Tool
+			if(itemType == "tool"){
+				if(item.toolType == block.prefferedTool){
+					speedMultiplier = item.speedMultiplier
+					//   if (toolEfficiency and canHarvest)
+					//     speedMultiplier += efficiencyLevel ^ 2 + 1
+				}
+			}
+
+			// //if (hasteEffect)
+			// //  speedMultiplier *= 1 + (0.2 * hasteLevel)
+
+			// //if (miningFatigue)
+			// //  speedMultiplier /= 3 ^ miningFatigueLevel
+
+			seconds /= speedMultiplier;
+
+			// //if (inWater)
+			// //  seconds *= 5
+
+			//if (!canJump){
+			// seconds *= 5
+			//}
+
+			return seconds
+		}else{
+			return null;
+		}
 	}
 }
 

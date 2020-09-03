@@ -14,7 +14,7 @@ class Bedrock extends Block{
 		this.name = "bedrock"
 		this.displayName = "Bedrock"
 
-		this.hardness = -1;
+		this.hardness = Number.POSITIVE_INFINITY;
 		this.resistance = 0;
 	}
 }
