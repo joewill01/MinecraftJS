@@ -1,0 +1,20 @@
+{
+  "name": "minecraft-js",
+  "version": "1.0.0",
+  "description": "A minecraft clone made in Javascript!",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": "https://github.com/joewill01/MinecraftJS",
+  "keywords": [
+    "Minecraft",
+    "clone"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^10.1.1",
+    "electron-packager": "^15.1.0"
+  }
+}
