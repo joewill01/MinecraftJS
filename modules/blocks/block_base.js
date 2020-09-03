@@ -57,7 +57,7 @@ class Block {
 		function setPlane(axis, angle, texture_name, obj, name) {
 			let mat_index = registry.registerMaterial(texture_name, obj.solid)
 			let material = registry.materials[mat_index]
-			obj.ctex.push(material)
+			//obj.ctex.push(material)
 
 			let planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
 			planeGeom.translate(0, 0, 0.5);
@@ -77,7 +77,7 @@ class Block {
 		  	plane.name = name;
 
 		  	plane.updateMatrix();
-		  	chunk_geom.merge(plane.geometry, plane.matrix, mat_index);
+		  	chunk_geom.merge(planeGeom, plane.matrix, mat_index);
 		}
 	}
 
