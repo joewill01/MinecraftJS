@@ -24,6 +24,9 @@ class Player extends Entity{
 	}
 
 	tp(x,y,z){
+		this.velocity.y = 0
+		this.velocity.z = 0
+		this.velocity.x = 0
 		if(x.toString().includes("~")){
 			if(x.toString().length != 1){
 				this.camera.position.x += parseInt(x.toString().slice(1));
@@ -47,6 +50,13 @@ class Player extends Entity{
 		}else{
 			this.camera.position.z = z;
 		}
+
+		this.x = this.camera.position.x
+		this.y = this.camera.position.y
+		this.z = this.camera.position.z
+
+		console.log("teleported player to")
+		console.log(this.camera.position)
 	}
 
 

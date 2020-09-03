@@ -39,9 +39,6 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-var player = new Player()
-
-
 //SELECTION CUBE AND BREAK ANIMATION
 var geom = new THREE.BoxBufferGeometry( 1.001, 1.001, 1.001);
 var edges = new THREE.EdgesGeometry( geom );
@@ -78,14 +75,15 @@ scene.add( selectionCube );
 
 var registry = new Registry();
 
-registry.registerEntity(player)
-
 var world = new World()
 for(let x=-3; x<=3; x++){
 	for(let z=-3; z<=3; z++){
 		world.generate_chunk(x,z);
 	}
 }
+
+var player = new Player()
+registry.registerEntity(player)
 
 control_type = 'pointer';
 
@@ -241,7 +239,7 @@ document.onmousedown = function(e){
 		m1Pressed = true;
 	}else if(e.which == 2){
 		console.log("MIDDLE")
-		console.log(world.get_looking_at_block())
+		blockToPlace = world.get_looking_at_block().ID
 	}else if(e.which == 3){
 		if(lookingAt != null){
 			switch(lookingAt.face){
