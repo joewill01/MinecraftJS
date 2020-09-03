@@ -48,16 +48,9 @@ selectionCube.name = "selectionCube";
 
 let breakCubeGeometry = new THREE.CubeGeometry(1.0009, 1.0009, 1.0009);
 var breaktextures = [];
-breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_0.png"))
-breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_1.png"))
-breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_2.png"))
-breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_3.png"))
-breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_4.png"))
-breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_5.png"))
-breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_6.png"))
-breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_7.png"))
-breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_8.png"))
-breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_9.png"))
+for(let i=0;i<=9;i++){
+	breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_"+i.toString()+".png"))
+}
 
 for (var i = 0; i < breaktextures.length; i++) {
     breaktextures[i].magFilter = THREE.NearestFilter;
@@ -71,7 +64,6 @@ breakCube.needsUpdate = true;
 breakCube.visible = false;
 selectionCube.add(breakCube);
 scene.add( selectionCube );
-
 
 var registry = new Registry();
 
