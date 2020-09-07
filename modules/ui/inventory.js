@@ -1,7 +1,8 @@
 class Inventory extends UIBase {
-    constructor(ui) {
+    constructor(ui, hotbar) {
         super(ui);
         this.items=[];
+        this.hotbar = hotbar;
 
         this.createEl("inventory");
         this.createStylesheet();
@@ -85,15 +86,34 @@ class Inventory extends UIBase {
         this.items.push(new UIItem(this.itemsContainer, 304, 240, 400));
 
         // item row 4 (hot bar)
-        this.items.push(new UIItem(this.itemsContainer, 16, 284, 400, 1, "diamond_pickaxe"));
-        this.items.push(new UIItem(this.itemsContainer, 52, 284, 400, 1, "diamond_sword"));
+        this.items.push(new UIItem(this.itemsContainer, 16, 284, 400));
+        this.items.push(new UIItem(this.itemsContainer, 52, 284, 400));
         this.items.push(new UIItem(this.itemsContainer, 88, 284, 400));
         this.items.push(new UIItem(this.itemsContainer, 124, 284, 400));
         this.items.push(new UIItem(this.itemsContainer, 160, 284, 400));
         this.items.push(new UIItem(this.itemsContainer, 196, 284, 400));
         this.items.push(new UIItem(this.itemsContainer, 232, 284, 400));
         this.items.push(new UIItem(this.itemsContainer, 268, 284, 400));
-        this.items.push(new UIItem(this.itemsContainer, 304, 284, 400, 65, "diamond"));
+        this.items.push(new UIItem(this.itemsContainer, 304, 284, 400));
+        this.items[37].mirrorTo(this.hotbar.items[0]);
+        this.items[38].mirrorTo(this.hotbar.items[1]);
+        this.items[39].mirrorTo(this.hotbar.items[2]);
+        this.items[40].mirrorTo(this.hotbar.items[3]);
+        this.items[41].mirrorTo(this.hotbar.items[4]);
+        this.items[42].mirrorTo(this.hotbar.items[5]);
+        this.items[43].mirrorTo(this.hotbar.items[6]);
+        this.items[44].mirrorTo(this.hotbar.items[7]);
+        this.items[45].mirrorTo(this.hotbar.items[8]);
+
+        this.items[37].setItem({"texture": "wooden_pickaxe", amount: 1});
+        this.items[38].setItem({"texture": "wooden_sword", amount: 1});
+        this.items[39].setItem({"texture": "wooden_axe", amount: 1});
+        this.items[40].setItem({"texture": "wooden_shovel", amount: 1});
+        this.items[41].setItem({"texture": "wooden_hoe", amount: 1});
+        this.items[42].setItem({"texture": "", amount: 0});
+        this.items[43].setItem({"texture": "leather", amount: 2});
+        this.items[44].setItem({"texture": "beef", amount: 3});
+        this.items[45].setItem({"texture": "", amount: 0});
     }
 
     createStylesheet() {

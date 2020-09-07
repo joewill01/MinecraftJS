@@ -18,15 +18,21 @@ class Hotbar {
         this.element.appendChild(this.items_bg_span);
 
         // create items div and populate with 9 item spans
-        this.item_spans_div = document.createElement("div");
-        this.item_spans_div.classList.add("items");
-        this.item_spans = [];
-        for (let i = 0; i < 9; i++) {
-            this.item_spans.push(document.createElement("span"));
-            this.item_spans[i].classList.add("item");
-            this.item_spans_div.appendChild(this.item_spans[i]);
-        }
-        this.element.appendChild(this.item_spans_div);
+        this.items_div = document.createElement("div");
+        this.items_div.classList.add("items_div");
+        this.items = [];
+
+        this.items.push(new UIItem(this.items_div, 6, 6, 400, 0, "", true));
+        this.items.push(new UIItem(this.items_div, 46, 6, 400, 0, "", true));
+        this.items.push(new UIItem(this.items_div, 86, 6, 400, 0, "", true));
+        this.items.push(new UIItem(this.items_div, 126, 6, 400, 0, "", true));
+        this.items.push(new UIItem(this.items_div, 166, 6, 400, 0, "", true));
+        this.items.push(new UIItem(this.items_div, 206, 6, 400, 0, "", true));
+        this.items.push(new UIItem(this.items_div, 246, 6, 400, 0, "", true));
+        this.items.push(new UIItem(this.items_div, 286, 6, 400, 0, "", true));
+        this.items.push(new UIItem(this.items_div, 326, 6, 400, 0, "", true));
+
+        this.element.append(this.items_div);
 
         // create item-selectors div and populate with 9 item selector spans
         this.selected_item_spans_div = document.createElement("div");
@@ -98,6 +104,13 @@ class Hotbar {
             align-items: center;
             flex-direction: column;
         }
+        
+        .items_div {
+            height: 110px;
+            width: 364px;
+            position: relative;
+        }
+        
         .widget {
             position: absolute;
             display: inline-block;

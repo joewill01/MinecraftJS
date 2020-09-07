@@ -1,12 +1,16 @@
 class UIItem {
-    constructor(parentElement, x=0, y=0, id="", amount=0, texture="") {
+    constructor(parentElement, x=0, y=0, id="", amount=0, texture="", x_invert=false, y_invert=false) {
         this.dom = document;
         this.parentElement = parentElement;
         this.x = x;
         this.y = y;
+        this.x_invert = x_invert;
+        this.y_invert = y_invert;
         this.id = id;
         this.amount = amount;
         this.texture = texture;
+        this.mirrorEl = '';
+        this.mirroring = false;
         this.onclick = () => {};
         this.oncontextmenu = () => {};
         this.createItem()
@@ -19,7 +23,6 @@ class UIItem {
         this.element.classList.add("standard_item");
         this.element.id = this.id;
 
-        this.updatePosition();
 
         this.item_hover_overlay = this.dom.createElement("span");
         this.item_hover_overlay.id = `${this.id}:item_hover_overlay`;
@@ -29,7 +32,6 @@ class UIItem {
         this.item_image = this.dom.createElement("span");
         this.item_image.id = `${this.id}:item_image`;
         this.item_image.classList.add("item_image");
-        this.updateTexture();
         this.element.appendChild(this.item_image);
 
         this.item_amount = this.dom.createElement("p");
@@ -37,22 +39,48 @@ class UIItem {
         this.item_amount.classList.add("item_amount");
         this.item_amount.classList.add("standard_text");
 
-        this.updateAmount();
+        this.setPosition();
+        this.setTexture();
+        this.setAmount();
 
         this.element.appendChild(this.item_amount);
 
         this.parentElement.appendChild(this.element);
     }
 
-    updateAmount(amount=this.amount) {
+    mirrorTo(UIItem) {
+        this.mirrorEl = UIItem;
+        this.mirroring = true;
+    }
+
+    updateMirror() {
+        if (this.mirroring) {
+            this.mirrorEl.texture = this.texture;
+            this.mirrorEl.amount = this.amount;
+            this.mirrorEl.update();
+        }
+    }
+
+    update() {
+        this.updatePosition();
+        this.updateTexture();
+        this.updateAmount();
+
+        this.updateMirror();
+    }
+
+    setAmount(amount=this.amount) {
         this.amount = amount;
-        if (amount <= 1) {
+        this.update();
+    }
+
+    updateAmount() {
+        if (this.amount <= 1) {
             this.item_amount.innerHTML = "";
         } else {
-            this.item_amount.innerHTML = amount.toString();
+            this.item_amount.innerHTML = this.amount.toString();
         }
-        if (amount <= 0) {
-            this.updateTexture("");
+        if (this.amount <= 0) {
         }
     }
 
@@ -68,32 +96,51 @@ class UIItem {
         return (this.texture === "")
     }
 
-    updateTexture(texture=this.texture) {
+    setTexture(texture=this.texture) {
         this.texture = texture;
-        this.item_image.style.backgroundImage = `url(minecraft/textures/item/${texture}.png)`;
+        this.update()
+    }
+
+    updateTexture() {
+        this.item_image.style.backgroundImage = `url(minecraft/textures/item/${this.texture}.png)`;
     }
 
     getItem() {
         return {"texture": this.texture, "amount": this.amount}
     }
 
-    changeItem(item={"texture": "", "amount": 0}) {
-        this.updateAmount(item.amount);
-        this.updateTexture(item.texture);
+    setItem(item={"texture": "", "amount": 0}) {
+        this.setAmount(item.amount);
+        this.setTexture(item.texture);
     }
 
     removeItem() {
-        this.updateAmount(0);
-        this.updateTexture("")
+        this.setAmount(0);
+        this.setTexture("")
     }
 
-    updatePosition(x=this.x, y=this.y) {
-        this.element.style.left = `${x}px`;
-        this.element.style.top = `${y}px`;
+    setPosition(x=this.x, y=this.y) {
+        this.x = x;
+        this.y = y;
+        this.update();
+    }
+
+    updatePosition() {
+        if (this.y_invert) {
+            this.element.style.right = `${this.x}px`;
+        } else {
+            this.element.style.left = `${this.x}px`;
+        }
+
+        if (this.x_invert) {
+            this.element.style.bottom = `${this.y}px`;
+        } else {
+            this.element.style.top = `${this.y}px`;
+        }
     }
 
     moveItemTo(UIItem) {
-        UIItem.changeItem(this.getItem());
+        UIItem.setItem(this.getItem());
         this.removeItem();
     }
 
@@ -106,9 +153,9 @@ class UIItem {
             // if UIItem has same item type OR is empty
             if (this.getAmount() >= amount) {
                 // if there are enough items to move
-                UIItem.updateTexture(this.getTexture());
-                UIItem.updateAmount(UIItem.getAmount() + amount);
-                this.updateAmount(this.getAmount() - amount);
+                UIItem.setTexture(this.getTexture());
+                UIItem.setAmount(UIItem.getAmount() + amount);
+                this.setAmount(this.getAmount() - amount);
             } else {
                 console.error(`UIItem (id: ${this.id}): Attempt to move more items than available.`)
             }
@@ -124,7 +171,7 @@ class UIItem {
     swapItemWith(UIItem) {
         let temp_item = UIItem.getItem();
         this.moveItemTo(UIItem);
-        this.changeItem(temp_item);
+        this.setItem(temp_item);
     }
 
     getMaxToMoveInTo(UIItem) {

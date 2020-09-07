@@ -27,8 +27,8 @@ var currentItem = null;
 let ui = new UI(document, document.getElementById("body"));
 
 let pause_menu = new PauseMenu(ui);
-let inventory = new Inventory(ui);
 let hotbar = new Hotbar(ui,0, 20, 14, 20, 17);
+let inventory = new Inventory(ui, hotbar);
 
 
 var scene = new THREE.Scene();
@@ -68,11 +68,16 @@ scene.add( selectionCube );
 var registry = new Registry();
 
 var world = new World()
+
+/*
 for(let x=-3; x<=3; x++){
 	for(let z=-3; z<=3; z++){
 		world.generate_chunk(x,z);
 	}
 }
+ */
+
+world.generate_chunk(0,0);
 
 var player = new Player()
 registry.registerEntity(player)
@@ -129,7 +134,7 @@ scene.add(player.controls.getObject());
 
 document.addEventListener('mousemove', function(event) {
     event.preventDefault();
-    ui.hand.updatePosition(event.clientX - 16, event.clientY - 16);
+    ui.hand.setPosition(event.clientX - 16, event.clientY - 16);
 }, true);
 
 document.addEventListener('contextmenu', event => event.preventDefault());
