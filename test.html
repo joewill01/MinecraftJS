@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test</title>
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .panorama {
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        .panoramas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 500vh;
+            transition: linear left 30s;
+        }
+
+        .panoramas:hover {
+            left: -390vh;
+        }
+
+        .panoramas span {
+            display: inline-block;
+            height: 100vh;
+            width: 100vh;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+        }
+
+        .panoramas span:nth-child(1) {
+            background-image: url("minecraft/textures/gui/title/background/panorama_0.png");
+        }
+
+        .panoramas span:nth-child(2) {
+            background-image: url("minecraft/textures/gui/title/background/panorama_1.png");
+        }
+
+        .panoramas span:nth-child(3) {
+            background-image: url("minecraft/textures/gui/title/background/panorama_2.png");
+        }
+
+        .panoramas span:nth-child(4) {
+            background-image: url("minecraft/textures/gui/title/background/panorama_3.png");
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="panorama">
+    <div class="panoramas">
+        <span></span><span></span><span></span><span></span>
+    </div>
+</div>
+
+</body>
+</html>

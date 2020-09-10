@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Player Test</title>
+    <style>
+        .player {
+            position: absolute;
+            height: 1000px;
+            width: 400px;
+            margin: 200px;
+            transform-style: preserve-3d;
+            transition: ease all 0.5s;
+            transform: rotateX(-40deg) rotateY(40deg);
+        }
+
+
+        .player span {
+            display: block;
+            position: absolute;
+            background-image: url("./steve.png");
+            background-size: 1600px 1600px;
+            image-rendering: pixelated;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .player .head {
+            position: absolute;
+            height: 200px;
+            width: 200px;
+            left: 100px;
+            top: 0;
+            transform-style: preserve-3d;
+            transition: ease all 0.5s;
+        }
+        .player .head span.top     { transform: rotateX( 90deg) translateZ(100px); background-position: -200px 0; }
+        .player .head span.bottom  { transform: rotateX(-90deg) translateZ(100px); background-position: -400px 0; }
+        .player .head span.left    { transform: rotateY(-90deg) translateZ(100px); background-position: 0 -200px; }
+        .player .head span.right   { transform: rotateY( 90deg) translateZ(100px); background-position: -400px -200px; }
+        .player .head span.front   { transform: rotateY(  0deg) translateZ(100px); background-position: -200px -200px; }
+        .player .head span.back    { transform: rotateY(180deg) translateZ(100px); background-position: -600px -200px; }
+
+
+        .player .body {
+            position: absolute;
+            height: 300px;
+            width: 200px;
+            left: 100px;
+            top: 200px;
+            transform-style: preserve-3d;
+        }
+        .player .body span.top     { transform: rotateX( 90deg) translateZ(50px); background-position: -500px -400px; height: 100px}
+        .player .body span.bottom  { transform: rotateX(-90deg) translateZ(250px); background-position: -700px -400px; height: 100px }
+        .player .body span.left    { transform: rotateY(-90deg) translateZ(50px); background-position: -400px -500px; width: 100px }
+        .player .body span.right   { transform: rotateY( 90deg) translateZ(150px); background-position: -700px -500px; width: 100px }
+        .player .body span.front   { transform: rotateY(  0deg) translateZ(50px); background-position: -500px -500px; }
+        .player .body span.back    { transform: rotateY(180deg) translateZ(50px); background-position: -800px -500px; }
+
+
+        .player .arm-left {
+            position: absolute;
+            height: 300px;
+            width: 100px;
+            left: 0;
+            top: 200px;
+            transform-style: preserve-3d;
+        }
+        .player .arm-left span.top     { transform: rotateX( 90deg) translateZ(50px); background-position: -500px -400px; height: 100px}
+        .player .arm-left span.bottom  { transform: rotateX(-90deg) translateZ(250px); background-position: -700px -400px; height: 100px }
+        .player .arm-left span.left    { transform: rotateY(-90deg) translateZ(50px); background-position: -600px -500px; width: 100px }
+        .player .arm-left span.right   { transform: rotateY( 90deg) translateZ(150px); background-position: -700px -500px; width: 100px }
+        .player .arm-left span.front   { transform: rotateY(  0deg) translateZ(50px); background-position: -1100px -500px; }
+        .player .arm-left span.back    { transform: rotateY(180deg) translateZ(50px); background-position: -800px -500px; }
+
+
+
+    </style>
+</head>
+<body>
+    <div class="player">
+
+        <!--
+        <div class="head">
+            <span class="top"></span>
+            <span class="bottom"></span>
+            <span class="left"></span>
+            <span class="right"></span>
+            <span class="front"></span>
+            <span class="back"></span>
+        </div>
+        -->
+        <div class="arm-left">
+            <span class="top"></span>
+            <span class="bottom"></span>
+            <span class="left"></span>
+            <span class="right"></span>
+            <span class="front"></span>
+            <span class="back"></span>
+        </div>
+
+        <div class="arm-right">
+
+        </div>
+        <!--
+        <div class="body">
+            <span class="top"></span>
+            <span class="bottom"></span>
+            <span class="left"></span>
+            <span class="right"></span>
+            <span class="front"></span>
+            <span class="back"></span>
+        </div>
+        -->
+        <div class="leg-left">
+
+        </div>
+
+        <div class="leg-right">
+
+        </div>
+    </div>
+</body>
+</html>

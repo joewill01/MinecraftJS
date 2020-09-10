@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <style>
+        .block {
+            position: absolute;
+            height: 200px;
+            width: 200px;
+            margin: 300px;
+            transform-style: preserve-3d;
+            transform: rotateX(-30deg) rotateY(-45deg);
+        }
+
+        .block span {
+            display: block;
+            background-size: cover;
+            image-rendering: pixelated;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            position: absolute;
+        }
+
+        .block span.top     { transform: rotateX( 90deg) translateZ(100px); background-image: url("minecraft/textures/block/grass_block_top-NORMAL-BY-JOE.png") }
+        .block span.bottom  { transform: rotateX(-90deg) translateZ(100px); background-image: url("minecraft/textures/block/dirt.png") }
+        .block span.left    { transform: rotateY(-90deg) translateZ(100px); background-image: url("minecraft/textures/block/grass_block_side.png") }
+        .block span.right   { transform: rotateY( 90deg) translateZ(100px); background-image: url("minecraft/textures/block/grass_block_side.png") }
+        .block span.front   { transform: rotateY(  0deg) translateZ(100px); background-image: url("minecraft/textures/block/grass_block_side.png") }
+        .block span.back    { transform: rotateY(180deg) translateZ(100px); background-image: url("minecraft/textures/block/grass_block_side.png") }
+
+
+    </style>
+</head>
+<body>
+    <div class="block">
+        <span class="top"></span>
+        <span class="bottom"></span>
+        <span class="left"></span>
+        <span class="right"></span>
+        <span class="front"></span>
+        <span class="back"></span>
+    </div>
+</body>
+</html>
