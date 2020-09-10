@@ -6,6 +6,7 @@ class Inventory extends UIBase {
 
         this.createEl("inventory");
         this.createStylesheet();
+        this.createPlayer();
         this.createItems();
         this.addEl();
 
@@ -30,6 +31,28 @@ class Inventory extends UIBase {
         this.itemsContainer.id = "inventory_items-container";
         this.itemsContainer.classList.add("inventory_items-container");
         this.inventory_container.appendChild(this.itemsContainer);
+
+    }
+
+    createPlayer(x=10, y=10) {
+        this.player = this.ui.dom.createElement("div");
+        this.player.id = "inventory_player";
+        this.player.classList.add("player");
+        this.inventory_container.appendChild(this.player);
+
+        let cubes = ["head", "arm-left", "arm-right", "body", "leg-left", "leg-right"];
+        let sides = ["top", "bottom", "left", "right", "front", "back"];
+
+        for (let cube of cubes) {
+            let cube_div = this.ui.dom.createElement("div");
+            cube_div.classList.add(cube);
+            for (let side of sides) {
+                let side_span = this.ui.dom.createElement("span");
+                side_span.classList.add(side);
+                cube_div.appendChild(side_span);
+            }
+            this.player.appendChild(cube_div);
+        }
 
     }
 
@@ -161,6 +184,163 @@ class Inventory extends UIBase {
                 height: 100%;
                 width: 100%;
             }
+            
+            /* player */
+            
+            .inventory_container .player {
+                position: absolute;
+                top: -310px;
+                left: -100px;
+                height: 800px;
+                width: 400px;
+                transform-style: preserve-3d;
+                transition: ease all 0.5s;
+                transform: scale(0.15);
+            }
+    
+            .inventory_container .player:hover {
+                transform: scale(0.15) rotateX(-40deg) rotateY(40deg);
+            }
+    
+            .inventory_container .player:hover .head {
+                transform: rotateY(20deg);
+            }
+            
+            .inventory_container .player .arm-right {
+                transform: rotate(-4deg) translateX(-7px);
+            }
+    
+            .inventory_container .player:hover .arm-right {
+                transform: rotateX(20deg);
+            }
+            
+            .inventory_container .player .arm-left {
+                transform: rotate(4deg) translateX(7px);
+            }
+            .inventory_container .player:hover .arm-left {
+                transform: rotateX(-20deg);
+            }
+    
+            .inventory_container .player:hover .leg-left {
+                transform: rotateX(20deg);
+            }
+    
+            .inventory_container .player:hover .leg-right {
+                transform: rotateX(-20deg);
+            }
+    
+            .inventory_container .player span {
+                display: block;
+                position: absolute;
+                background-image: url("steve.png");
+                background-size: 1600px 1600px;
+                image-rendering: pixelated;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+            }
+    
+            .inventory_container .player .head {
+                position: absolute;
+                height: 200px;
+                width: 200px;
+                left: 100px;
+                top: 0;
+                transform-style: preserve-3d;
+                transition: ease all 0.5s;
+            }
+            .inventory_container .player .head span.top     { transform: rotateX( 90deg) translateZ(100px); background-position: -200px 0; }
+            .inventory_container .player .head span.bottom  { transform: rotateX(-90deg) translateZ(100px); background-position: -400px 0; }
+            .inventory_container .player .head span.left    { transform: rotateY(-90deg) translateZ(100px); background-position: 0 -200px; }
+            .inventory_container .player .head span.right   { transform: rotateY( 90deg) translateZ(100px); background-position: -400px -200px; }
+            .inventory_container .player .head span.front   { transform: rotateY(  0deg) translateZ(100px); background-position: -200px -200px; }
+            .inventory_container .player .head span.back    { transform: rotateY(180deg) translateZ(100px); background-position: -600px -200px; }
+    
+    
+            .inventory_container .player .body {
+                position: absolute;
+                height: 300px;
+                width: 200px;
+                left: 100px;
+                top: 200px;
+                transform-style: preserve-3d;
+                transition: ease all 0.5s;
+            }
+            .inventory_container .player .body span.top     { transform: rotateX( 90deg) translateZ(50px); background-position: -500px -400px; height: 100px}
+            .inventory_container .player .body span.bottom  { transform: rotateX(-90deg) translateZ(250px); background-position: -700px -400px; height: 100px }
+            .inventory_container .player .body span.left    { transform: rotateY(-90deg) translateZ(50px); background-position: -400px -500px; width: 100px }
+            .inventory_container .player .body span.right   { transform: rotateY( 90deg) translateZ(150px); background-position: -700px -500px; width: 100px }
+            .inventory_container .player .body span.front   { transform: rotateY(  0deg) translateZ(50px); background-position: -500px -500px; }
+            .inventory_container .player .body span.back    { transform: rotateY(180deg) translateZ(50px); background-position: -800px -500px; }
+    
+    
+            .inventory_container .player .arm-left {
+                position: absolute;
+                height: 300px;
+                width: 100px;
+                left: 0;
+                top: 0;
+                transform-style: preserve-3d;
+                transition: ease all 0.5s;
+            }
+            .inventory_container .player .arm-left span.top     { transform: rotateX( 90deg) translateZ(-150px) ; background-position: -1100px -400px; height: 100px}
+            .inventory_container .player .arm-left span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -1200px -400px; height: 100px }
+            .inventory_container .player .arm-left span.left    { transform: rotateY(-90deg) translateZ(50px) translateY(200px); background-position: -1000px -500px; width: 100px }
+            .inventory_container .player .arm-left span.right   { transform: rotateY( 90deg) translateZ(50px) translateY(200px); background-position: -1200px -500px; width: 100px }
+            .inventory_container .player .arm-left span.front   { transform: rotateY(  0deg) translateZ(50px) translateY(200px); background-position: -1100px -500px; }
+            .inventory_container .player .arm-left span.back    { transform: rotateY(180deg) translateZ(50px) translateY(200px); background-position: -1300px -500px; }
+    
+    
+            .inventory_container .player .arm-right {
+                position: absolute;
+                height: 300px;
+                width: 100px;
+                left: 300px;
+                top: 0;
+                transform-style: preserve-3d;
+                transition: ease all 0.5s;
+            }
+    
+            .inventory_container .player .arm-right span.top     { transform: rotateX( 90deg) translateZ(-150px) ; background-position: -1100px -400px; height: 100px}
+            .inventory_container .player .arm-right span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -1200px -400px; height: 100px }
+            .inventory_container .player .arm-right span.left    { transform: rotateY(-90deg) translateZ(50px) translateY(200px); background-position: -1200px -500px; width: 100px }
+            .inventory_container .player .arm-right span.right   { transform: rotateY( 90deg) translateZ(50px) translateY(200px) scaleX(-1); background-position: -1000px -500px; width: 100px }
+            .inventory_container .player .arm-right span.front   { transform: rotateY(  0deg) translateZ(50px) translateY(200px); background-position: -1100px -500px; }
+            .inventory_container .player .arm-right span.back    { transform: rotateY(180deg) translateZ(50px) translateY(200px); background-position: -1300px -500px; }
+    
+            .inventory_container .player .leg-left {
+                position: absolute;
+                height: 300px;
+                width: 100px;
+                left: 100px;
+                top: 300px;
+                transform-style: preserve-3d;
+                transition: ease all 0.5s;
+            }
+            .inventory_container .player .leg-left span.top     { transform: rotateX( 90deg) translateZ(-150px); background-position: -100px -400px; height: 100px}
+            .inventory_container .player .leg-left span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -200px -400px; height: 100px }
+            .inventory_container .player .leg-left span.left    { transform: rotateY(-90deg) translateZ(50px) translateY(200px); background-position: 0 -500px; width: 100px }
+            .inventory_container .player .leg-left span.right   { transform: rotateY( 90deg) translateZ(50px) translateY(200px); background-position: -200px -500px; width: 100px }
+            .inventory_container .player .leg-left span.front   { transform: rotateY(  0deg) translateZ(50px) translateY(200px); background-position: -100px -500px; }
+            .inventory_container .player .leg-left span.back    { transform: rotateY(180deg) translateZ(50px) translateY(200px); background-position: -300px -500px; }
+    
+    
+            .inventory_container .player .leg-right {
+                position: absolute;
+                height: 300px;
+                width: 100px;
+                left: 200px;
+                top: 300px;
+                transform-style: preserve-3d;
+                transition: ease all 0.5s;
+            }
+            .inventory_container .player .leg-right span.top     { transform: rotateX( 90deg) translateZ(-150px); background-position: -100px -400px; height: 100px}
+            .inventory_container .player .leg-right span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -200px -400px; height: 100px }
+            .inventory_container .player .leg-right span.left    { transform: rotateY(-90deg) translateZ(50px) translateY(200px); background-position: -200px -500px; width: 100px }
+            .inventory_container .player .leg-right span.right   { transform: rotateY( 90deg) translateZ(50px) translateY(200px) scaleX(-1); background-position: 0 -500px; width: 100px; }
+            .inventory_container .player .leg-right span.front   { transform: rotateY(  0deg) translateZ(50px) translateY(200px); background-position: -100px -500px; }
+            .inventory_container .player .leg-right span.back    { transform: rotateY(180deg) translateZ(50px) translateY(200px); background-position: -300px -500px; }
         `;
         this.element.appendChild(this.stylesheet);
     }
