@@ -11,6 +11,7 @@ class UIItem {
         this.texture = texture;
         this.mirrorEl = '';
         this.mirroring = false;
+        this.onchange = () => {};
         this.onclick = () => {};
         this.oncontextmenu = () => {};
         this.createItem()
@@ -55,23 +56,23 @@ class UIItem {
 
     updateMirror() {
         if (this.mirroring) {
+        console.log("update mirror!");
             this.mirrorEl.texture = this.texture;
             this.mirrorEl.amount = this.amount;
-            this.mirrorEl.update();
+            this.mirrorEl.updateTexture();
+            this.mirrorEl.updateAmount();
         }
     }
 
-    update() {
-        this.updatePosition();
-        this.updateTexture();
-        this.updateAmount();
-
+    onchangeInternal() {
+        // runs on change
         this.updateMirror();
+        this.onchange();
     }
 
     setAmount(amount=this.amount) {
         this.amount = amount;
-        this.update();
+        this.updateAmount();
     }
 
     updateAmount() {
@@ -81,28 +82,52 @@ class UIItem {
             this.item_amount.innerHTML = this.amount.toString();
         }
         if (this.amount <= 0) {
+            this.setTexture("");
         }
+        this.onchangeInternal();
     }
 
     getAmount() {
         return this.amount;
     }
 
-    getTexture() {
-        return this.texture;
-    }
-
-    isEmpty() {
-        return (this.texture === "")
-    }
-
     setTexture(texture=this.texture) {
         this.texture = texture;
-        this.update()
+        this.updateTexture()
     }
 
     updateTexture() {
         this.item_image.style.backgroundImage = `url(minecraft/textures/item/${this.texture}.png)`;
+        this.onchangeInternal();
+    }
+
+    getTexture() {
+        return this.texture;
+    }
+
+    setPosition(x=this.x, y=this.y) {
+        this.x = x;
+        this.y = y;
+        this.updatePosition();
+    }
+
+    updatePosition() {
+        if (this.y_invert) {
+            this.element.style.right = `${this.x}px`;
+        } else {
+            this.element.style.left = `${this.x}px`;
+        }
+
+        if (this.x_invert) {
+            this.element.style.bottom = `${this.y}px`;
+        } else {
+            this.element.style.top = `${this.y}px`;
+        }
+        this.onchangeInternal();
+    }
+
+    isEmpty() {
+        return (this.texture === "")
     }
 
     getItem() {
@@ -119,25 +144,7 @@ class UIItem {
         this.setTexture("")
     }
 
-    setPosition(x=this.x, y=this.y) {
-        this.x = x;
-        this.y = y;
-        this.update();
-    }
 
-    updatePosition() {
-        if (this.y_invert) {
-            this.element.style.right = `${this.x}px`;
-        } else {
-            this.element.style.left = `${this.x}px`;
-        }
-
-        if (this.x_invert) {
-            this.element.style.bottom = `${this.y}px`;
-        } else {
-            this.element.style.top = `${this.y}px`;
-        }
-    }
 
     moveItemTo(UIItem) {
         UIItem.setItem(this.getItem());
