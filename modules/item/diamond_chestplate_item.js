@@ -1,5 +1,7 @@
 class DiamondChestplateItem extends Item{
 	constructor() {
+		super();
+		
 		this.ID = 9;
 		this.name = "diamond_chestplate"; // Item name such as diamond_sword
 		this.displayName = "Diamond Chestplate"; // Same as name but able to be overwritten for custom item names

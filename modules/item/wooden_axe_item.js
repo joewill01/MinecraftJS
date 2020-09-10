@@ -1,5 +1,7 @@
 class WoodenAxeItem extends Item{
-	constructor{
+	constructor(){
+		super();
+		
 		this.ID = 4;
 		this.name = "wooden_axe"; 
 		this.displayName = "Wooden Axe"; 

@@ -1,5 +1,7 @@
 class RawBeefItem extends Item{
-	constructor{
+	constructor(){
+		super();
+		
 		this.ID = 7;
 		this.name = "raw_beef";
 		this.displayName = "Raw Beef";
