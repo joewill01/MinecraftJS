@@ -1,5 +1,7 @@
 class WoodenShovelItem extends Item{
 	constructor() {
+		super();
+		
 		this.ID = 2;
 		this.name = "wooden_shovel"; 
 		this.displayName = "Wooden Shovel"; 

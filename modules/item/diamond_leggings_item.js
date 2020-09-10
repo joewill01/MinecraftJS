@@ -1,5 +1,7 @@
 class DiamondLeggingsItem extends Item{
 	constructor() {
+		super();
+		
 		this.ID = 10;
 		this.name = "diamond_leggings"; // Item name such as diamond_sword
 		this.displayName = "Diamond Leggings"; // Same as name but able to be overwritten for custom item names

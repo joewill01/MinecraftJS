@@ -1,4 +1,4 @@
-class Item(){
+class Item{
 	constructor() {
 		this.ID = 0;
 		this.name = "not_set"; // Item name such as diamond_sword
