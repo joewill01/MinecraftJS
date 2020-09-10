@@ -14,6 +14,21 @@
             transform: rotateX(-40deg) rotateY(40deg);
         }
 
+        .player:hover {
+
+        }
+
+        .player:hover .head {
+            transform: rotateY(-20deg);
+        }
+
+        .player:hover .arm-right {
+            transform: rotateX(20deg);
+        }
+
+        .player:hover .arm-left {
+            transform: rotateX(-20deg);
+        }
 
         .player span {
             display: block;
@@ -51,6 +66,7 @@
             left: 100px;
             top: 200px;
             transform-style: preserve-3d;
+            transition: ease all 0.5s;
         }
         .player .body span.top     { transform: rotateX( 90deg) translateZ(50px); background-position: -500px -400px; height: 100px}
         .player .body span.bottom  { transform: rotateX(-90deg) translateZ(250px); background-position: -700px -400px; height: 100px }
@@ -62,27 +78,76 @@
 
         .player .arm-left {
             position: absolute;
-            height: 300px;
+            height: 500px;
             width: 100px;
             left: 0;
-            top: 200px;
+            top: 0;
             transform-style: preserve-3d;
+            transition: ease all 0.5s;
         }
-        .player .arm-left span.top     { transform: rotateX( 90deg) translateZ(50px); background-position: -500px -400px; height: 100px}
-        .player .arm-left span.bottom  { transform: rotateX(-90deg) translateZ(250px); background-position: -700px -400px; height: 100px }
-        .player .arm-left span.left    { transform: rotateY(-90deg) translateZ(50px); background-position: -600px -500px; width: 100px }
-        .player .arm-left span.right   { transform: rotateY( 90deg) translateZ(150px); background-position: -700px -500px; width: 100px }
-        .player .arm-left span.front   { transform: rotateY(  0deg) translateZ(50px); background-position: -1100px -500px; }
-        .player .arm-left span.back    { transform: rotateY(180deg) translateZ(50px); background-position: -800px -500px; }
+        .player .arm-left span.top     { transform: rotateX( 90deg) translateZ(-150px) ; background-position: -1100px -400px; height: 100px}
+        .player .arm-left span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -1200px -400px; height: 100px }
+        .player .arm-left span.left    { transform: rotateY(-90deg) translateZ(50px) translateY(200px); background-position: -1000px -500px; width: 100px }
+        .player .arm-left span.right   { transform: rotateY( 90deg) translateZ(50px) translateY(200px); background-position: -1200px -500px; width: 100px }
+        .player .arm-left span.front   { transform: rotateY(  0deg) translateZ(50px) translateY(200px); background-position: -1100px -500px; }
+        .player .arm-left span.back    { transform: rotateY(180deg) translateZ(50px) translateY(200px); background-position: -1300px -500px; }
 
 
+        .player .arm-right {
+            position: absolute;
+            height: 500px;
+            width: 100px;
+            left: 300px;
+            top: 0;
+            transform-style: preserve-3d;
+            transition: ease all 0.5s;
+        }
+
+        .player .arm-right span.top     { transform: rotateX( 90deg) translateZ(-150px) ; background-position: -1100px -400px; height: 100px}
+        .player .arm-right span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -1200px -400px; height: 100px }
+        .player .arm-right span.left    { transform: rotateY(-90deg) translateZ(50px) translateY(200px); background-position: -1200px -500px; width: 100px }
+        .player .arm-right span.right   { transform: rotateY( 90deg) translateZ(50px) translateY(200px) scaleX(-1); background-position: -1000px -500px; width: 100px }
+        .player .arm-right span.front   { transform: rotateY(  0deg) translateZ(50px) translateY(200px); background-position: -1100px -500px; }
+        .player .arm-right span.back    { transform: rotateY(180deg) translateZ(50px) translateY(200px); background-position: -1300px -500px; }
+
+         .player .leg-left {
+            position: absolute;
+            height: 300px;
+            width: 100px;
+            left: 100px;
+            top: 500px;
+            transform-style: preserve-3d;
+            transition: ease all 0.5s;
+        }
+        .player .leg-left span.top     { transform: rotateX( 90deg) translateZ(50px); background-position: -100px -400px; height: 100px}
+        .player .leg-left span.bottom  { transform: rotateX(-90deg) translateZ(250px); background-position: -200px -400px; height: 100px }
+        .player .leg-left span.left    { transform: rotateY(-90deg) translateZ(50px); background-position: 0 -500px; width: 100px }
+        .player .leg-left span.right   { transform: rotateY( 90deg) translateZ(50px); background-position: -200px -500px; width: 100px }
+        .player .leg-left span.front   { transform: rotateY(  0deg) translateZ(50px); background-position: -100px -500px; }
+        .player .leg-left span.back    { transform: rotateY(180deg) translateZ(50px); background-position: -300px -500px; }
+
+
+        .player .leg-right {
+            position: absolute;
+            height: 300px;
+            width: 100px;
+            left: 200px;
+            top: 500px;
+            transform-style: preserve-3d;
+            transition: ease all 0.5s;
+        }
+        .player .leg-right span.top     { transform: rotateX( 90deg) translateZ(50px); background-position: -100px -400px; height: 100px}
+        .player .leg-right span.bottom  { transform: rotateX(-90deg) translateZ(250px); background-position: -200px -400px; height: 100px }
+        .player .leg-right span.left    { transform: rotateY(-90deg) translateZ(50px); background-position: -200px -500px; width: 100px }
+        .player .leg-right span.right   { transform: rotateY( 90deg) translateZ(50px) scaleX(-1); background-position: 0 -500px; width: 100px; }
+        .player .leg-right span.front   { transform: rotateY(  0deg) translateZ(50px); background-position: -100px -500px; }
+        .player .leg-right span.back    { transform: rotateY(180deg) translateZ(50px); background-position: -300px -500px; }
 
     </style>
 </head>
 <body>
     <div class="player">
 
-        <!--
         <div class="head">
             <span class="top"></span>
             <span class="bottom"></span>
@@ -91,7 +156,7 @@
             <span class="front"></span>
             <span class="back"></span>
         </div>
-        -->
+
         <div class="arm-left">
             <span class="top"></span>
             <span class="bottom"></span>
@@ -102,9 +167,14 @@
         </div>
 
         <div class="arm-right">
-
+            <span class="top"></span>
+            <span class="bottom"></span>
+            <span class="left"></span>
+            <span class="right"></span>
+            <span class="front"></span>
+            <span class="back"></span>
         </div>
-        <!--
+
         <div class="body">
             <span class="top"></span>
             <span class="bottom"></span>
@@ -113,13 +183,23 @@
             <span class="front"></span>
             <span class="back"></span>
         </div>
-        -->
-        <div class="leg-left">
 
+        <div class="leg-left">
+            <span class="top"></span>
+            <span class="bottom"></span>
+            <span class="left"></span>
+            <span class="right"></span>
+            <span class="front"></span>
+            <span class="back"></span>
         </div>
 
         <div class="leg-right">
-
+            <span class="top"></span>
+            <span class="bottom"></span>
+            <span class="left"></span>
+            <span class="right"></span>
+            <span class="front"></span>
+            <span class="back"></span>
         </div>
     </div>
 </body>
