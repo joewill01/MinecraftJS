@@ -3,6 +3,7 @@ class Inventory extends UIBase {
         super(ui);
         this.items=[];
         this.hotbar = hotbar;
+        this.player = '';
 
         this.createEl("inventory");
         this.createStylesheet();
@@ -194,45 +195,21 @@ class Inventory extends UIBase {
                 height: 800px;
                 width: 400px;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
                 transform: scale(0.15);
             }
     
-            .inventory_container .player:hover {
-                transform: scale(0.15) rotateX(-40deg) rotateY(40deg);
-            }
-    
-            .inventory_container .player:hover .head {
-                transform: rotateY(20deg);
-            }
-            
             .inventory_container .player .arm-right {
                 transform: rotate(-4deg) translateX(-7px);
             }
     
-            .inventory_container .player:hover .arm-right {
-                transform: rotateX(20deg);
-            }
-            
             .inventory_container .player .arm-left {
                 transform: rotate(4deg) translateX(7px);
             }
-            .inventory_container .player:hover .arm-left {
-                transform: rotateX(-20deg);
-            }
-    
-            .inventory_container .player:hover .leg-left {
-                transform: rotateX(20deg);
-            }
-    
-            .inventory_container .player:hover .leg-right {
-                transform: rotateX(-20deg);
-            }
-    
+           
             .inventory_container .player span {
                 display: block;
                 position: absolute;
-                background-image: url("steve.png");
+                background-image: url("./modules/ui/steve.png");
                 background-size: 1600px 1600px;
                 image-rendering: pixelated;
                 width: 100%;
@@ -248,7 +225,6 @@ class Inventory extends UIBase {
                 left: 100px;
                 top: 0;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
             .inventory_container .player .head span.top     { transform: rotateX( 90deg) translateZ(100px); background-position: -200px 0; }
             .inventory_container .player .head span.bottom  { transform: rotateX(-90deg) translateZ(100px); background-position: -400px 0; }
@@ -265,7 +241,6 @@ class Inventory extends UIBase {
                 left: 100px;
                 top: 200px;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
             .inventory_container .player .body span.top     { transform: rotateX( 90deg) translateZ(50px); background-position: -500px -400px; height: 100px}
             .inventory_container .player .body span.bottom  { transform: rotateX(-90deg) translateZ(250px); background-position: -700px -400px; height: 100px }
@@ -282,7 +257,6 @@ class Inventory extends UIBase {
                 left: 0;
                 top: 0;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
             .inventory_container .player .arm-left span.top     { transform: rotateX( 90deg) translateZ(-150px) ; background-position: -1100px -400px; height: 100px}
             .inventory_container .player .arm-left span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -1200px -400px; height: 100px }
@@ -299,7 +273,6 @@ class Inventory extends UIBase {
                 left: 300px;
                 top: 0;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
     
             .inventory_container .player .arm-right span.top     { transform: rotateX( 90deg) translateZ(-150px) ; background-position: -1100px -400px; height: 100px}
@@ -316,7 +289,6 @@ class Inventory extends UIBase {
                 left: 100px;
                 top: 300px;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
             .inventory_container .player .leg-left span.top     { transform: rotateX( 90deg) translateZ(-150px); background-position: -100px -400px; height: 100px}
             .inventory_container .player .leg-left span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -200px -400px; height: 100px }
@@ -333,7 +305,6 @@ class Inventory extends UIBase {
                 left: 200px;
                 top: 300px;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
             .inventory_container .player .leg-right span.top     { transform: rotateX( 90deg) translateZ(-150px); background-position: -100px -400px; height: 100px}
             .inventory_container .player .leg-right span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -200px -400px; height: 100px }
@@ -343,5 +314,12 @@ class Inventory extends UIBase {
             .inventory_container .player .leg-right span.back    { transform: rotateY(180deg) translateZ(50px) translateY(200px); background-position: -300px -500px; }
         `;
         this.element.appendChild(this.stylesheet);
+    }
+
+    mousemove(x, y) {
+        // RUN THIS FUNCTION ON MOUSE MOVE
+        if (this.player) {
+            this.player.style.transform = `scale(0.15) rotateX(${-((y-(window.innerHeight/2))/(window.innerHeight/2))*45}deg) rotateY(${((x-(window.innerWidth/2))/(window.innerWidth/2))*45}deg)`
+        }
     }
 }
