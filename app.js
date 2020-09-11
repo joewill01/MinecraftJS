@@ -17,7 +17,7 @@ var prevSelected = null;
 var selected = null;
 var lookingAt = null;
 var blockToPlace = 6;// will call hotbar.selected
-var renderHitboxes = false;
+var renderHitboxes = true;
 var locked = false;
 
 //Vars for breaking blocks
@@ -65,14 +65,6 @@ breakCube.visible = false;
 selectionCube.add(breakCube);
 scene.add( selectionCube );
 
-var item_geom = new THREE.PlaneBufferGeometry( 0.4, 0.4, 0.4 );
-let texture = new THREE.TextureLoader().load( 'minecraft/textures/item/diamond_pickaxe.png' );
-texture.magFilter = THREE.NearestFilter;
-texture.minFilter = THREE.NearestFilter;
-var item_material = new THREE.MeshBasicMaterial( {map:texture, side: THREE.DoubleSide, transparent:true} );
-var item_plane = new THREE.Mesh( item_geom, item_material );
-scene.add( item_plane );
-
 var registry = new Registry();
 
 var world = new World()
@@ -89,6 +81,9 @@ world.generate_chunk(0,0);
 
 var player = new Player()
 registry.registerEntity(player)
+
+var item = new WoodenPickaxeItem()
+var item_entity = new ItemEntity(0,43,0,item)
 
 control_type = 'pointer';
 
@@ -420,7 +415,6 @@ function animate() {
 	player.moveCamera();
 	player.stepBreakSequence()
 	getSelected(raycaster, mouse);
-	item_plane.position.y =player.y
 
 	stats.update();
 	requestAnimationFrame( animate );

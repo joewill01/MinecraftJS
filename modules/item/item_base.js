@@ -9,6 +9,7 @@ class Item{
 		this.allowedEnchants = [];
 		this.itemTexture = "";
 		this.rarity = 0; // 0:common, 1:uncommon, 2:rare, 3:Epic > See: https://minecraft.gamepedia.com/Rarity
+		this.displayType = "2d"; // 2d/3d 
 
 		this.stackable = true;
 		this.maxStackSize = 64;

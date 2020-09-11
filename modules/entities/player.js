@@ -1,6 +1,6 @@
 class Player extends Entity{
 	constructor(){
-		super(0.6, 1.8, 1.6, 0, 100, 0);
+		super(0.6, 1.8, 1.6, 0, 100, 0, "player");
 
 		this.perspective = 1;
 
