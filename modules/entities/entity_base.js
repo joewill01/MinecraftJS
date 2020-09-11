@@ -112,6 +112,6 @@ class Entity {
 	}
 
 	handleCollisions(coll){
-		console.log(coll)
+		//console.log(coll)
 	}
 }
