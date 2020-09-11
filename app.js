@@ -17,7 +17,7 @@ var prevSelected = null;
 var selected = null;
 var lookingAt = null;
 var blockToPlace = 6;// will call hotbar.selected
-var renderHitboxes = true;
+var renderHitboxes = false;
 var locked = false;
 
 //Vars for breaking blocks
@@ -81,7 +81,7 @@ world.generate_chunk(0,0);
 var player = new Player()
 
 var item = new RawBeefItem()
-var item_entity = new ItemEntity(0,43,0,item)
+var item_entity = new ItemEntity(0,50,0,item)
 
 control_type = 'pointer';
 
@@ -225,7 +225,9 @@ var onKeyDown = function ( event ) {
 			if(pressed.indexOf(114)!=-1){
 				registry.entityBuffer.forEach(function(entity){
 				    entity.hitbox.visible = renderHitboxes;
-					entity.eyeLevelHitbox.visible = renderHitboxes;
+				    if(entity.eyeLevelHitbox != undefined){
+				    	entity.eyeLevelHitbox.visible = renderHitboxes;
+				    }
 				})
 			}
 			break;

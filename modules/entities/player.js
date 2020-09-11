@@ -3,8 +3,7 @@ class Player extends Entity{
 		super(0.6, 1.8, 1.6, 0, 100, 0, "player");
 
 		this.perspective = 1;
-
-		this.velocity = new THREE.Vector3();
+		this.mass = 2.5;
 
 		this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		this.thirdPersonCamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -64,7 +63,6 @@ class Player extends Entity{
 		console.log(this.camera.position)
 	}
 
-
 	moveCamera() {
 
 		var time = performance.now();
@@ -88,7 +86,11 @@ class Player extends Entity{
 		}
 		this.camera.updateProjectionMatrix();
 
-		this.velocity.y -= 9.8 * 2.5 * delta; // 100.0 = mass
+		if(this.velocity.y - 9.8 * this.mass * delta > -this.terminalVelocity){
+			this.velocity.y -= 9.8 * this.mass * delta;
+		}else{
+			this.velocity.y = -this.terminalVelocity
+		}
 
 		direction.z = Number( moveForward ) - Number( moveBackward );
 		direction.x = Number( moveRight ) - Number( moveLeft );
@@ -97,17 +99,9 @@ class Player extends Entity{
 		if ( moveForward || moveBackward ) this.velocity.z -= direction.z * 1 * delta;
 		if ( moveLeft || moveRight ) this.velocity.x -= direction.x * 1 * delta;
 
-		this.controls.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z)
+		this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.camera, true)
 
 		prevTime = time;
-
-		this.eyeLevelHitbox.position.x = this.camera.position.x
-		this.eyeLevelHitbox.position.y = this.camera.position.y
-		this.eyeLevelHitbox.position.z = this.camera.position.z
-
-		this.hitbox.position.x = this.camera.position.x
-		this.hitbox.position.y = this.camera.position.y - this.hitboxHeight/2 + (this.hitboxHeight - this.eyeLevel)
-		this.hitbox.position.z = this.camera.position.z
 
 		//Do a raycast here to see how far away the nearsest block is and then set the z to that if its less than 5
 		this.thirdPersonCamera.position.z = 5

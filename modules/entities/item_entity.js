@@ -1,6 +1,5 @@
 class ItemEntity extends Entity{
 	constructor(x,y,z,item){
-
 		if(item.displayType == "2d"){
 			var xySize = 0.35;
 			var zSize = 0.02
@@ -159,14 +158,21 @@ class ItemEntity extends Entity{
 	}
 
 	update(){
+		var time = performance.now();
+		var delta = ( time - prevTime ) / 1000;
+		if(this.velocity.y - 9.8 * this.mass > -this.terminalVelocity){
+			this.velocity.y -= 9.8 * this.mass;
+		}else{
+			this.velocity.y = -this.terminalVelocity
+		}
 		try{
 			if(this.pivot != undefined){
 				this.pivot.rotation.y += 0.015;
 				let offset = Math.sin(performance.now()/400)*0.02
 				this.pivot.children[0].position.y = -this.xySize/2 + offset
+				this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.pivot, false)
 			}
 		}catch(e){
-			console.log(e)
 		}
 	}
 }
