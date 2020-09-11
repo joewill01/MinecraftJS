@@ -44,9 +44,12 @@ class Inventory extends UIBase {
         let cubes = ["head", "arm-left", "arm-right", "body", "leg-left", "leg-right"];
         let sides = ["top", "bottom", "left", "right", "front", "back"];
 
+        this.player_elements = {};
+
         for (let cube of cubes) {
             let cube_div = this.ui.dom.createElement("div");
             cube_div.classList.add(cube);
+            this.player_elements[`${cube}`] = cube_div;
             for (let side of sides) {
                 let side_span = this.ui.dom.createElement("span");
                 side_span.classList.add(side);
@@ -188,6 +191,16 @@ class Inventory extends UIBase {
             
             /* player */
             
+            @keyframes swayArmR {
+                0% {transform: rotate(0deg) translateX(0);}
+                100% {transform: rotate(-6deg) translateX(-8px);}
+            }
+            
+            @keyframes swayArmL {
+                0% {transform: rotate(0deg) translateX(0);}
+                100% {transform: rotate(6deg) translateX(8px);}
+            }
+            
             .inventory_container .player {
                 position: absolute;
                 top: -310px;
@@ -199,18 +212,26 @@ class Inventory extends UIBase {
             }
     
             .inventory_container .player .arm-right {
-                transform: rotate(-4deg) translateX(-7px);
+                animation-name: swayArmR;
+                animation-duration: 2s;
+                animation-iteration-count:infinite;
+                animation-direction: alternate;
+                animation-timing-function: ease-in-out;
             }
     
             .inventory_container .player .arm-left {
-                transform: rotate(4deg) translateX(7px);
+                animation-name: swayArmL;
+                animation-duration: 2s;
+                animation-iteration-count:infinite;
+                animation-direction: alternate;
+                animation-timing-function: ease-in-out;
             }
            
             .inventory_container .player span {
                 display: block;
                 position: absolute;
-                background-image: url("./modules/ui/steve.png");
-                background-size: 1600px 1600px;
+                background-image: url("./honeydew.png");
+                background-size: 1600px 800px;
                 image-rendering: pixelated;
                 width: 100%;
                 height: 100%;
@@ -318,8 +339,54 @@ class Inventory extends UIBase {
 
     mousemove(x, y) {
         // RUN THIS FUNCTION ON MOUSE MOVE
+        x=x+90;
+        y=y+130;
+
+        let angleY = ((x-(window.innerWidth/2))/(window.innerWidth/2))*45;
+        let angleX = -((y-(window.innerHeight/2))/(window.innerHeight/2))*45;
+
+        let angleBodyY = angleY;
+        let angleBodyX = angleX;
+        let angleHeadY = angleY;
+        let angleHeadX = angleX;
+
+        let maxAngleBodyY = 20;
+        let maxAngleBodyX = 30;
+        let maxAngleHeadY = 35;
+        let maxAngleHeadX = 20;
+
+        if (Math.abs(angleBodyY) > maxAngleBodyY) {
+            if (angleBodyY < 0) {
+                angleBodyY = -maxAngleBodyY;
+            } else {
+                angleBodyY = maxAngleBodyY;
+            }
+        }
+        if (Math.abs(angleBodyX) > maxAngleBodyX) {
+            if (angleBodyX < 0) {
+                angleBodyX = -maxAngleBodyX;
+            } else {
+                angleBodyX = maxAngleBodyX;
+            }
+        }
+        if (Math.abs(angleHeadY) > maxAngleHeadY) {
+            if (angleHeadY < 0) {
+                angleHeadY = -maxAngleHeadY;
+            } else {
+                angleHeadY = maxAngleHeadY;
+            }
+        }
+        if (Math.abs(angleHeadX) > maxAngleHeadX) {
+            if (angleHeadX < 0) {
+                angleHeadX = -maxAngleHeadX;
+            } else {
+                angleHeadX = maxAngleHeadX;
+            }
+        }
+
         if (this.player) {
-            this.player.style.transform = `scale(0.15) rotateX(${-((y-(window.innerHeight/2))/(window.innerHeight/2))*45}deg) rotateY(${((x-(window.innerWidth/2))/(window.innerWidth/2))*45}deg)`
+            this.player.style.transform = `scale(0.15) rotateX(${angleBodyX}deg) rotateY(${angleBodyY}deg)`;
+            this.player_elements['head'].style.transform = `rotateX(${angleHeadX}deg) rotateY(${angleHeadY}deg)`;
         }
     }
 }
