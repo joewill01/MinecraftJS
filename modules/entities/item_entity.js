@@ -2,8 +2,8 @@ class ItemEntity extends Entity{
 	constructor(x,y,z,item){
 
 		if(item.displayType == "2d"){
-			var xySize = 0.25;
-			var zSize = 0.01
+			var xySize = 0.35;
+			var zSize = 0.02
 
 			super(xySize, xySize, false, x, y, z,"item_" + uuid());
 

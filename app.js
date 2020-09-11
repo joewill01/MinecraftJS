@@ -30,7 +30,6 @@ let pause_menu = new PauseMenu(ui);
 let hotbar = new Hotbar(ui,0, 20, 14, 20, 17);
 let inventory = new Inventory(ui, hotbar);
 
-
 var scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x99ccff, 50, 70);
 scene.background = new THREE.Color( 0x99ccff );
@@ -81,7 +80,7 @@ world.generate_chunk(0,0);
 
 var player = new Player()
 
-var item = new WoodenPickaxeItem()
+var item = new RawBeefItem()
 var item_entity = new ItemEntity(0,43,0,item)
 
 control_type = 'pointer';
