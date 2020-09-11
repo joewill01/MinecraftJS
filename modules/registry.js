@@ -66,4 +66,10 @@ class Registry{
 	registerEntity(entity){
 		this.entityBuffer.push(entity);
 	}
+
+	updateEntities(){
+		for(let i=0;i<this.entityBuffer.length;i++){
+			this.entityBuffer[i].update();
+		}
+	}
 }

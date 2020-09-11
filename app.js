@@ -80,7 +80,6 @@ for(let x=-3; x<=3; x++){
 world.generate_chunk(0,0);
 
 var player = new Player()
-registry.registerEntity(player)
 
 var item = new WoodenPickaxeItem()
 var item_entity = new ItemEntity(0,43,0,item)
@@ -412,9 +411,8 @@ stats = createStats();
 document.body.appendChild( stats.domElement );
 
 function animate() {
-	player.moveCamera();
-	player.stepBreakSequence()
 	getSelected(raycaster, mouse);
+	registry.updateEntities();
 
 	stats.update();
 	requestAnimationFrame( animate );

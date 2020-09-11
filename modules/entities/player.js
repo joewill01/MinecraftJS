@@ -23,6 +23,11 @@ class Player extends Entity{
 		this.lastStage = 0;
 	}
 
+	update(){
+		this.moveCamera();
+		this.stepBreakSequence();
+	}
+
 	tp(x,y,z){
 		this.velocity.y = 0
 		this.velocity.z = 0

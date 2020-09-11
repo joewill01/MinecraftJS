@@ -2,10 +2,13 @@ class ItemEntity extends Entity{
 	constructor(x,y,z,item){
 
 		if(item.displayType == "2d"){
-			let xySize = 0.25;
-			let zSize = 0.01
+			var xySize = 0.25;
+			var zSize = 0.01
 
 			super(xySize, xySize, false, x, y, z,"item_" + uuid());
+
+			this.xySize = xySize
+			this.zSize = zSize
 
 			var data = null;
 
@@ -99,7 +102,6 @@ class ItemEntity extends Entity{
 
 		    })();
 
-
 		    var canvas = document.createElement('canvas');
 		    var ctx = canvas.getContext('2d');
 		    var img = new Image();
@@ -127,17 +129,23 @@ class ItemEntity extends Entity{
 				texture.minFilter = THREE.NearestFilter;
 
 		        var geometry = new THREE.ExtrudeBufferGeometry( itemOutline, { depth: zSize, bevelEnabled: false } );
-		        console.log(geometry.faceVertexUvs)
 		        var mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({map:texture}) );
-		        mesh.position.x = x - xySize/2;
-				mesh.position.y = y - xySize/2;
-				mesh.position.z = z;
+		        mesh.position.x = -xySize/2;
+				mesh.position.y = -xySize/2;
 				mesh.scale.x = xySize;
 				mesh.scale.y = xySize;
-				scene.add( mesh );
-				console.log(mesh)
 
+				var pivot = new THREE.Object3D();
+				pivot.position.x = x 
+				pivot.position.y = y 
+				pivot.position.z = z
+				pivot.add( mesh );
+
+				scene.add( pivot );
+				img.entity.pivot = pivot
 		    }
+
+		    img.entity = this
 		    img.src = 'minecraft/textures/item/'+item.itemTexture
 
 		    var defineNonTransparent = function (x, y) {
@@ -148,5 +156,17 @@ class ItemEntity extends Entity{
 		}else{
 			super(0.25, 0.25, false, x, y, z,"item_" + uuid());
 		}	
+	}
+
+	update(){
+		try{
+			if(this.pivot != undefined){
+				this.pivot.rotation.y += 0.015;
+				let offset = Math.sin(performance.now()/400)*0.02
+				this.pivot.children[0].position.y = -this.xySize/2 + offset
+			}
+		}catch(e){
+			console.log(e)
+		}
 	}
 }

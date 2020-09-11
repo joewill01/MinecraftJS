@@ -25,5 +25,11 @@ class Entity {
 			this.eyeLevelHitbox.name=name+"-eye-level"
 			scene.add( this.eyeLevelHitbox );
 		}
+
+		registry.registerEntity(this)
+	}
+
+	update(){
+		
 	}
 }
