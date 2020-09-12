@@ -153,7 +153,22 @@ class ItemEntity extends Entity{
 		    }
 
 		}else{
-			super(0.25, 0.25, false, x, y, z,"item_" + uuid());
+
+			super(0.35, 0.35, false, x, y, z,"item_" + uuid());
+
+			this.size = 0.2 
+
+			var geometry = new THREE.BoxGeometry( this.size, this.size, this.size );
+	        var mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({color:"#ff00ff"}) );
+
+			var pivot = new THREE.Object3D();
+			pivot.position.x = x 
+			pivot.position.y = y 
+			pivot.position.z = z
+			pivot.add( mesh );
+
+			scene.add( pivot );
+			this.pivot = pivot;
 		}	
 	}
 
@@ -168,11 +183,17 @@ class ItemEntity extends Entity{
 		try{
 			if(this.pivot != undefined){
 				this.pivot.rotation.y += 0.015;
-				let offset = Math.sin(performance.now()/400)*0.02
-				this.pivot.children[0].position.y = -this.xySize/2 + offset
+				let offset = Math.sin(performance.now()/400)*0.02 + 0.1
+				if(this.xySize!=undefined){
+					this.pivot.children[0].position.y = -this.xySize/2 + offset
+				}else{
+					this.pivot.children[0].position.y = -this.size/2 + offset
+				}
+				
 				this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.pivot, false)
 			}
 		}catch(e){
+			console.log(e)
 		}
 	}
 }
