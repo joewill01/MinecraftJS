@@ -152,7 +152,7 @@ class Player extends Entity{
 				//Reset Break Sequence
 				this.breaktime = this.calc_break_time(this.lastLookedAt,{"name":"Diamond_Pickaxe","type":"tool","toolType":"pickaxe","speedMultiplier":8,"harvestLevel":4});
 				//this.breaktime = this.calc_break_time(this.lastLookedAt,{"name":"Diamond_Shovel","type":"tool","toolType":"shovel","speedMultiplier":8,"harvestLevel":4});
-				this.breaktime = this.calc_break_time(this.lastLookedAt,0);
+				//this.breaktime = this.calc_break_time(this.lastLookedAt,0);
 				this.startedBreakSequenceAt = performance.now();
 			}else{
 				//Continue Break Sequence
