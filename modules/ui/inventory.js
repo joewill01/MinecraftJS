@@ -3,6 +3,7 @@ class Inventory extends UIBase {
         super(ui);
         this.items=[];
         this.hotbar = hotbar;
+        this.player = '';
 
         this.createEl("inventory");
         this.createStylesheet();
@@ -43,9 +44,12 @@ class Inventory extends UIBase {
         let cubes = ["head", "arm-left", "arm-right", "body", "leg-left", "leg-right"];
         let sides = ["top", "bottom", "left", "right", "front", "back"];
 
+        this.player_elements = {};
+
         for (let cube of cubes) {
             let cube_div = this.ui.dom.createElement("div");
             cube_div.classList.add(cube);
+            this.player_elements[`${cube}`] = cube_div;
             for (let side of sides) {
                 let side_span = this.ui.dom.createElement("span");
                 side_span.classList.add(side);
@@ -187,6 +191,16 @@ class Inventory extends UIBase {
             
             /* player */
             
+            @keyframes swayArmR {
+                0% {transform: rotate(0deg) translateX(0);}
+                100% {transform: rotate(-6deg) translateX(-8px);}
+            }
+            
+            @keyframes swayArmL {
+                0% {transform: rotate(0deg) translateX(0);}
+                100% {transform: rotate(6deg) translateX(8px);}
+            }
+            
             .inventory_container .player {
                 position: absolute;
                 top: -310px;
@@ -194,46 +208,30 @@ class Inventory extends UIBase {
                 height: 800px;
                 width: 400px;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
                 transform: scale(0.15);
             }
     
-            .inventory_container .player:hover {
-                transform: scale(0.15) rotateX(-40deg) rotateY(40deg);
-            }
-    
-            .inventory_container .player:hover .head {
-                transform: rotateY(20deg);
-            }
-            
             .inventory_container .player .arm-right {
-                transform: rotate(-4deg) translateX(-7px);
+                animation-name: swayArmR;
+                animation-duration: 2s;
+                animation-iteration-count:infinite;
+                animation-direction: alternate;
+                animation-timing-function: ease-in-out;
             }
     
-            .inventory_container .player:hover .arm-right {
-                transform: rotateX(20deg);
-            }
-            
             .inventory_container .player .arm-left {
-                transform: rotate(4deg) translateX(7px);
+                animation-name: swayArmL;
+                animation-duration: 2s;
+                animation-iteration-count:infinite;
+                animation-direction: alternate;
+                animation-timing-function: ease-in-out;
             }
-            .inventory_container .player:hover .arm-left {
-                transform: rotateX(-20deg);
-            }
-    
-            .inventory_container .player:hover .leg-left {
-                transform: rotateX(20deg);
-            }
-    
-            .inventory_container .player:hover .leg-right {
-                transform: rotateX(-20deg);
-            }
-    
+           
             .inventory_container .player span {
                 display: block;
                 position: absolute;
-                background-image: url("steve.png");
-                background-size: 1600px 1600px;
+                background-image: url("./honeydew.png");
+                background-size: 1600px 800px;
                 image-rendering: pixelated;
                 width: 100%;
                 height: 100%;
@@ -248,7 +246,6 @@ class Inventory extends UIBase {
                 left: 100px;
                 top: 0;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
             .inventory_container .player .head span.top     { transform: rotateX( 90deg) translateZ(100px); background-position: -200px 0; }
             .inventory_container .player .head span.bottom  { transform: rotateX(-90deg) translateZ(100px); background-position: -400px 0; }
@@ -265,7 +262,6 @@ class Inventory extends UIBase {
                 left: 100px;
                 top: 200px;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
             .inventory_container .player .body span.top     { transform: rotateX( 90deg) translateZ(50px); background-position: -500px -400px; height: 100px}
             .inventory_container .player .body span.bottom  { transform: rotateX(-90deg) translateZ(250px); background-position: -700px -400px; height: 100px }
@@ -282,7 +278,6 @@ class Inventory extends UIBase {
                 left: 0;
                 top: 0;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
             .inventory_container .player .arm-left span.top     { transform: rotateX( 90deg) translateZ(-150px) ; background-position: -1100px -400px; height: 100px}
             .inventory_container .player .arm-left span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -1200px -400px; height: 100px }
@@ -299,7 +294,6 @@ class Inventory extends UIBase {
                 left: 300px;
                 top: 0;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
     
             .inventory_container .player .arm-right span.top     { transform: rotateX( 90deg) translateZ(-150px) ; background-position: -1100px -400px; height: 100px}
@@ -316,7 +310,6 @@ class Inventory extends UIBase {
                 left: 100px;
                 top: 300px;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
             .inventory_container .player .leg-left span.top     { transform: rotateX( 90deg) translateZ(-150px); background-position: -100px -400px; height: 100px}
             .inventory_container .player .leg-left span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -200px -400px; height: 100px }
@@ -333,7 +326,6 @@ class Inventory extends UIBase {
                 left: 200px;
                 top: 300px;
                 transform-style: preserve-3d;
-                transition: ease all 0.5s;
             }
             .inventory_container .player .leg-right span.top     { transform: rotateX( 90deg) translateZ(-150px); background-position: -100px -400px; height: 100px}
             .inventory_container .player .leg-right span.bottom  { transform: rotateX(-90deg) translateZ(450px); background-position: -200px -400px; height: 100px }
@@ -343,5 +335,58 @@ class Inventory extends UIBase {
             .inventory_container .player .leg-right span.back    { transform: rotateY(180deg) translateZ(50px) translateY(200px); background-position: -300px -500px; }
         `;
         this.element.appendChild(this.stylesheet);
+    }
+
+    mousemove(x, y) {
+        // RUN THIS FUNCTION ON MOUSE MOVE
+        x=x+90;
+        y=y+130;
+
+        let angleY = ((x-(window.innerWidth/2))/(window.innerWidth/2))*45;
+        let angleX = -((y-(window.innerHeight/2))/(window.innerHeight/2))*45;
+
+        let angleBodyY = angleY;
+        let angleBodyX = angleX;
+        let angleHeadY = angleY;
+        let angleHeadX = angleX;
+
+        let maxAngleBodyY = 20;
+        let maxAngleBodyX = 30;
+        let maxAngleHeadY = 35;
+        let maxAngleHeadX = 20;
+
+        if (Math.abs(angleBodyY) > maxAngleBodyY) {
+            if (angleBodyY < 0) {
+                angleBodyY = -maxAngleBodyY;
+            } else {
+                angleBodyY = maxAngleBodyY;
+            }
+        }
+        if (Math.abs(angleBodyX) > maxAngleBodyX) {
+            if (angleBodyX < 0) {
+                angleBodyX = -maxAngleBodyX;
+            } else {
+                angleBodyX = maxAngleBodyX;
+            }
+        }
+        if (Math.abs(angleHeadY) > maxAngleHeadY) {
+            if (angleHeadY < 0) {
+                angleHeadY = -maxAngleHeadY;
+            } else {
+                angleHeadY = maxAngleHeadY;
+            }
+        }
+        if (Math.abs(angleHeadX) > maxAngleHeadX) {
+            if (angleHeadX < 0) {
+                angleHeadX = -maxAngleHeadX;
+            } else {
+                angleHeadX = maxAngleHeadX;
+            }
+        }
+
+        if (this.player) {
+            this.player.style.transform = `scale(0.15) rotateX(${angleBodyX}deg) rotateY(${angleBodyY}deg)`;
+            this.player_elements['head'].style.transform = `rotateX(${angleHeadX}deg) rotateY(${angleHeadY}deg)`;
+        }
     }
 }

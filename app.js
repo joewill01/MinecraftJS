@@ -136,6 +136,7 @@ scene.add(player.controls.getObject());
 document.addEventListener('mousemove', function(event) {
     event.preventDefault();
     ui.hand.setPosition(event.clientX - 16, event.clientY - 16);
+    inventory.mousemove(event.clientX - 16, event.clientY - 16)
 }, true);
 
 document.addEventListener('contextmenu', event => event.preventDefault());
