@@ -155,11 +155,47 @@ class ItemEntity extends Entity{
 		}else{
 
 			super(0.35, 0.35, false, x, y, z,"item_" + uuid());
+			this.x = x;
+			this.y = y;
+			this.z = z;
 
 			this.size = 0.2 
 
-			var geometry = new THREE.BoxGeometry( this.size, this.size, this.size );
-	        var mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({color:"#ff00ff"}) );
+			let block_geom = new THREE.Geometry();
+
+			setPlane("y",  Math.PI * 0.5, item.blockTextures["S"], this, "S", block_geom); //side
+			setPlane("y", -Math.PI * 0.5, item.blockTextures["N"] , this, "N", block_geom); //side
+			setPlane("y",  0, item.blockTextures["E"] , this, "E", block_geom); //side
+			setPlane("y",  Math.PI, item.blockTextures["W"] , this, "W", block_geom);// side
+			setPlane("x",  Math.PI * 0.5, item.blockTextures["D"] , this, "D", block_geom); //bottom
+			setPlane("x", -Math.PI * 0.5, item.blockTextures["U"] , this, "U", block_geom); //top
+
+			function setPlane(axis, angle, texture_name, obj, name, block_geom) {
+				console.log(angle)
+				let mat_index = registry.registerMaterial(texture_name, true)
+				let material = registry.materials[mat_index]
+
+				let planeGeom = new THREE.PlaneGeometry(obj.size, obj.size);
+				planeGeom.translate(0, 0, 0.1);
+				switch (axis) {
+			    	case 'y':
+			      		planeGeom.rotateY(angle);
+			      		break;
+			    	default:
+			      		planeGeom.rotateX(angle);
+			  	}
+
+			  	let plane = new THREE.Mesh(planeGeom);
+			  	plane.name = name;
+
+			  	plane.updateMatrix();
+			  	block_geom.merge(planeGeom, plane.matrix, mat_index);
+			}
+
+
+			let mesh = new THREE.Mesh(block_geom, registry.materials);
+			mesh.geometry.computeFaceNormals();
+			mesh.geometry.computeVertexNormals();
 
 			var pivot = new THREE.Object3D();
 			pivot.position.x = x 
