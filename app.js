@@ -48,7 +48,7 @@ selectionCube.name = "selectionCube";
 let breakCubeGeometry = new THREE.CubeGeometry(1.0009, 1.0009, 1.0009);
 var breaktextures = [];
 for(let i=0;i<=9;i++){
-	breaktextures.push(new THREE.TextureLoader("minecraft/textures/block/destroy_stage_"+i.toString()+".png"))
+	breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_"+i.toString()+".png"))
 }
 
 for (var i = 0; i < breaktextures.length; i++) {
