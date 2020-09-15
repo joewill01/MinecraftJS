@@ -167,6 +167,6 @@ class PauseMenu extends UIBase {
 
         //set onclick/onchange/hover functions
         this.UIelements["options_screen"]["buttons"]["done"].onclick = () => {this.openScreen(this.main_screen)};
-        this.UIelements["options_screen"]["sliders"]["fov"].onchange = (value) => {console.log(`FOV set to ${value.toString()}`)}
+        this.UIelements["options_screen"]["sliders"]["fov"].onchange = (value) => {player.changeBaseFOV(value)};
     }
 }

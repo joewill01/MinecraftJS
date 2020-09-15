@@ -19,6 +19,7 @@ var lookingAt = null;
 var blockToPlace = 6;// will call hotbar.selected
 var renderHitboxes = false;
 var locked = false;
+var baseFOV = 70;
 
 //Vars for breaking blocks
 var m1Pressed = false;

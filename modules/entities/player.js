@@ -5,9 +5,9 @@ class Player extends Entity{
 		this.perspective = 1;
 		this.mass = 2.5;
 
-		this.camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
-		this.thirdPersonCamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
-		this.secondPersonCamera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		this.camera = new THREE.PerspectiveCamera( baseFOV, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		this.thirdPersonCamera = new THREE.PerspectiveCamera( baseFOV, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		this.secondPersonCamera = new THREE.PerspectiveCamera( baseFOV, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		this.camera.position.set(this.x,this.y,this.z);
 		this.controls = new THREE.PointerLockControls(this.camera, renderer.domElement);
 
@@ -78,10 +78,10 @@ class Player extends Entity{
 		}
 		
 		//Change the FOV of the camera to show you are sprinting
-		if(sprinting && this.camera.fov < 80){
+		if(sprinting && this.camera.fov < baseFOV+10){
 			this.camera.fov ++;
 		}
-		if(!sprinting && this.camera.fov > 70){
+		if(!sprinting && this.camera.fov > baseFOV){
 			this.camera.fov -= 0.5;
 		}
 		this.camera.updateProjectionMatrix();
@@ -257,7 +257,12 @@ class Player extends Entity{
 		canJump = true;
 	}
 
+	changeBaseFOV(fov){
+		baseFOV = fov;
+		this.camera.fov = fov;
+		this.thirdPersonCamera.fov = fov;
+		this.secondPersonCamera.fov = fov;
+	}
+
 }
-
-
 

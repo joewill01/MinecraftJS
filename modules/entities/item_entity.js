@@ -171,7 +171,6 @@ class ItemEntity extends Entity{
 			setPlane("x", -Math.PI * 0.5, item.blockTextures["U"] , this, "U", block_geom); //top
 
 			function setPlane(axis, angle, texture_name, obj, name, block_geom) {
-				console.log(angle)
 				let mat_index = registry.registerMaterial(texture_name, true)
 				let material = registry.materials[mat_index]
 
