@@ -29,6 +29,7 @@ class Block {
 		this.replaceableByWorldGenOres = false;
 		this.rotatable = false;
 		this.allowedRotations = []; //N,S,E,W,D,U Letter is where the old Top face will end up
+		this.droppedItemId = null; 
 	}
 
 	render(chunk_geom){
@@ -87,5 +88,12 @@ class Block {
 
 	break(){//Overwrite this function and call break then add custom functions
 		this.onBreak();
+		if(this.droppedItemId != null){
+			let item = registry.getItemInstanceFromId(this.droppedItemId);
+			let item_entity = new ItemEntity(this.x, this.y, this.z, item);
+			item_entity.velocity.y = randomIntFromInterval(5,10);
+			item_entity.velocity.x = randomIntFromInterval(-3,3)/100;
+			item_entity.velocity.z = randomIntFromInterval(-3,3)/100;
+		}
 	}
 }

@@ -63,6 +63,50 @@ class Registry{
 		}
 	}
 
+	getItemInstanceFromId(id){
+		switch(id){
+			case 0:
+				return 0;
+				break;
+			case 1:
+				return new WoodenPickaxeItem();
+				break;
+			case 2:
+				return new WoodenShovelItem();
+				break;
+			case 3:
+				return new WoodenSwordItem();
+				break;
+			case 4:
+				return new WoodenAxeItem();
+				break;
+			case 5:
+				return new WoodenHoeItem();
+				break;
+			case 6:
+				return new LeatherItem();
+				break;
+			case 7:
+				return new RawBeefItem();
+				break;
+			case 8:
+				return new DiamondHelmetItem();
+				break;
+			case 9:
+				return new DiamondChestplateItem();
+				break;
+			case 10:
+				return new DiamondLeggingsItem();
+				break;
+			case 11:
+				return new DiamondBootsItem();
+				break;
+			case 12:
+				return new DirtBlockItem();
+				break;
+		}
+	}
+
 	registerEntity(entity){
 		this.entityBuffer.push(entity);
 	}

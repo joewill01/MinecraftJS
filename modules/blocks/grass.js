@@ -17,5 +17,6 @@ class GrassBlock extends Block{
 
 		this.hardness = 0.6;
 		this.resistance = 0.2;
+		this.droppedItemId = 12;
 	}
 }

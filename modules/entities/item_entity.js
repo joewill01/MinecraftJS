@@ -226,10 +226,26 @@ class ItemEntity extends Entity{
 					this.pivot.children[0].position.y = -this.size/2 + offset
 				}
 				
-				this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.pivot, false)
+				this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.pivot)
 			}
 		}catch(e){
 			console.log(e)
 		}
 	}
+
+	onHitGround(){
+		this.velocity.x = 0;
+		this.velocity.z = 0;
+	}
+
+	// handleCollisions(coll){
+	// 	let cols = coll["allCollisions"] 
+	// 	for(let i=0;i<cols.length;i++){
+	// 		if(cols[i].object.name == "player-hitbox"){
+	// 			console.log("collided")
+ //    			scene.remove( this );
+	// 		}
+	// 	}
+		
+	// }
 }

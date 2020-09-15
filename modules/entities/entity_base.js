@@ -37,7 +37,7 @@ class Entity {
 		
 	}
 
-	move(x, y, z, toMove, player){
+	move(x, y, z, toMove){
 		
 
 		this.vec.setFromMatrixColumn( toMove.matrix, 0 );
@@ -87,13 +87,10 @@ class Entity {
 			toMove.position.y += y;
 		}
 		else{
-			if(player){
-				canJump = true;
-			}
 			this.velocity.y *= 0.001;
+			this.onHitGround();
 		}
 
-		
 
 		if(this.eyeLevelHitbox != undefined){
 			this.eyeLevelHitbox.position.x = toMove.position.x
@@ -113,5 +110,9 @@ class Entity {
 
 	handleCollisions(coll){
 		//console.log(coll)
+	}
+
+	onHitGround(){
+
 	}
 }

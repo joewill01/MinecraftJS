@@ -17,5 +17,6 @@ class Dirt extends Block{
 
 		this.hardness = 0.5;
 		this.resistance = 0.2;
+		this.droppedItemId = 12;
 	}
 }

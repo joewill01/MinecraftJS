@@ -80,9 +80,6 @@ world.generate_chunk(0,0);
 
 var player = new Player()
 
-var item = new LeatherItem()
-var item_entity = new ItemEntity(0,50,0,item)
-
 control_type = 'pointer';
 
 if (control_type === 'touch') {

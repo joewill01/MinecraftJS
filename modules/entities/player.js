@@ -99,7 +99,7 @@ class Player extends Entity{
 		if ( moveForward || moveBackward ) this.velocity.z -= direction.z * 1 * delta;
 		if ( moveLeft || moveRight ) this.velocity.x -= direction.x * 1 * delta;
 
-		this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.camera, true)
+		this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.camera)
 
 		prevTime = time;
 
@@ -252,6 +252,11 @@ class Player extends Entity{
 			return null;
 		}
 	}
+
+	onHitGround(){
+		canJump = true;
+	}
+
 }
 
 
