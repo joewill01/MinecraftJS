@@ -80,11 +80,17 @@ class Player extends Entity{
 		//Change the FOV of the camera to show you are sprinting
 		if(sprinting && this.camera.fov < baseFOV+10){
 			this.camera.fov ++;
+			this.thirdPersonCamera.fov ++;
+			this.secondPersonCamera.fov ++;
 		}
 		if(!sprinting && this.camera.fov > baseFOV){
 			this.camera.fov -= 0.5;
+			this.thirdPersonCamera.fov -= 0.5;
+			this.secondPersonCamera.fov -= 0.5;
 		}
 		this.camera.updateProjectionMatrix();
+		this.thirdPersonCamera.updateProjectionMatrix();
+		this.secondPersonCamera.updateProjectionMatrix();
 
 		if(this.velocity.y - 9.8 * this.mass * delta > -this.terminalVelocity){
 			this.velocity.y -= 9.8 * this.mass * delta;
