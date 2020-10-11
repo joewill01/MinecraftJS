@@ -231,6 +231,10 @@ class ItemEntity extends Entity{
 		}catch(e){
 			console.log(e)
 		}
+
+		this.x = this.hitbox.position.x
+		this.y = this.hitbox.position.y
+		this.z = this.hitbox.position.z
 	}
 
 	onHitGround(){

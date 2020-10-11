@@ -16,10 +16,11 @@ var ctlHeld = false;
 var prevSelected = null;
 var selected = null;
 var lookingAt = null;
-var blockToPlace = 6;// will call hotbar.selected
+var blockToPlace = 1;// will call hotbar.selected
 var renderHitboxes = false;
 var locked = false;
 var baseFOV = 70;
+var collidingEntities = {};
 
 //Vars for breaking blocks
 var m1Pressed = false;

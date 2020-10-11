@@ -25,6 +25,7 @@ class Player extends Entity{
 	update(){
 		this.moveCamera();
 		this.stepBreakSequence();
+		this.checkEntityCollisions();
 	}
 
 	tp(x,y,z){
@@ -116,9 +117,9 @@ class Player extends Entity{
 		this.secondPersonCamera.position.z = -5
 		this.secondPersonCamera.lookAt(this.camera.position)
 
-		this.x = this.camera.position.x
-		this.y = this.camera.position.y
-		this.z = this.camera.position.z
+		this.x = this.hitbox.position.x
+		this.y = this.hitbox.position.y
+		this.z = this.hitbox.position.z
 	}
 
 	getCamera(){
@@ -271,18 +272,18 @@ class Player extends Entity{
 	}
 
 	handleCollisions(coll){
-		coll = coll.allCollisions
+		
+	}
+
+	checkEntityCollisions(){
+		let coll = collidingEntities[this.entityId]
 		try{
 			for(let i=0;i<coll.length;i++){
-				if(coll[i].object.name.includes("-detectable") && coll[i].object.name.includes("item")){
-					let item = coll[i].object.entity
+				if(coll[i] instanceof ItemEntity){
+					let item = coll[i]
 					
 					console.log("Picked up: "+item.item.displayName)
-					console.log(item)
-
-					scene.getObjectByProperty( 'uuid', item.detectable.uuid ).geometry.dispose( );
-			        scene.getObjectByProperty( 'uuid', item.detectable.uuid ).material.dispose( );
-			        scene.remove( scene.getObjectByProperty( 'uuid', item.detectable.uuid ) );
+					//item is the item class
 
 			        scene.getObjectByProperty( 'uuid', item.hitbox.uuid ).geometry.dispose( );
 			        scene.getObjectByProperty( 'uuid', item.hitbox.uuid ).material.dispose( );
@@ -295,7 +296,6 @@ class Player extends Entity{
 				}
 			}
 		}catch(e){
-			
 		}
 	}
 

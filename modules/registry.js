@@ -116,6 +116,7 @@ class Registry{
 		for(let i=0;i<this.entityBuffer.length;i++){
 			this.entityBuffer[i].update();
 		}
+		entity_collision_check();
 	}
 
 	unRegisterEntity(entityId){
@@ -125,6 +126,5 @@ class Registry{
 				return
 			}
 		}
-		console.log(this.entityBuffer)
 	}
 }

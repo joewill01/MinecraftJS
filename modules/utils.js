@@ -58,3 +58,21 @@ function uuid() {
 function randomIntFromInterval(min, max) { // min and max included 
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+function cubeIntersects(c1pos, c2pos, c1size, c2size){//{x,y,z}*4
+	let lengthx = Math.abs(c1pos.x - c2pos.x);
+	let lengthy = Math.abs(c1pos.y - c2pos.y);
+	let lengthz = Math.abs(c1pos.z - c2pos.z);
+	let gapx = lengthx - c1size.x/2 - c2size.x/2;
+	let gapy = lengthy - c1size.y/2 - c2size.y/2;
+	let gapz = lengthz - c1size.z/2 - c2size.z/2;
+
+	//console.log(c1pos.y,c2pos.y,c1size.y/2,c2size.y/2,lengthy,gapy)
+
+	if(gapx<=0 && gapy<=0 && gapz <=0){
+		return {collided:true}
+	}else{
+		return {collided:false}
+	}
+	
+}

@@ -12,17 +12,6 @@ class Entity {
 		this.terminalVelocity = 50;
 
 		let geom = new THREE.CubeGeometry( this.hitboxWidth, this.hitboxHeight, this.hitboxWidth);
-		let mat = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } );
-		this.detectable = new THREE.Mesh( geom, mat);
-		this.detectable.visible = false;
-		this.detectable.name= name+"-detectable"
-		this.detectable.position.x = this.x
-		this.detectable.position.y = this.y
-		this.detectable.position.z = this.z
-		this.detectable.entity = this;
-		scene.add( this.detectable );
-
-		geom = new THREE.CubeGeometry( this.hitboxWidth, this.hitboxHeight, this.hitboxWidth);
 		let wireMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF, wireframe:true } );
 		this.hitbox = new THREE.Mesh( geom, wireMaterial);
 		this.hitbox.visible = renderHitboxes;
@@ -114,10 +103,6 @@ class Entity {
 			this.hitbox.position.y = toMove.position.y
 			this.hitbox.position.z = toMove.position.z
 		}
-
-		this.detectable.position.x = this.hitbox.position.x
-		this.detectable.position.y = this.hitbox.position.y
-		this.detectable.position.z = this.hitbox.position.z
 
 	}
 
