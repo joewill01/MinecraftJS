@@ -298,6 +298,5 @@ class Player extends Entity{
 		}catch(e){
 		}
 	}
-
 }
 

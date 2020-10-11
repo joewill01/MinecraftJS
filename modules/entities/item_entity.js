@@ -242,14 +242,4 @@ class ItemEntity extends Entity{
 		this.velocity.z = 0;
 	}
 
-	// handleCollisions(coll){
-	// 	let cols = coll["allCollisions"] 
-	// 	for(let i=0;i<cols.length;i++){
-	// 		if(cols[i].object.name == "player-hitbox"){
-	// 			console.log("collided")
- //    			scene.remove( this );
-	// 		}
-	// 	}
-		
-	// }
 }
