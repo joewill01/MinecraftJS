@@ -205,6 +205,7 @@ class ItemEntity extends Entity{
 			scene.add( pivot );
 			this.pivot = pivot;
 		}	
+		this.item = item;
 	}
 
 	update(){

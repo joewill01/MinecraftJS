@@ -270,5 +270,31 @@ class Player extends Entity{
 		this.secondPersonCamera.fov = fov;
 	}
 
+	handleCollisions(coll){
+		coll = coll.allCollisions
+		try{
+			for(let i=0;i<coll.length;i++){
+				if(coll[i].object.name.includes("-detectable") && coll[i].object.name.includes("item")){
+					let item = coll[i].object.entity
+					console.log(item)
+					console.log("Picked up: "+item.item.displayName)
+
+					scene.getObjectByProperty( 'uuid', item.detectable.uuid ).geometry.dispose( );
+			        scene.getObjectByProperty( 'uuid', item.detectable.uuid ).material.dispose( );
+			        scene.remove( scene.getObjectByProperty( 'uuid', item.detectable.uuid ) );
+
+			        scene.getObjectByProperty( 'uuid', item.hitbox.uuid ).geometry.dispose( );
+			        scene.getObjectByProperty( 'uuid', item.hitbox.uuid ).material.dispose( );
+			        scene.remove( scene.getObjectByProperty( 'uuid', item.hitbox.uuid ) );
+
+			        scene.remove( scene.getObjectByProperty( 'uuid', item.pivot.uuid ) );
+
+				}
+			}
+		}catch(e){
+			console.log(e)
+		}
+	}
+
 }
 
