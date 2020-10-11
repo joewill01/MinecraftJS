@@ -1,17 +1,19 @@
 function mesh_collision_check(vec, mesh){
 	var originPoint = mesh.position.clone();
 
-	let collided = {"collidedWorld":false}
+	let collided = {"collidedWorld":false,"allCollisions":[],"worldCollisions":[]}
 	//For every point in the player hitbox geometry
-	for (var vertexIndex = 0; vertexIndex < mesh.geometry.vertices.length; vertexIndex++){
+
+	//top, bottom, vertical_link, cross_axis
+	vertex_pos = [[0,1],[1,4],[4,5],[5,0],  [2,3],[3,6],[6,7],[7,2],  [0,2],[1,3],[4,6],[5,7],  [2,5],[7,4],[6,1],[3,0]]
+
+
+
+	for (var vertex = 0; vertex < vertex_pos.length; vertex++){
+
 		//Calculate its position in world space
-		if(vertexIndex == mesh.geometry.vertices.length - 1){
-			var localVertex = mesh.geometry.vertices[vertexIndex].clone();
-    		var localVertex2 = mesh.geometry.vertices[0].clone();
-		}else{
-			var localVertex = mesh.geometry.vertices[vertexIndex].clone();
-    		var localVertex2 = mesh.geometry.vertices[vertexIndex + 1].clone();
-		}
+		var localVertex = mesh.geometry.vertices[vertex_pos[vertex][0]].clone();
+		var localVertex2 = mesh.geometry.vertices[vertex_pos[vertex][1]].clone();
     	
 		let globalVertex = localVertex.applyMatrix4(mesh.matrix);
 		let globalVertex2 = localVertex2.applyMatrix4(mesh.matrix);
@@ -36,12 +38,13 @@ function mesh_collision_check(vec, mesh){
 		if ( worldCollisionResults.length > 0 && worldCollisionResults[0].distance < globalVertex.length() ) 
 	    {
 	    	collided.collidedWorld = true;
-	    	collided.worldCollisions = worldCollisionResults
+	    	collided.worldCollisions = collided.worldCollisions.concat(worldCollisionResults.filter((item) => collided.worldCollisions.indexOf(item) < 0))
 	    }
 	    if ( allCollisionResults.length > 0 && allCollisionResults[0].distance < globalVertex.length() ) 
 	    {
-	    	collided.allCollisions = allCollisionResults
+	    	collided.allCollisions = collided.allCollisions.concat(allCollisionResults.filter((item) => collided.allCollisions.indexOf(item) < 0))
 	    }
 	}
 	return collided
 }
+

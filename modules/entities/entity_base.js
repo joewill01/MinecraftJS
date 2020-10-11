@@ -65,7 +65,6 @@ class Entity {
 		vecX.x = vecX.x * x
 		flipVecX.x = flipVecX.x * z
 		collided_with = mesh_collision_check(vecX.add(flipVecX), this.hitbox)
-		this.handleCollisions(collided_with);
 		if(!collided_with.collidedWorld){
 			toMove.position.add(vecX);
 		}else{
@@ -80,7 +79,6 @@ class Entity {
 		vecZ.z = vecZ.z * x
 		flipVecZ.z = flipVecZ.z * z
 		collided_with = mesh_collision_check(vecZ.add(flipVecZ), this.hitbox)
-		this.handleCollisions(collided_with);
 		if(!collided_with.collidedWorld){
 			toMove.position.add(vecZ);
 		}else{

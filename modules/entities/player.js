@@ -276,8 +276,9 @@ class Player extends Entity{
 			for(let i=0;i<coll.length;i++){
 				if(coll[i].object.name.includes("-detectable") && coll[i].object.name.includes("item")){
 					let item = coll[i].object.entity
-					console.log(item)
+					
 					console.log("Picked up: "+item.item.displayName)
+					console.log(item)
 
 					scene.getObjectByProperty( 'uuid', item.detectable.uuid ).geometry.dispose( );
 			        scene.getObjectByProperty( 'uuid', item.detectable.uuid ).material.dispose( );
@@ -289,10 +290,12 @@ class Player extends Entity{
 
 			        scene.remove( scene.getObjectByProperty( 'uuid', item.pivot.uuid ) );
 
+			        registry.unRegisterEntity(item.entityId)
+
 				}
 			}
 		}catch(e){
-			console.log(e)
+			
 		}
 	}
 

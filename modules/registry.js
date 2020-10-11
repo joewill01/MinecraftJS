@@ -109,11 +109,22 @@ class Registry{
 
 	registerEntity(entity){
 		this.entityBuffer.push(entity);
+		entity.entityId = this.entityBuffer.length
 	}
 
 	updateEntities(){
 		for(let i=0;i<this.entityBuffer.length;i++){
 			this.entityBuffer[i].update();
 		}
+	}
+
+	unRegisterEntity(entityId){
+		for (var i = this.entityBuffer.length - 1; i >= 0; i--) {
+			if(this.entityBuffer[i].entityId == entityId){
+				this.entityBuffer.splice(i,1)
+				return
+			}
+		}
+		console.log(this.entityBuffer)
 	}
 }
