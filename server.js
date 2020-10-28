@@ -1,4 +1,32 @@
 "use strict";
+
+
+var worldName = "world"
+
+var fs = require('fs');
+var dir = `./saves/${worldName}`;
+
+const Chunk = require('./modules/world/chunkServer.js')
+const World = require("./modules/world/worldServer.js")
+
+var world = new World(Chunk,worldName);
+
+if (!fs.existsSync(dir)){
+  console.log("World does not exist, creating world")
+  fs.mkdirSync(dir);
+  fs.mkdirSync(dir+"/data");
+  
+  console.log("Generating Spawn");
+  for(let x=-1;x<=1;x++){
+    for(let y=-1;y<=1;y++){
+      world.generate_chunk(x,y);
+    }
+  }
+}
+
+
+console.log("Starting Server")
+
 //Create Server on given port with given title
 process.title = 'MinecraftJSServer';
 var webSocketsServerPort = 25565;

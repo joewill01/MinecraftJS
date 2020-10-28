@@ -74,3 +74,9 @@ class Chunk{
 		scene.add(chunk_mesh);
 	}
 }
+
+try{
+	module.exports = Chunk;
+}catch(e){
+
+}

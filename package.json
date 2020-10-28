@@ -18,6 +18,7 @@
     "electron-packager": "^15.1.0"
   },
   "dependencies": {
+    "noise": "0.0.0",
     "websocket": "^1.0.32"
   }
 }

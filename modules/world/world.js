@@ -191,3 +191,11 @@ class World{
 		return meshs
 	}
 }
+
+try{
+	module.exports = World;
+}catch(e){
+	
+}
+
+
