@@ -21,6 +21,7 @@ var renderHitboxes = false;
 var locked = false;
 var baseFOV = 70;
 var collidingEntities = {};
+var serverConn = null;
 
 //Vars for breaking blocks
 var m1Pressed = false;
