@@ -10,6 +10,7 @@ class Player extends Entity{
 		this.secondPersonCamera = new THREE.PerspectiveCamera( baseFOV, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		this.camera.position.set(this.x,this.y,this.z);
 		this.controls = new THREE.PointerLockControls(this.camera, renderer.domElement);
+		this.euler = null;
 
 		// this.move = this.move.bind(this);
 		// document.addEventListener("mousemove", this.move, true);

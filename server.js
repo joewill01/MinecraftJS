@@ -17,13 +17,6 @@ var wsServer = new webSocketServer({
   httpServer: server
 });
 
-//Helper Function to ensure no dodgy strings are passed in
-function validateMessage(str) {
-  return String(str)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
 //On connection
 wsServer.on('request', function(request) {
   console.log((new Date()) + ' Connection from origin '+ request.origin + '.');
@@ -40,11 +33,11 @@ wsServer.on('request', function(request) {
   connection.on('message', function(message) {
     if (message.type === 'utf8') { // accept only text
       if(userData === false){
-        userData = validateMessage(message.utf8Data)
+        userData = JSON.parse(message.utf8Data)
       }else{
 
       }
-      console.log(validateMessage(message.utf8Data))
+      console.log(JSON.parse(message.utf8Data).entities.player)
     }
   });
   // user disconnected

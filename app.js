@@ -69,16 +69,8 @@ scene.add( selectionCube );
 
 var registry = new Registry();
 
+//SERVER OR CLIENT
 var world = new World()
-
-/*
-for(let x=-3; x<=3; x++){
-	for(let z=-3; z<=3; z++){
-		world.generate_chunk(x,z);
-	}
-}
- */
-
 world.generate_chunk(0,0);
 
 var player = new Player()
@@ -414,10 +406,15 @@ document.body.appendChild( stats.domElement );
 
 function animate() {
 	getSelected(raycaster, mouse);
+	//SERVER OR CLIENT
 	registry.updateEntities();
 
 	stats.update();
 	requestAnimationFrame( animate );
 	renderer.render( scene, player.getCamera() );
+
+	if(serverConn != null){
+		serverConn.send(JSON.stringify({"entities":{"player":{"x":player.x,"y":player.y,"z":player.z,"euler":player.euler}}}))
+	}
 }
 animate();

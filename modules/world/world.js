@@ -181,7 +181,7 @@ class World{
 			this.chunk_instances[this.get_chunk_name(x,z)].render();
 			scene.remove(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh"));
 		}else{
-			console.warn("Tryed to update chunk " + this.get_chunk_name(x,z) + ", Failed as chunk does not exist")
+			//console.warn("Tryed to update chunk " + this.get_chunk_name(x,z) + ", Failed as chunk does not exist")
 		}
 	}
 
