@@ -16,6 +16,7 @@ if (!fs.existsSync(dir)){
   fs.mkdirSync(dir);
   fs.mkdirSync(dir+"/data");
   fs.mkdirSync(dir+"/players");
+  fs.writeFile(`./saves/${worldName}/banned_ips.txt`, JSON.stringify([]), function(){});
   
   console.log("Generating Spawn");
   for(let x=-1;x<=1;x++){
@@ -25,6 +26,7 @@ if (!fs.existsSync(dir)){
   }
 }
 
+var banned = [];
 
 console.log("Starting Server")
 
@@ -36,6 +38,7 @@ var webSocketServer = require('websocket').server;
 var http = require('http');
 
 var clients = []
+var online_ids = []
 
 var server = http.createServer(function(request, response) {});
 server.listen(webSocketsServerPort, function() {
@@ -49,8 +52,21 @@ var wsServer = new webSocketServer({
 //On connection
 wsServer.on('request', function(request) {
   console.log((new Date()) + ' Connection from origin '+ request.origin + '.');
+  fs.readFile(`./saves/${worldName}/banned_ips.txt`, 'utf8' , (err, data) => {
+    if (err) {
+      console.error(err);
+      return
+    }
+    banned = JSON.parse(data);
+  });
+
   //Check IP address here is not in banned IPs
-  var connection = request.accept(null, request.origin); 
+  if(banned.includes(request.origin)){
+    var connection = request.reject(null, request.origin); 
+    return;
+  }else{
+    var connection = request.accept(null, request.origin); 
+  }
 
   var index = clients.push(connection) - 1;
   var connData = false;
@@ -80,9 +96,12 @@ wsServer.on('request', function(request) {
           });
         }
       }else{
-
-      }
-      //console.log(JSON.parse(message.utf8Data).entities.player)
+        let msgplayer = JSON.parse(message.utf8Data).entities.player
+        playerData.x = msgplayer.x
+        playerData.y = msgplayer.y
+        playerData.z = msgplayer.z
+        playerData.euler = msgplayer.euler
+      } 
     }
   });
   // user disconnected

@@ -25,7 +25,8 @@ function createConn(connData){
     serverConn.send(JSON.stringify({"id":"0123456"}))
   };
   serverConn.onerror = function (error) {
-    // just in there were some problems with connection...
+    console.log("Rejected")
+    serverConn = null;
   };
 
   serverConn.onmessage = function (message) {
@@ -37,6 +38,4 @@ function createConn(connData){
     }
     console.log(json)
   };
-
-  //connection.send(msg);
 }
