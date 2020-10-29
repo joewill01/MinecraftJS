@@ -15,6 +15,7 @@ if (!fs.existsSync(dir)){
   console.log("World does not exist, creating world")
   fs.mkdirSync(dir);
   fs.mkdirSync(dir+"/data");
+  fs.mkdirSync(dir+"/players");
   
   console.log("Generating Spawn");
   for(let x=-1;x<=1;x++){
@@ -48,10 +49,12 @@ var wsServer = new webSocketServer({
 //On connection
 wsServer.on('request', function(request) {
   console.log((new Date()) + ' Connection from origin '+ request.origin + '.');
+  //Check IP address here is not in banned IPs
   var connection = request.accept(null, request.origin); 
 
   var index = clients.push(connection) - 1;
-  var userData = false;
+  var connData = false;
+  var playerData = {};
   console.log((new Date()) + ' Connection accepted.');
 
   // send message
@@ -60,17 +63,33 @@ wsServer.on('request', function(request) {
   // user sent some message
   connection.on('message', function(message) {
     if (message.type === 'utf8') { // accept only text
-      if(userData === false){
-        userData = JSON.parse(message.utf8Data)
+      if(connData === false){
+        connData = JSON.parse(message.utf8Data)
+        if (!fs.existsSync(`./saves/${worldName}/players/${connData.id}.txt`)){
+          console.log("New Player")
+          fs.writeFile(`./saves/${worldName}/players/${connData.id}.txt`, JSON.stringify(playerData), function(){});
+        }else{
+          console.log("Returning Player")
+          fs.readFile(`./saves/${worldName}/players/${connData.id}.txt`, 'utf8' , (err, data) => {
+            if (err) {
+              console.error(err);
+              return
+            }
+            playerData = JSON.parse(data);
+            console.log(playerData);
+          });
+        }
       }else{
 
       }
-      console.log(JSON.parse(message.utf8Data).entities.player)
+      //console.log(JSON.parse(message.utf8Data).entities.player)
     }
   });
   // user disconnected
   connection.on('close', function(connection) {
       console.log((new Date()) + " Peer " + connection.origin + " disconnected.");
+      //Persist Player data
+      fs.writeFile(`./saves/${worldName}/players/${connData.id}.txt`, JSON.stringify(playerData), function(){});
       // remove user from the list of connected clients
       clients.splice(index, 1);
   });

@@ -22,6 +22,7 @@ function createConn(connData){
   serverConn = new WebSocket(`ws://${connData.ip}:${connData.port}`);
   serverConn.onopen = function () {
     console.log("successfully connected")
+    serverConn.send(JSON.stringify({"id":"0123456"}))
   };
   serverConn.onerror = function (error) {
     // just in there were some problems with connection...
