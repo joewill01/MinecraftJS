@@ -76,3 +76,7 @@ function cubeIntersects(c1pos, c2pos, c1size, c2size){//{x,y,z}*4
 	}
 	
 }
+
+function mod(n, m) {
+  return ((n % m) + m) % m;
+}
