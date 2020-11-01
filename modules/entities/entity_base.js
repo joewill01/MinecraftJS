@@ -53,7 +53,7 @@ class Entity {
 		flipVecX.z = 0;
 		vecX.x = vecX.x * x
 		flipVecX.x = flipVecX.x * z
-		collided_with = mesh_collision_check(vecX.add(flipVecX), this.hitbox)
+		collided_with = mesh_collision_check(vecX.add(flipVecX), this.hitbox, this)
 		if(!collided_with.collidedWorld){
 			toMove.position.add(vecX);
 		}else{
@@ -67,7 +67,7 @@ class Entity {
 		flipVecZ.x = 0;
 		vecZ.z = vecZ.z * x
 		flipVecZ.z = flipVecZ.z * z
-		collided_with = mesh_collision_check(vecZ.add(flipVecZ), this.hitbox)
+		collided_with = mesh_collision_check(vecZ.add(flipVecZ), this.hitbox, this)
 		if(!collided_with.collidedWorld){
 			toMove.position.add(vecZ);
 		}else{
@@ -79,7 +79,7 @@ class Entity {
 		vecY.z = 0;
 		vecY.x = 0;
 		vecY.y = y;
-		collided_with = mesh_collision_check(vecY, this.hitbox)
+		collided_with = mesh_collision_check(vecY, this.hitbox, this)
 		this.handleCollisions(collided_with);
 		if(!collided_with.collidedWorld){
 			toMove.position.y += y;

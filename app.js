@@ -407,12 +407,15 @@ stats = createStats();
 document.body.appendChild( stats.domElement );
 
 var frames = 0;
+var infinite_terrain = false;
 
 function animate() {
 	frames+=1;
 
 	if(mod(frames,120)==0){
-		chunkLoadManager.update()
+		if(infinite_terrain){
+			chunkLoadManager.update()
+		}
 	}
 
 	getSelected(raycaster, mouse);
