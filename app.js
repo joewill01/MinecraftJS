@@ -36,7 +36,7 @@ let options_menu = new OptionsMenu(ui);
 let inventory = new Inventory(ui, hotbar);
 
 var scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x99ccff, 50, 70);
+scene.fog = new THREE.Fog(0x99ccff, 30, 50);
 scene.background = new THREE.Color( 0x99ccff );
 
 var renderer = new THREE.WebGLRenderer();
@@ -71,11 +71,13 @@ scene.add( selectionCube );
 
 var registry = new Registry();
 
+var player = new Player()
+
 //SERVER OR CLIENT
 var world = new World()
-world.generate_chunk(0,0);
-
-var player = new Player()
+let render_distance = 4;
+var chunkLoadManager = new ChunkLoadManager(player, render_distance)
+chunkLoadManager.initial_load()
 
 control_type = 'pointer';
 
@@ -406,7 +408,18 @@ function createStats() {
 stats = createStats();
 document.body.appendChild( stats.domElement );
 
+var frames = 0;
+var infinite_terrain = false;
+
 function animate() {
+	frames+=1;
+
+	if(mod(frames,120)==0){
+		if(infinite_terrain){
+			chunkLoadManager.update()
+		}
+	}
+
 	getSelected(raycaster, mouse);
 	//SERVER OR CLIENT
 	registry.updateEntities();

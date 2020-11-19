@@ -1,4 +1,4 @@
-function mesh_collision_check(vec, mesh){
+function mesh_collision_check(vec, mesh, entity){
 	var originPoint = mesh.position.clone();
 
 	let collided = {"collidedWorld":false,"allCollisions":[],"worldCollisions":[]}
@@ -30,17 +30,16 @@ function mesh_collision_check(vec, mesh){
     	let ray = new THREE.Raycaster( globalVertex2, directionVector.clone().normalize() );
 
 		//Find all the items it intersects
-		let allCollisionResults = ray.intersectObjects( scene.children,  true );
+
+		let playerPos = world.world_to_chunk_coords(player.x,0,player.z)
+		let player_chunk = [playerPos.chunk_x,playerPos.chunk_z]
+
 		let worldCollisionResults = ray.intersectObjects( world.get_chunk_instances_array() );
 		//Test if we have collided with something
 		if ( worldCollisionResults.length > 0 && worldCollisionResults[0].distance < globalVertex.length() ) 
 	    {
 	    	collided.collidedWorld = true;
 	    	collided.worldCollisions = collided.worldCollisions.concat(worldCollisionResults.filter((item) => collided.worldCollisions.indexOf(item) < 0))
-	    }
-	    if ( allCollisionResults.length > 0 && allCollisionResults[0].distance < globalVertex.length() ) 
-	    {
-	    	collided.allCollisions = collided.allCollisions.concat(allCollisionResults.filter((item) => collided.allCollisions.indexOf(item) < 0))
 	    }
 	}
 	return collided

@@ -106,6 +106,13 @@ class World{
 		world.world[world.get_chunk_name(coords.chunk_x,coords.chunk_z)][coords.index] = id;
 	}
 
+	unload_chunk(x, z){
+		if(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh") != undefined){
+			delete this.chunk_instances[this.get_chunk_name(x,z)]
+			scene.remove(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh"));
+		}else{}
+	}
+
 	reload_chunk(x, z){
 		if(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh") != undefined){
 			this.chunk_instances[this.get_chunk_name(x,z)].render();
@@ -189,6 +196,12 @@ class World{
 		  meshs.push(value.chunk_mesh);
 		}
 		return meshs
+	}
+
+	get_chunk_instances_array_old(){
+		let playerPos = world.world_to_chunk_coords(player.x,0,player.z)
+		let chunk_name = this.get_chunk_name(playerPos.chunk_x,playerPos.chunk_z)
+		return [this.chunk_instances[chunk_name].chunk_mesh]
 	}
 }
 
