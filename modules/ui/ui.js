@@ -1,6 +1,7 @@
 class UI {
     constructor(dom, parent_element) {
         this.dom = dom;
+        this.screens = [];
         this.createUI();
 
         this.createStylesheet();
@@ -17,6 +18,22 @@ class UI {
         this.element = this.dom.createElement("div");
         this.element.id = "ui";
         this.element.classList.add("ui");
+    }
+
+    closeAllScreens() {
+        for (screen of this.screens) {
+            screen.hide();
+        }
+    }
+
+    openScreen(id) {
+        for (let screen of this.screens) {
+            if (screen.element.id === id) {
+                console.log(screen);
+                this.closeAllScreens();
+                screen.show();
+            }
+        }
     }
 
     appendUI(element) {

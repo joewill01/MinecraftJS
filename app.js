@@ -29,8 +29,10 @@ var currentItem = null;
 
 let ui = new UI(document, document.getElementById("body"));
 
-let pause_menu = new PauseMenu(ui);
 let hotbar = new Hotbar(ui,0, 20, 14, 20, 17);
+
+let pause_menu = new PauseMenu(ui);
+let options_menu = new OptionsMenu(ui);
 let inventory = new Inventory(ui, hotbar);
 
 var scene = new THREE.Scene();
