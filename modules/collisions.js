@@ -31,10 +31,9 @@ function mesh_collision_check(vec, mesh, entity){
 
 		//Find all the items it intersects
 
-		let playerPos = world.world_to_chunk_coords(player.x,0,player.z)
-		let player_chunk = [playerPos.chunk_x,playerPos.chunk_z]
+		let visible_blocks = entity.boxes.filter(block => block[0].collidable==true).map(block => block[0])
 
-		let worldCollisionResults = ray.intersectObjects( world.get_chunk_instances_array() );
+		let worldCollisionResults = ray.intersectObjects( visible_blocks );
 		//Test if we have collided with something
 		if ( worldCollisionResults.length > 0 && worldCollisionResults[0].distance < globalVertex.length() ) 
 	    {
@@ -54,8 +53,6 @@ function entity_collision_check(){
 		for(let y=0; y<registry.entityBuffer.length;y++){
 			let entity2 = registry.entityBuffer[y]
 			if(y!=i){
-
-
 				let intersects = cubeIntersects({x:entity.x,y:entity.y,z:entity.z},
 								{x:entity2.x,y:entity2.y,z:entity2.z},
 								{x:entity.hitboxWidth,y:entity.hitboxHeight,z:entity.hitboxWidth},

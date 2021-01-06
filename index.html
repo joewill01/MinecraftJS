@@ -63,13 +63,14 @@
 		<link rel="apple-touch-icon" sizes="167x167" href="logo167.png">
 
 	</head>
-	<body id="body">
+	<body id="body" onload="initScene()">
 		<!-- Dependancies -->
 		<script src="lib/three.js"></script>
 		<script src="lib/PointerLockControls.js"></script>
 		<script src="lib/hammer.min.js"></script>
 		<script src="lib/stats.min.js"></script>
 		<script src="lib/noise.js"></script>
+		<script src="/lib/physi.js"></script>
 
 		<!--Server Client Architecture -->
 		<script src="modules/connection/client.js"></script>

@@ -10,6 +10,7 @@ class Entity {
 		this.vec = new THREE.Vector3();
 		this.mass = 0.3;
 		this.terminalVelocity = 50;
+		this.hasGravity = true;
 
 		let geom = new THREE.CubeGeometry( this.hitboxWidth, this.hitboxHeight, this.hitboxWidth);
 		let wireMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF, wireframe:true } );
@@ -30,15 +31,89 @@ class Entity {
 			scene.add( this.eyeLevelHitbox );
 		}
 
+		let hitboxGeom = new THREE.CubeGeometry( 1.001,1.001,1.001 );
+		let mat = new THREE.MeshBasicMaterial({ color: 0x888888 });
+
+		this.boxes = [
+			//Floor
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,0,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,0,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,0,1],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,0,1],
+
+			//Ceiling
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,3,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,3,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,3,1],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,3,1],
+
+			//Center1
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,1,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,1,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,1,1],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,1,1],
+
+			//Center2
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,2,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,2,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,2,1],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,2,1],
+
+			//Left
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), -1,1,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), -1,1,1],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), -1,2,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), -1,2,1],
+
+			//Right
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 2,1,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 2,1,1],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 2,2,0],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 2,2,1],
+
+			//Front
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,1,-1],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,1,-1],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,2,-1],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,2,-1],
+
+			//Back
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,1,2],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,1,2],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 0,2,2],
+			[new Physijs.BoxMesh(hitboxGeom,mat,0), 1,2,2],
+
+		]
+
+		this.boxes.forEach((box, index) => {
+		  	scene.add( box[0] );
+		})
+	
 		registry.registerEntity(this)
 	}
 
 	update(){
-		
+		this.updateCollBoxes();
+	}
+
+	updateCollBoxes(){
+		this.boxes.forEach((boxData, index) => {
+			let box = boxData[0]
+			let x = Math.floor(this.hitbox.position.x)+boxData[1]
+			let y = Math.floor(this.hitbox.position.y-1.4)+boxData[2]
+			let z = Math.floor(this.hitbox.position.z)+boxData[3]
+		  	box.position.set(x,y,z);
+		  	if(world.get_block(x,y,z) != 0){
+		  		box.visible = true;
+		  		box.collidable = true;
+		  	}else{
+		  		box.visible = false;
+		  		box.collidable = false;
+		  	}
+		})
 	}
 
 	move(x, y, z, toMove){
-		
 
 		this.vec.setFromMatrixColumn( toMove.matrix, 0 );
 
@@ -89,7 +164,6 @@ class Entity {
 			this.onHitGround();
 		}
 
-
 		if(this.eyeLevelHitbox != undefined){
 			this.eyeLevelHitbox.position.x = toMove.position.x
 			this.eyeLevelHitbox.position.y = toMove.position.y
@@ -103,7 +177,6 @@ class Entity {
 			this.hitbox.position.y = toMove.position.y
 			this.hitbox.position.z = toMove.position.z
 		}
-
 	}
 
 	handleCollisions(coll){
