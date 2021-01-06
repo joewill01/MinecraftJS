@@ -1,6 +1,6 @@
 class Player extends Entity{
 	constructor(){
-		super(0.6, 1.8, 1.6, 0, 100, 0, "player");
+		super(0.6, 1.8, 1.6, 0, 60, 0, "player");
 
 		this.perspective = 1;
 		this.mass = 2.5;
@@ -12,8 +12,6 @@ class Player extends Entity{
 		this.controls = new THREE.PointerLockControls(this.camera, renderer.domElement);
 		this.euler = null;
 
-		// this.move = this.move.bind(this);
-		// document.addEventListener("mousemove", this.move, true);
 		this.camera.add(this.thirdPersonCamera)
 		this.camera.add(this.secondPersonCamera)
 
@@ -24,7 +22,8 @@ class Player extends Entity{
 	}
 
 	update(){
-		this.moveCamera();
+		this.updateCollBoxes();
+		this.moveCamera();		
 		this.stepBreakSequence();
 		this.checkEntityCollisions();
 	}

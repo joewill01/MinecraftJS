@@ -27,107 +27,116 @@ var serverConn = null;
 var m1Pressed = false;
 var currentItem = null;
 
-let ui = new UI(document, document.getElementById("body"));
+var ui, hotbar, pause_menu,options_menu,inventory, scene, renderer
+var selectionCube, breakCube, registry, player, world, chunkLoadManager
+var control_type, breaktextures
 
-let hotbar = new Hotbar(ui,0, 20, 14, 20, 17);
+Physijs.scripts.worker = '/lib/physijs_worker.js';
 
-let pause_menu = new PauseMenu(ui);
-let options_menu = new OptionsMenu(ui);
-let inventory = new Inventory(ui, hotbar);
+function initScene(){
+	ui = new UI(document, document.getElementById("body"));
 
-var scene = new THREE.Scene();
-scene.fog = new THREE.Fog(0x99ccff, 30, 50);
-scene.background = new THREE.Color( 0x99ccff );
+	hotbar = new Hotbar(ui,0, 20, 14, 20, 17);
 
-var renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
-document.body.appendChild( renderer.domElement );
+	pause_menu = new PauseMenu(ui);
+	options_menu = new OptionsMenu(ui);
+	inventory = new Inventory(ui, hotbar);
 
-//SELECTION CUBE AND BREAK ANIMATION
-var geom = new THREE.BoxBufferGeometry( 1.001, 1.001, 1.001);
-var edges = new THREE.EdgesGeometry( geom );
-var selectionCube = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
-selectionCube.visible = false;
-selectionCube.name = "selectionCube";
+	scene = new Physijs.Scene;
+	scene.fog = new THREE.Fog(0x99ccff, 30, 50);
+	scene.background = new THREE.Color( 0x99ccff );
 
-let breakCubeGeometry = new THREE.CubeGeometry(1.0009, 1.0009, 1.0009);
-var breaktextures = [];
-for(let i=0;i<=9;i++){
-	breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_"+i.toString()+".png"))
-}
-
-for (var i = 0; i < breaktextures.length; i++) {
-    breaktextures[i].magFilter = THREE.NearestFilter;
-	breaktextures[i].minFilter = THREE.NearestFilter;
-}
-
-let breakCubeMat = new THREE.MeshPhongMaterial({"map":breaktextures[0],"opacity":0.5})
-breakCubeMat.transparent = true;
-var breakCube = new THREE.Mesh(breakCubeGeometry, breakCubeMat);
-breakCube.needsUpdate = true;
-breakCube.visible = false;
-selectionCube.add(breakCube);
-scene.add( selectionCube );
-
-var registry = new Registry();
-
-var player = new Player()
-
-//SERVER OR CLIENT
-var world = new World()
-let render_distance = 4;
-var chunkLoadManager = new ChunkLoadManager(player, render_distance)
-chunkLoadManager.initial_load()
-
-control_type = 'pointer';
-
-if (control_type === 'touch') {
-	// for touch controls
-	let hammer = new Hammer(renderer.domElement);
-
-	hammer.on("panleft panright panup pandown", function(e) {
-		if (e.type === 'panleft') {
-			player.camera.rotation.y += Math.PI / 180
-		} else if (e.type === 'panright') {
-			player.camera.rotation.y -= Math.PI / 180
-		}
-	})
-
-} else if (control_type === 'pointer') {
-	// for pointer controls
-	canvas=document.getElementsByTagName("canvas")[0];
-	canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
-	document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
-
-	player.controls.connect();
-
-	renderer.domElement.onclick = function() {
-		ui.captureCursor();
-	};
-}
-
-
-ui.releaseCursor = (() => {
-	player.controls.unlock();
-	locked = false;
-});
-
-
-ui.captureCursor = (() => {
-	player.controls.lock();
-	locked = true;
-});
-
-ui.updateSize = (() => {
+	renderer = new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
-	player.camera.width = window.innerWidth;
-	player.camera.height = window.innerHeight;
-	player.camera.aspect = window.innerWidth / window.innerHeight;
-	player.camera.updateProjectionMatrix();
-	navigator.keyboard.lock();
-});
+	document.body.appendChild( renderer.domElement );
 
-scene.add(player.controls.getObject());
+	//SELECTION CUBE AND BREAK ANIMATION
+	let geom = new THREE.BoxBufferGeometry( 1.001, 1.001, 1.001);
+	let edges = new THREE.EdgesGeometry( geom );
+	selectionCube = new THREE.LineSegments( edges, new THREE.LineBasicMaterial( { color: 0x000000 } ) );
+	selectionCube.visible = false;
+	selectionCube.name = "selectionCube";
+
+	let breakCubeGeometry = new THREE.CubeGeometry(1.0009, 1.0009, 1.0009);
+	breaktextures = [];
+	for(let i=0;i<=9;i++){
+		breaktextures.push(new THREE.ImageUtils.loadTexture("minecraft/textures/block/destroy_stage_"+i.toString()+".png"))
+	}
+
+	for (var i = 0; i < breaktextures.length; i++) {
+	    breaktextures[i].magFilter = THREE.NearestFilter;
+		breaktextures[i].minFilter = THREE.NearestFilter;
+	}
+
+	let breakCubeMat = new THREE.MeshPhongMaterial({"map":breaktextures[0],"opacity":0.5})
+	breakCubeMat.transparent = true;
+	breakCube = new THREE.Mesh(breakCubeGeometry, breakCubeMat);
+	breakCube.needsUpdate = true;
+	breakCube.visible = false;
+	selectionCube.add(breakCube);
+	scene.add( selectionCube );
+
+	registry = new Registry();
+
+	player = new Player()
+
+	//SERVER OR CLIENT
+	world = new World()
+	let render_distance = 4;
+	chunkLoadManager = new ChunkLoadManager(player, render_distance)
+	chunkLoadManager.initial_load()
+
+	control_type = 'pointer';
+
+	if (control_type === 'touch') {
+		// for touch controls
+		let hammer = new Hammer(renderer.domElement);
+
+		hammer.on("panleft panright panup pandown", function(e) {
+			if (e.type === 'panleft') {
+				player.camera.rotation.y += Math.PI / 180
+			} else if (e.type === 'panright') {
+				player.camera.rotation.y -= Math.PI / 180
+			}
+		})
+
+	} else if (control_type === 'pointer') {
+		// for pointer controls
+		canvas=document.getElementsByTagName("canvas")[0];
+		canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock;
+		document.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock;
+
+		player.controls.connect();
+
+		renderer.domElement.onclick = function() {
+			ui.captureCursor();
+		};
+	}
+
+	scene.add(player.controls.getObject());
+
+	ui.releaseCursor = (() => {
+		player.controls.unlock();
+		locked = false;
+	});
+
+	ui.captureCursor = (() => {
+		player.controls.lock();
+		locked = true;
+	});
+
+	ui.updateSize = (() => {
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		player.camera.width = window.innerWidth;
+		player.camera.height = window.innerHeight;
+		player.camera.aspect = window.innerWidth / window.innerHeight;
+		player.camera.updateProjectionMatrix();
+		navigator.keyboard.lock();
+	});
+
+	requestAnimationFrame( animate );
+}
+
 
 document.addEventListener('mousemove', function(event) {
     event.preventDefault();
@@ -378,8 +387,7 @@ function getSelected(raycaster, mouse){
 		}
 	}catch{
 		lookingAt = null;
-	}
-	
+	}	
 }
 
 document.addEventListener( 'keydown', onKeyDown, false );
@@ -405,6 +413,7 @@ function createStats() {
 
   return stats;
 }
+
 stats = createStats();
 document.body.appendChild( stats.domElement );
 
@@ -414,6 +423,7 @@ var infinite_terrain = false;
 function animate() {
 	frames+=1;
 
+	//every 120 updates
 	if(mod(frames,120)==0){
 		if(infinite_terrain){
 			chunkLoadManager.update()
@@ -421,15 +431,13 @@ function animate() {
 	}
 
 	getSelected(raycaster, mouse);
-	//SERVER OR CLIENT
-	registry.updateEntities();
-
+	
 	stats.update();
 	requestAnimationFrame( animate );
+	registry.updateEntities();
+	scene.simulate();
 	renderer.render( scene, player.getCamera() );
-
 	if(serverConn != null){
 		serverConn.send(JSON.stringify({"entities":{"player":{"x":player.x,"y":player.y,"z":player.z,"euler":player.euler}}}))
 	}
 }
-animate();

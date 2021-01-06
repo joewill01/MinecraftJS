@@ -209,6 +209,7 @@ class ItemEntity extends Entity{
 	}
 
 	update(){
+		this.updateCollBoxes();
 		var time = performance.now();
 		var delta = ( time - prevTime ) / 1000;
 		if(this.velocity.y - 9.8 * this.mass > -this.terminalVelocity){
