@@ -1,0 +1,4 @@
+[
+{"email":"john.watkins2002@gmail.com","password":"test","admin":True,"name":"John"},
+{"email":"a","password":"a",admin:false,"name":"TestUser"}
+]

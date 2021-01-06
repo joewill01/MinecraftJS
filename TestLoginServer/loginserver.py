@@ -1,15 +1,20 @@
 from flask import Flask, jsonify, request, make_response
 import jwt
+import json
 import datetime
 from functools import wraps
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "Yk6Omtur9gKArILioVEyTRsxfJPShEC3gipuhKwUFA47mitHEYj6VygQjXgnv3mqT7VvWd197efyECFH"
+app.config["SECRET_KEY"] = '\x9f\xeaxN\x93\x0f\xca\xd8o\x04\xa01\xff7\xce\xcb\x1e\xd15p\xe5\xc6\xd0\x83'
+
+def get_users():
+        with open("users.txt","r") as f:
+                return json.loads(f.read())
 
 def token_required(f):
 	@wraps(f)
 	def decorated(*args, **kwargs):
-		token = request.args.get("token")
+		token = request.headers.get("x-access-token")
 
 		if not token:
 			return jsonify({"message":"Token is missing"}), 403
@@ -19,29 +24,36 @@ def token_required(f):
 		except:
 			return jsonify({"message":"Token is invalid"}), 403
 
-		return f(*args, **args)
+		return f(data["user"], *args, **kwargs)
 	return decorated
 
 @app.route("/register")
 def register():
-	return ""
+        return ""
 
 @app.route("/login")
 def login():
-	auth = request.authorization
+        auth = request.authorization
 
-	if auth and auth.password == "password":
-		token = jwt.encode({"user": auth.username, "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7)}, app.config["SECRET_KEY"])
+        users = get_users()
+        valid_user = [user for user in users if user["email"] == auth.username]
+        if valid_user == []:
+                return make_response("Could not verify", 401, {"WWW.Authenticate" : "Basic realm='Login Required'"})
+        valid_user = valid_user[0]
 
-		return jsonify({"token": token.decode("UTF-8")})
+        if valid_user["password"] == auth.password:
+                del valid_user["password"]
+                token = jwt.encode({"user": valid_user, "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7)}, app.config["SECRET_KEY"])
 
-	return make_response("Could not verify", 401, {"WWW.Authenticate" : "Basic realm='Login Required'"})
+                return jsonify({"token": token.decode("UTF-8")})
 
-	
+        return make_response("Could not verify", 401, {"WWW.Authenticate" : "Basic realm='Login Required'"})
+
 @app.route("/get_user_info")
 @token_required
-def protected():
-	return jsonify({"message":"good token"})
+def protected(current_user):
+        print(current_user)
+        return jsonify({"message":"good token"})
 
 if __name__ == "__main__":
     app.run(debug=True)
