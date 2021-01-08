@@ -19,6 +19,7 @@ class Player extends Entity{
 		this.breaktime = 0;
 		this.startedBreakSequenceAt = null;
 		this.lastStage = 0;
+		this.frozen = true;
 	}
 
 	update(){
@@ -65,61 +66,62 @@ class Player extends Entity{
 	}
 
 	moveCamera() {
+		if(!this.frozen){
+			var time = performance.now();
+			var delta = ( time - prevTime ) / 1000;
 
-		var time = performance.now();
-		var delta = ( time - prevTime ) / 1000;
+			//Change speed if sprinting
+			if (!sprinting){
+				this.velocity.x -= this.velocity.x * 16.0 * delta;
+				this.velocity.z -= this.velocity.z * 16.0 * delta;
+			}else{
+				this.velocity.x -= this.velocity.x * 10.0 * delta;
+				this.velocity.z -= this.velocity.z * 10.0 * delta;
+			}
+			
+			//Change the FOV of the camera to show you are sprinting
+			if(sprinting && this.camera.fov < baseFOV+10){
+				this.camera.fov ++;
+				this.thirdPersonCamera.fov ++;
+				this.secondPersonCamera.fov ++;
+			}
+			if(!sprinting && this.camera.fov > baseFOV){
+				this.camera.fov -= 0.5;
+				this.thirdPersonCamera.fov -= 0.5;
+				this.secondPersonCamera.fov -= 0.5;
+			}
+			this.camera.updateProjectionMatrix();
+			this.thirdPersonCamera.updateProjectionMatrix();
+			this.secondPersonCamera.updateProjectionMatrix();
 
-		//Change speed if sprinting
-		if (!sprinting){
-			this.velocity.x -= this.velocity.x * 16.0 * delta;
-			this.velocity.z -= this.velocity.z * 16.0 * delta;
-		}else{
-			this.velocity.x -= this.velocity.x * 10.0 * delta;
-			this.velocity.z -= this.velocity.z * 10.0 * delta;
+			if(this.velocity.y - 9.8 * this.mass * delta > -this.terminalVelocity){
+				this.velocity.y -= 9.8 * this.mass * delta;
+			}else{
+				this.velocity.y = -this.terminalVelocity
+			}
+
+			direction.z = Number( moveForward ) - Number( moveBackward );
+			direction.x = Number( moveRight ) - Number( moveLeft );
+			direction.normalize(); // this ensures consistent movements in all directions
+
+			if ( moveForward || moveBackward ) this.velocity.z -= direction.z * 1 * delta;
+			if ( moveLeft || moveRight ) this.velocity.x -= direction.x * 1 * delta;
+
+			this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.camera)
+
+			prevTime = time;
+
+			//Do a raycast here to see how far away the nearsest block is and then set the z to that if its less than 5
+			this.thirdPersonCamera.position.z = 5
+			this.thirdPersonCamera.lookAt(this.camera.position)
+
+			this.secondPersonCamera.position.z = -5
+			this.secondPersonCamera.lookAt(this.camera.position)
+
+			this.x = this.hitbox.position.x
+			this.y = this.hitbox.position.y
+			this.z = this.hitbox.position.z
 		}
-		
-		//Change the FOV of the camera to show you are sprinting
-		if(sprinting && this.camera.fov < baseFOV+10){
-			this.camera.fov ++;
-			this.thirdPersonCamera.fov ++;
-			this.secondPersonCamera.fov ++;
-		}
-		if(!sprinting && this.camera.fov > baseFOV){
-			this.camera.fov -= 0.5;
-			this.thirdPersonCamera.fov -= 0.5;
-			this.secondPersonCamera.fov -= 0.5;
-		}
-		this.camera.updateProjectionMatrix();
-		this.thirdPersonCamera.updateProjectionMatrix();
-		this.secondPersonCamera.updateProjectionMatrix();
-
-		if(this.velocity.y - 9.8 * this.mass * delta > -this.terminalVelocity){
-			this.velocity.y -= 9.8 * this.mass * delta;
-		}else{
-			this.velocity.y = -this.terminalVelocity
-		}
-
-		direction.z = Number( moveForward ) - Number( moveBackward );
-		direction.x = Number( moveRight ) - Number( moveLeft );
-		direction.normalize(); // this ensures consistent movements in all directions
-
-		if ( moveForward || moveBackward ) this.velocity.z -= direction.z * 1 * delta;
-		if ( moveLeft || moveRight ) this.velocity.x -= direction.x * 1 * delta;
-
-		this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.camera)
-
-		prevTime = time;
-
-		//Do a raycast here to see how far away the nearsest block is and then set the z to that if its less than 5
-		this.thirdPersonCamera.position.z = 5
-		this.thirdPersonCamera.lookAt(this.camera.position)
-
-		this.secondPersonCamera.position.z = -5
-		this.secondPersonCamera.lookAt(this.camera.position)
-
-		this.x = this.hitbox.position.x
-		this.y = this.hitbox.position.y
-		this.z = this.hitbox.position.z
 	}
 
 	getCamera(){

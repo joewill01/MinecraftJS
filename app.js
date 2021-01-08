@@ -123,6 +123,8 @@ function initScene(){
 	ui.captureCursor = (() => {
 		player.controls.lock();
 		locked = true;
+		prevTime = performance.now()
+		player.frozen = false;
 	});
 
 	ui.updateSize = (() => {

@@ -186,4 +186,8 @@ class Entity {
 	onHitGround(){
 
 	}
+
+	cleanup(){
+		
+	}
 }
