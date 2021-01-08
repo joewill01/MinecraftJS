@@ -420,7 +420,7 @@ stats = createStats();
 document.body.appendChild( stats.domElement );
 
 var frames = 0;
-var infinite_terrain = false;
+var infinite_terrain = true;
 
 function animate() {
 	frames+=1;
