@@ -70,8 +70,8 @@ class Player extends Entity{
 			var time = performance.now();
 			var delta = ( time - prevTime ) / 1000;
 
-			if(delta>0.25){
-				delta = 0.25
+			if(delta>0.2){
+				delta = 0.15
 			}
 
 			//Change speed if sprinting
