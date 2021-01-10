@@ -104,6 +104,9 @@ class Registry{
 			case 12:
 				return new DirtBlockItem();
 				break;
+			case 13:
+				return new SeedsItem();
+				break;
 		}
 	}
 
