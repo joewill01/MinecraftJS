@@ -39,11 +39,16 @@ class ItemEntity extends Entity{
 		        // is done on a separate canvas for each discrete element
 		        while(moveDiscreteElementToNewCanvas()){}
 		        
-		        //Start drawing the shape
-		        var itemOutline = new THREE.Shape();
+		        var pivot = new THREE.Object3D();
+				pivot.position.x = x 
+				pivot.position.y = y 
+				pivot.position.z = z
 
 		        //Draw lines
 		        for (var i = all_points.length - 1; i >= 0; i--) {
+		        	//Start drawing the shape
+		        	var itemOutline = new THREE.Shape();
+
 		        	let points = all_points[i]
 		        
 			        //Use points to draw shape
@@ -52,24 +57,20 @@ class ItemEntity extends Entity{
 			        	itemOutline.lineTo(points[i][0],points[i][1])
 			        }
 			        itemOutline.lineTo(points[0][0],points[0][1])
-			    }
 
-			    let texture = new THREE.TextureLoader().load( img.src );
-		        texture.magFilter = THREE.NearestFilter;
-				texture.minFilter = THREE.NearestFilter;
+				    let texture = new THREE.TextureLoader().load( img.src );
+			        texture.magFilter = THREE.NearestFilter;
+					texture.minFilter = THREE.NearestFilter;
 
-		        var geometry = new THREE.ExtrudeBufferGeometry( itemOutline, { depth: zSize, bevelEnabled: false } );
-		        var mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({map:texture}) );
-		        mesh.position.x = -xySize/2;
-				mesh.position.y = -xySize/2;
-				mesh.scale.x = xySize;
-				mesh.scale.y = xySize;
-
-				var pivot = new THREE.Object3D();
-				pivot.position.x = x 
-				pivot.position.y = y 
-				pivot.position.z = z
-				pivot.add( mesh );
+			        var geometry = new THREE.ExtrudeBufferGeometry( itemOutline, { depth: zSize, bevelEnabled: false } );
+			        var mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({map:texture}) );
+			        mesh.position.x = -xySize/2;
+					mesh.position.y = 0;
+					mesh.scale.x = xySize;
+					mesh.scale.y = xySize;
+					
+					pivot.add( mesh );
+				}
 
 				scene.add( pivot );
 				img.entity.pivot = pivot
@@ -188,9 +189,13 @@ class ItemEntity extends Entity{
 				this.pivot.rotation.y += 0.015;
 				let offset = Math.sin(performance.now()/400)*0.02 + 0.1
 				if(this.xySize!=undefined){
-					this.pivot.children[0].position.y = -this.xySize/2 + offset
+					this.pivot.children.forEach((child, index)=>{
+						child.position.y = -this.xySize/2 + offset
+					})
 				}else{
-					this.pivot.children[0].position.y = -this.size/2 + offset
+					this.pivot.children.forEach((child, index)=>{
+						child.position.y = -this.size/2 + offset
+					})
 				}
 				
 				this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.pivot)
