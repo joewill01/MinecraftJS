@@ -278,7 +278,6 @@ class Player extends Entity{
 	}
 
 	handleCollisions(coll){
-		
 	}
 
 	checkEntityCollisions(){
@@ -291,14 +290,27 @@ class Player extends Entity{
 					console.log("Picked up: "+item.item.displayName)
 					//item is the item class
 
-			        scene.getObjectByProperty( 'uuid', item.hitbox.uuid ).geometry.dispose( );
-			        scene.getObjectByProperty( 'uuid', item.hitbox.uuid ).material.dispose( );
-			        scene.remove( scene.getObjectByProperty( 'uuid', item.hitbox.uuid ) );
+					registry.unRegisterEntity(item.entityId)
 
-			        scene.remove( scene.getObjectByProperty( 'uuid', item.pivot.uuid ) );
+					scene.remove(item.hitbox);
+					item.pivot.remove(item.pivot.children[0])
+					scene.remove(item.pivot);
 
-			        registry.unRegisterEntity(item.entityId)
+					item.cleanup()
+			        item.hitbox.geometry.dispose( );
+			        item.hitbox.material.dispose( );
 
+			        item.pivot.children[0].geometry.dispose( );
+			        item.pivot.children[0].material.dispose( );
+			        
+			        item.pivot.geometry.dispose( );
+			        item.pivot.material.dispose( );
+			        
+			        item.hitbox = null;
+			        item.pivot = null;
+
+			        renderer.renderLists.dispose();
+			        renderer.dispose();
 				}
 			}
 		}catch(e){

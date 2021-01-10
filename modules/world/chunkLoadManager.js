@@ -9,12 +9,11 @@ class ChunkLoadManager{
 	initial_load(){
 		let playerPos = world.world_to_chunk_coords(player.x,0,player.z)
 		this.prev_chunk = [playerPos.chunk_x,playerPos.chunk_z]
-		for(let x=playerPos.chunk_x-Math.floor(this.rd/2);x<=playerPos.chunk_x+Math.floor(this.rd/2);x++){
-			for(let z=playerPos.chunk_z-Math.floor(this.rd/2);z<=playerPos.chunk_z+Math.floor(this.rd/2);z++){
-				this.loaded[world.get_chunk_name(x,z)] = [x,z];
-				world.generate_chunk(x,z);
-			}
+		let toLoad = this.gen_diamond(playerPos.chunk_x,playerPos.chunk_z,3)
+		for (var i = toLoad.length - 1; i >= 0; i--) {
+			world.generate_chunk(toLoad[i][0],toLoad[i][1]);
 		}
+		
 		for(let y=256;y>0;y--){
 			if(world.get_block_ID(player.x,y,player.z) != 0){
 				player.tp(player.x,y+2.5,player.z)
@@ -55,6 +54,39 @@ class ChunkLoadManager{
 		}
 		this.prev_chunk = player_chunk;
 	}
-}
 
-//Make collision detection only check the currently in chunk
+	gen_peaks(x,y,r){
+		return [[x,r+y],[r+x,y],[x,-r+y],[-r+x,y]]
+	}
+
+	gen_line(a,b,dirx,diry){
+		let to_ret = []
+	    while (!arraysMatch(a,b)){
+	    	a[0]+=dirx
+	        a[1]+=diry
+	        to_ret.push([...a])
+	    }
+	    return to_ret.slice(0,-1)
+	}
+
+	gen_diamond(x,y,render_distance){
+		let diamond = [];
+		for(let i=0;i<render_distance;i++){
+			if(i==0){
+				diamond.push([x,y])
+			}else if(i==1){
+				diamond = diamond.concat(this.gen_peaks(x,y,i))
+			}else{
+				let diamond_layer = [];
+				let peaks = this.gen_peaks(x,y,i)
+				diamond_layer = diamond_layer.concat(peaks)
+				diamond_layer = diamond_layer.concat(this.gen_line([...peaks[0]],[...peaks[1]],1,-1))
+	            diamond_layer = diamond_layer.concat(this.gen_line([...peaks[1]],[...peaks[2]],-1,-1))
+	            diamond_layer = diamond_layer.concat(this.gen_line([...peaks[2]],[...peaks[3]],-1,1))
+	            diamond_layer = diamond_layer.concat(this.gen_line([...peaks[3]],[...peaks[0]],1,1))
+	            diamond = diamond.concat(diamond_layer)
+			}
+		}
+		return diamond
+	}
+}

@@ -1,6 +1,7 @@
 class ItemEntity extends Entity{
 	constructor(x,y,z,item){
 		if(item.displayType == "2d"){
+			let geom;
 			var xySize = 0.35;
 			var zSize = 0.02
 
@@ -116,6 +117,7 @@ class ItemEntity extends Entity{
 		        let points = geom.contour(defineNonTransparent);
 
 		        points = points.map(x => [x[0]/img.width*scale,x[1]/img.height*scale]);
+		        console.log(points)
 
 		        itemOutline.moveTo(points[0][0],points[0][1])
 		        for(let i=1;i<points.length;i++){
@@ -142,6 +144,7 @@ class ItemEntity extends Entity{
 
 				scene.add( pivot );
 				img.entity.pivot = pivot
+				this.pivot = pivot
 		    }
 
 		    img.entity = this
@@ -190,7 +193,6 @@ class ItemEntity extends Entity{
 			  	plane.updateMatrix();
 			  	block_geom.merge(planeGeom, plane.matrix, mat_index);
 			}
-
 
 			let mesh = new THREE.Mesh(block_geom, registry.materials);
 			mesh.geometry.computeFaceNormals();
@@ -243,4 +245,12 @@ class ItemEntity extends Entity{
 		this.velocity.z = 0;
 	}
 
+	cleanup(){
+		this.boxes.forEach((box, index) => {
+			box[0].geometry.dispose( );
+			box[0].material.dispose( );
+		  	scene.remove(box[0])
+		})
+		this.boxes = null;
+	}
 }

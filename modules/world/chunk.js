@@ -12,6 +12,7 @@ class Chunk{
 		let zoom = 100
 		let scale = 10
 		let raise = 40
+		let offset = 999999999999999
 
 		for (let y = 0; y < 257; y++){
 			for (let x = 0; x < 16; x++) {
@@ -23,7 +24,7 @@ class Chunk{
 		}
 		for (let x = 0; x < 16; x++) {
 			for (let z = 0; z < 16; z++) {
-				let height = Math.ceil(Math.abs(noise.perlin2((this.x*16+x) / zoom, (this.z*16 + z) / zoom)) * scale) + raise;
+				let height = Math.ceil(Math.abs(noise.perlin2((this.x*16+x+offset) / zoom, (this.z*16 + z + offset) / zoom)) * scale) + raise;
 				for (let y = 0; y <= height; y++){
 					if(y==height){
 						this.cdata[y*256 + x*16 + z] = 1

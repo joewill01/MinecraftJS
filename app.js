@@ -419,8 +419,15 @@ function createStats() {
 stats = createStats();
 document.body.appendChild( stats.domElement );
 
+var rendererStats	= new THREEx.RendererStats()
+rendererStats.domElement.style.position	= 'absolute'
+rendererStats.domElement.style.left	= '0px'
+rendererStats.domElement.style.bottom	= '0px'
+rendererStats.domElement.style.zIndex	= '100'
+document.body.appendChild( rendererStats.domElement )
+
 var frames = 0;
-var infinite_terrain = true;
+var infinite_terrain = false;
 
 function animate() {
 	frames+=1;
@@ -435,6 +442,7 @@ function animate() {
 	getSelected(raycaster, mouse);
 	
 	stats.update();
+	rendererStats.update(renderer);
 	requestAnimationFrame( animate );
 	registry.updateEntities();
 	scene.simulate();
