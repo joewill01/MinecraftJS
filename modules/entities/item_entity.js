@@ -1,7 +1,6 @@
 class ItemEntity extends Entity{
 	constructor(x,y,z,item){
 		if(item.displayType == "2d"){
-			let geom;
 			var xySize = 0.35;
 			var zSize = 0.02
 
@@ -10,122 +9,52 @@ class ItemEntity extends Entity{
 			this.xySize = xySize
 			this.zSize = zSize
 
-			var data = null;
-
-		    // this is a "marching ants" algorithm used to calc the outline path
-		    (function () {
-		        // d3-plugin for calculating outline paths
-		        // License: https://github.com/d3/d3-plugins/blob/master/LICENSE
-		        //
-		        // Copyright (c) 2012-2014, Michael Bostock
-		        // All rights reserved.
-		        //
-		        //  Redistribution and use in source and binary forms, with or without
-		        //  modification, are permitted provided that the following conditions are met:
-		        //* Redistributions of source code must retain the above copyright notice, this
-		        //  list of conditions and the following disclaimer.
-		        //* Redistributions in binary form must reproduce the above copyright notice,
-		        //  this list of conditions and the following disclaimer in the documentation
-		        //  and/or other materials provided with the distribution.
-		        //* The name Michael Bostock may not be used to endorse or promote products
-		        //  derived from this software without specific prior written permission.
-		        // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL MICHAEL BOSTOCK BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-		        geom = {};
-		        geom.contour = function (grid, start) {
-		            var s = start || d3_geom_contourStart(grid), // starting point 
-		                c = [], // contour polygon 
-		                x = s[0], // current x position 
-		                y = s[1], // current y position 
-		                dx = 0, // next x direction 
-		                dy = 0, // next y direction 
-		                pdx = NaN, // previous x direction 
-		                pdy = NaN, // previous y direction 
-		                i = 0;
-
-		            do {
-		                // determine marching squares index 
-		                i = 0;
-		                if (grid(x - 1, y - 1)) i += 1;
-		                if (grid(x, y - 1)) i += 2;
-		                if (grid(x - 1, y)) i += 4;
-		                if (grid(x, y)) i += 8;
-
-		                // determine next direction 
-		                if (i === 6) {
-		                    dx = pdy === -1 ? -1 : 1;
-		                    dy = 0;
-		                } else if (i === 9) {
-		                    dx = 0;
-		                    dy = pdx === 1 ? -1 : 1;
-		                } else {
-		                    dx = d3_geom_contourDx[i];
-		                    dy = d3_geom_contourDy[i];
-		                }
-
-		                // update contour polygon 
-		                if (dx != pdx && dy != pdy) {
-		                    c.push([x, y]);
-		                    pdx = dx;
-		                    pdy = dy;
-		                }
-
-		                x += dx;
-		                y += dy;
-		            } while (s[0] != x || s[1] != y);
-
-		            return c;
-		        };
-
-		        // lookup tables for marching directions 
-		        var d3_geom_contourDx = [1, 0, 1, 1, -1, 0, -1, 1, 0, 0, 0, 0, -1, 0, -1, NaN],
-		            d3_geom_contourDy = [0, -1, 0, 0, 0, -1, 0, 0, 1, -1, 1, 1, 0, -1, 0, NaN];
-
-		        function d3_geom_contourStart(grid) {
-		            var x = 0,
-		                y = 0;
-
-		            // search for a starting point; begin at origin 
-		            // and proceed along outward-expanding diagonals 
-		            while (true) {
-		                if (grid(x, y)) {
-		                    return [x, y];
-		                }
-		                if (x === 0) {
-		                    x = y + 1;
-		                    y = 0;
-		                } else {
-		                    x = x - 1;
-		                    y = y + 1;
-		                }
-		            }
-		        }
-
-		    })();
-
 		    var canvas = document.createElement('canvas');
 		    var ctx = canvas.getContext('2d');
+
+		    var imageData,data,imageData1,data1,cw,ch;
+		    var all_points = [];
+
+		    var defineNonTransparent=function(x,y){
+		        return(data1[(y*cw+x)*4+3]>0);
+		    }
+
 		    var img = new Image();
-		    img.onload = function (){
+		    img.onload = start;
 
-		    	var itemOutline = new THREE.Shape();
+		    function start(){
+		    	// resize the main canvas to the image size
+		        canvas.width=cw=img.width;
+		        canvas.height=img.height;
 
-		    	ctx.scale(1, -1);
-		    	let scale = 1;
-		        ctx.drawImage(img, 0,-img.height);
-		        var theData = ctx.getImageData(0, 0, img.width, img.height);
-		        data = theData.data;
-		        let points = geom.contour(defineNonTransparent);
+		        // draw the image on the main canvas
+		        ctx.save()
+		        ctx.translate(0, canvas.height);
+				ctx.scale(1, -1);
+		        ctx.drawImage(img,0,0);
+		        ctx.restore()
 
-		        points = points.map(x => [x[0]/img.width*scale,x[1]/img.height*scale]);
-		        console.log(points)
+		        // Move every discrete element from the main canvas to a separate canvas
+		        // The sticker effect is applied individually to each discrete element and
+		        // is done on a separate canvas for each discrete element
+		        while(moveDiscreteElementToNewCanvas()){}
+		        
+		        //Start drawing the shape
+		        var itemOutline = new THREE.Shape();
 
-		        itemOutline.moveTo(points[0][0],points[0][1])
-		        for(let i=1;i<points.length;i++){
-		        	itemOutline.lineTo(points[i][0],points[i][1])
-		        }
-		        itemOutline.lineTo(points[0][0],points[0][1])
+		        //Draw lines
+		        for (var i = all_points.length - 1; i >= 0; i--) {
+		        	let points = all_points[i]
+		        
+			        //Use points to draw shape
+			        itemOutline.moveTo(points[0][0],points[0][1])
+			        for(let i=1;i<points.length;i++){
+			        	itemOutline.lineTo(points[i][0],points[i][1])
+			        }
+			        itemOutline.lineTo(points[0][0],points[0][1])
+			    }
 
-		        let texture = new THREE.TextureLoader().load( img.src );
+			    let texture = new THREE.TextureLoader().load( img.src );
 		        texture.magFilter = THREE.NearestFilter;
 				texture.minFilter = THREE.NearestFilter;
 
@@ -147,13 +76,48 @@ class ItemEntity extends Entity{
 				this.pivot = pivot
 		    }
 
+		    function defineGeomPath(context,points){
+		        context.beginPath();
+		        context.moveTo(points[0][0],points[0][1]);  
+		        for(var i=1;i<points.length;i++){
+		            context.lineTo(points[i][0],points[i][1]);
+		        }
+		        context.lineTo(points[0][0],points[0][1]);
+		        context.closePath();    
+		    }
+
+		    function moveDiscreteElementToNewCanvas(){
+
+		        // get the imageData of the main canvas
+		        imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+		        data1=imageData.data;
+
+		        // test & return if the main canvas is empty
+		        // Note: do this b/ geom.contour will fatal-error if canvas is empty
+		        var hit=false;
+		        for(var i=0;i<data1.length;i+=4){
+		            if(data1[i+3]>0){hit=true;break;}
+		        }
+		        if(!hit){return;}
+
+		        // get the point-path that outlines a discrete element
+		        var points=geom.contour(defineNonTransparent);
+		        let new_points = points.map(x => [x[0]/img.width,x[1]/img.height]);
+		        all_points.push(new_points)
+
+		        // remove the element from the main canvas
+		        defineGeomPath(ctx,points);
+		        ctx.save();
+		        ctx.clip();
+		        ctx.globalCompositeOperation="destination-out";
+		        ctx.clearRect(0,0,canvas.width,canvas.height);
+		        ctx.restore();
+
+		        return(true);
+		    }
+
 		    img.entity = this
 		    img.src = 'minecraft/textures/item/'+item.itemTexture
-
-		    var defineNonTransparent = function (x, y) {
-		        var a = data[(y * img.width + x) * 4 + 3];
-		        return (a > 20);
-		    }
 
 		}else{
 
