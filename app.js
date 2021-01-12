@@ -444,7 +444,7 @@ function animate() {
 	stats.update();
 	rendererStats.update(renderer);
 	requestAnimationFrame( animate );
-	registry.updateEntities();
+	registry.updateAll();
 	scene.simulate();
 	renderer.render( scene, player.getCamera() );
 	if(serverConn != null){
