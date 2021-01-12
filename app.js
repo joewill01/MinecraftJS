@@ -43,7 +43,7 @@ function initScene(){
 	inventory = new Inventory(ui, hotbar);
 
 	scene = new Physijs.Scene;
-	scene.fog = new THREE.Fog(0x99ccff, 30, 50);
+	scene.fog = new THREE.Fog(0x99ccff, 70, 90);
 	scene.background = new THREE.Color( 0x99ccff );
 
 	renderer = new THREE.WebGLRenderer();
@@ -82,7 +82,7 @@ function initScene(){
 
 	//SERVER OR CLIENT
 	world = new World()
-	let render_distance = 4;
+	let render_distance = 10;
 	chunkLoadManager = new ChunkLoadManager(player, render_distance)
 	chunkLoadManager.initial_load()
 
@@ -433,7 +433,7 @@ function animate() {
 	frames+=1;
 
 	//every 120 updates
-	if(mod(frames,15)==0){
+	if(mod(frames,10)==0){
 		if(infinite_terrain){
 			chunkLoadManager.update()
 		}

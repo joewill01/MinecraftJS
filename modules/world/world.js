@@ -13,10 +13,6 @@ class World{
 		let chunk_instance = new Chunk(chunkx,chunkz);
 		this.chunk_instances[chunk_instance.name] = chunk_instance;
 		chunk_instance.generate()
-		this.reload_chunk(chunkx+1,chunkz);
-		this.reload_chunk(chunkx-1,chunkz);
-		this.reload_chunk(chunkx,chunkz+1);
-		this.reload_chunk(chunkx,chunkz-1);
 	}
 
 	world_to_chunk_coords(x, y, z){
