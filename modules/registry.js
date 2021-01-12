@@ -1,5 +1,9 @@
 class Registry{
 	constructor(){
+		this.last_entity_id = 0;
+		this.last_emitter_id = 0;
+		this.last_particle_id = 0;
+
 		this.textures = [];
 		this.textureRegister = {};
 		this.materials = [];
@@ -120,7 +124,7 @@ class Registry{
 
 	registerEntity(entity){
 		this.entityBuffer.push(entity);
-		entity.entityId = this.entityBuffer.length
+		entity.entityId = ++this.last_entity_id;
 	}
 
 	updateEntities(){
@@ -141,7 +145,7 @@ class Registry{
 
 	registerEmitter(emitter){
 		this.emitterRegister.push(emitter);
-		emitter.id = this.emitterRegister.length
+		emitter.id = ++this.last_emitter_id;
 	}
 
 	tickParticleEmitters(){
@@ -150,14 +154,32 @@ class Registry{
 		}
 	}
 
+	unRegisterEmitter(emitterId){
+		for (var i = this.emitterRegister.length - 1; i >= 0; i--) {
+			if(this.emitterRegister[i].id == emitterId){
+				this.emitterRegister.splice(i,1)
+				return
+			}
+		}
+	}
+
 	registerParticle(particle){
 		this.particleRegister.push(particle);
-		particle.id = this.particleRegister.length
+		particle.id = ++this.last_particle_id;
 	}
 
 	updateParticles(){
 		for(let i=0;i<this.particleRegister.length;i++){
 			this.particleRegister[i].update();
+		}
+	}
+
+	unRegisterParticle(id){
+		for (var i = this.particleRegister.length - 1; i >= 0; i--) {
+			if(this.particleRegister[i].id == id){
+				this.particleRegister.splice(i,1)
+				return
+			}
 		}
 	}
 }
