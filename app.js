@@ -427,13 +427,13 @@ rendererStats.domElement.style.zIndex	= '100'
 document.body.appendChild( rendererStats.domElement )
 
 var frames = 0;
-var infinite_terrain = false;
+var infinite_terrain = true;
 
 function animate() {
 	frames+=1;
 
 	//every 120 updates
-	if(mod(frames,120)==0){
+	if(mod(frames,15)==0){
 		if(infinite_terrain){
 			chunkLoadManager.update()
 		}
