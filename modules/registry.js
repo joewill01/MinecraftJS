@@ -5,6 +5,7 @@ class Registry{
 		this.materials = [];
 		this.materialRegister = {};
 		this.itemRegister = {};
+		this.emitterRegister = [];
 
 		this.entityBuffer = [];
 	}
@@ -115,6 +116,11 @@ class Registry{
 		entity.entityId = this.entityBuffer.length
 	}
 
+	registerEmitter(emitter){
+		this.emitterRegister.push(emitter);
+		emitter.id = this.emitterRegister.length
+	}
+
 	updateEntities(){
 		for(let i=0;i<this.entityBuffer.length;i++){
 			this.entityBuffer[i].update();
@@ -128,6 +134,12 @@ class Registry{
 				this.entityBuffer.splice(i,1)
 				return
 			}
+		}
+	}
+
+	tickParticleEmitters(){
+		for(let i=0;i<this.emitterRegister.length;i++){
+			this.emitterRegister[i].tick();
 		}
 	}
 }

@@ -1,0 +1,3 @@
+class TorchFlame extends Particle{
+	
+}
