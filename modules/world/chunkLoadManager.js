@@ -60,30 +60,25 @@ class ChunkLoadManager{
 		let playerPos = world.world_to_chunk_coords(player.x,0,player.z)
 		let player_chunk = [playerPos.chunk_x,playerPos.chunk_z]
 		let update_chunks = false;
-		if(player_chunk[0] != this.prev_chunk[0] || player_chunk[1] != this.prev_chunk[1]){
-			update_chunks = true;
-		}
-		if(update_chunks){
-			let toLoad = this.gen_diamond(playerPos.chunk_x,playerPos.chunk_z,this.rd)
+		let toLoad = this.gen_diamond(playerPos.chunk_x,playerPos.chunk_z,this.rd)
 
-			//Unload all uneccessary chunks
-			for(var key in this.loaded){
-				let c = this.loaded[key]
-				if(!arrayInArray(c,toLoad)){
-					world.unload_chunk(c[0],c[1])
-					delete this.loaded[key]
-					return
-				}
+		//Unload all uneccessary chunks
+		for(var key in this.loaded){
+			let c = this.loaded[key]
+			if(!arrayInArray(c,toLoad)){
+				world.unload_chunk(c[0],c[1])
+				delete this.loaded[key]
+				return
 			}
+		}
 
-			for (var i = 0; i < toLoad.length; i++) {
-				let x = toLoad[i][0];
-				let z = toLoad[i][1];
-				if(!Object.keys(this.loaded).includes(world.get_chunk_name(x,z))){
-					this.loaded[world.get_chunk_name(x,z)] = [x,z];
-					world.generate_chunk(x,z);
-					return
-				}
+		for (var i = 0; i < toLoad.length; i++) {
+			let x = toLoad[i][0];
+			let z = toLoad[i][1];
+			if(!Object.keys(this.loaded).includes(world.get_chunk_name(x,z))){
+				this.loaded[world.get_chunk_name(x,z)] = [x,z];
+				world.generate_chunk(x,z);
+				return
 			}
 		}
 		this.prev_chunk = player_chunk;
