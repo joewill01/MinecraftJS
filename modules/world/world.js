@@ -109,6 +109,7 @@ class World{
 	unload_chunk(x, z){
 		if(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh") != undefined){
 			delete this.chunk_instances[this.get_chunk_name(x,z)]
+			delete this.world[this.get_chunk_name(x,z)]
 			scene.remove(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh"));
 		}else{}
 	}
