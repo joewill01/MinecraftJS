@@ -15,4 +15,9 @@ class TorchSmoke extends Particle{
 		this.targetSize = 0.2;
 		this.targetPos.y = this.y+1.5;
 	}
+
+	postInit(){
+		let hue = randomIntFromInterval(20,250)/255;
+		this.particleMesh.material.color.setRGB(hue,hue,hue)
+	}
 }

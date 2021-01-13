@@ -46,6 +46,7 @@ class Particle{
 		scene.add( this.particleMesh );
 
 		registry.registerParticle(this)
+		this.postInit()
 	}
 
 	update(){
@@ -120,5 +121,9 @@ class Particle{
             this.particleMesh.texture = undefined;
         }
 		this.particleMesh = null;
+	}
+
+	postInit(){
+		
 	}
 }
