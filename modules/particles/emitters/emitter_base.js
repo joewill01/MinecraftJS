@@ -6,7 +6,6 @@ class Emitter{
 		this.name="NotSet"
 		this.id = null;
 		this.active = false;
-		this.particles = [];
 	}
 
 	init(){

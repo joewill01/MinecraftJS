@@ -6,11 +6,15 @@ class Registry{
 
 		this.textures = [];
 		this.textureRegister = {};
+
 		this.materials = [];
 		this.materialRegister = {};
+
 		this.itemRegister = {};
-		this.emitterRegister = [];
-		this.particleRegister = [];
+
+		this.emitterBuffer = [];
+		this.particleRegister = {};
+		this.particleBuffer = [];
 
 		this.entityBuffer = [];
 	}
@@ -30,6 +34,31 @@ class Registry{
 
 	registerMaterial(texture_name,transparent){
 		let texID = this._registerBlockTexture(texture_name)
+		if (!this.materialRegister.hasOwnProperty(texture_name)){
+			let material = new THREE.MeshBasicMaterial( {map: this.textures[texID],transparent: transparent, side: THREE.DoubleSide} );
+			this.materials.push(material);
+			this.materialRegister[texture_name] = this.materials.length-1;
+			return this.materials.length-1;
+		}else{
+			return this.materialRegister[texture_name]
+		}
+	}
+
+	registerParticleTexture(texName){
+		if (!this.particleRegister.hasOwnProperty(texName)){
+			let texture = new THREE.TextureLoader().load(`minecraft/textures/particle/${texName}`)
+			texture.magFilter = THREE.NearestFilter;
+			texture.minFilter = THREE.NearestFilter;
+			this.textures.push(texture);
+			this.particleRegister[texName] = this.textures.length-1;
+			return this.textures.length-1;
+		}else{
+			return this.particleRegister[texName]
+		}
+	}
+
+	registerParticleMaterial(texture_name,transparent){
+		let texID = this.registerParticleTexture(texture_name)
 		if (!this.materialRegister.hasOwnProperty(texture_name)){
 			let material = new THREE.MeshBasicMaterial( {map: this.textures[texID],transparent: transparent} );
 			this.materials.push(material);
@@ -144,40 +173,40 @@ class Registry{
 	}
 
 	registerEmitter(emitter){
-		this.emitterRegister.push(emitter);
+		this.emitterBuffer.push(emitter);
 		emitter.id = ++this.last_emitter_id;
 	}
 
 	tickParticleEmitters(){
-		for(let i=0;i<this.emitterRegister.length;i++){
-			this.emitterRegister[i].tick();
+		for(let i=0;i<this.emitterBuffer.length;i++){
+			this.emitterBuffer[i].tick();
 		}
 	}
 
 	unRegisterEmitter(emitterId){
-		for (var i = this.emitterRegister.length - 1; i >= 0; i--) {
-			if(this.emitterRegister[i].id == emitterId){
-				this.emitterRegister.splice(i,1)
+		for (var i = this.emitterBuffer.length - 1; i >= 0; i--) {
+			if(this.emitterBuffer[i].id == emitterId){
+				this.emitterBuffer.splice(i,1)
 				return
 			}
 		}
 	}
 
 	registerParticle(particle){
-		this.particleRegister.push(particle);
+		this.particleBuffer.push(particle);
 		particle.id = ++this.last_particle_id;
 	}
 
 	updateParticles(){
-		for(let i=0;i<this.particleRegister.length;i++){
-			this.particleRegister[i].update();
+		for(let i=0;i<this.particleBuffer.length;i++){
+			this.particleBuffer[i].update();
 		}
 	}
 
 	unRegisterParticle(id){
-		for (var i = this.particleRegister.length - 1; i >= 0; i--) {
-			if(this.particleRegister[i].id == id){
-				this.particleRegister.splice(i,1)
+		for (var i = this.particleBuffer.length - 1; i >= 0; i--) {
+			if(this.particleBuffer[i].id == id){
+				this.particleBuffer.splice(i,1)
 				return
 			}
 		}

@@ -4,20 +4,35 @@ class TorchEmitter extends Emitter{
 
 		this.name="TorchEmitter"
 		this.init();
-		this.delay = 0;
+		this.fireDelay = 0;
 		this.lastEmittedFire = 0;
+
+		this.smokeDelay = randomIntFromInterval(2000,6000);
+		this.lastEmittedSmoke = performance.now();
 	}
 
 	tick(){
 		this.fireEmitTimer = performance.now()
-		if(this.fireEmitTimer-this.lastEmittedFire>this.delay){
-			this.emit();
-			this.delay = randomIntFromInterval(900,4000);
+		if(this.fireEmitTimer-this.lastEmittedFire>this.fireDelay){
+			this.emitFlame();
+			this.fireDelay = randomIntFromInterval(900,4000);
 			this.lastEmittedFire = performance.now()
+		}
+
+		this.smokeEmitTimer = performance.now()
+		if(this.smokeEmitTimer-this.lastEmittedSmoke>this.smokeDelay){
+			this.emitSmoke();
+			this.smokeDelay = randomIntFromInterval(2000,6000);
+			this.lastEmittedSmoke = performance.now()
 		}
 	}
 
-	emit(){
+	emitSmoke(){
+		let x = new TorchSmoke(this.x,this.y,this.z);
+		x.init()
+	}
+
+	emitFlame(){
 		let x = new TorchFlame(this.x,this.y,this.z);
 		x.init()
 	}

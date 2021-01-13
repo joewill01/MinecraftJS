@@ -30,15 +30,18 @@ class Particle{
 	}
 
 	init(){
+		this.animation_stages = this.textures.length
 		this.createdAt = performance.now();
 		let geometry = new THREE.PlaneBufferGeometry( this.baseSize, this.baseSize, this.baseSize );
 
-		let tex = new THREE.TextureLoader().load('minecraft/textures/particle/' + this.textures[0])
-		tex.magFilter = THREE.NearestFilter;
-		tex.minFilter = THREE.NearestFilter;
+		let mat_index = registry.registerParticleMaterial(this.textures[0], true)
+		let material = registry.materials[mat_index]
 		
-		let material = new THREE.MeshBasicMaterial( {map: tex, side: THREE.DoubleSide, transparent: true} );
 		this.particleMesh = new THREE.Mesh( geometry, material );
+		let tex_index = registry.registerParticleTexture(this.textures[0])
+		let newTex = registry.textures[tex_index]
+		this.particleMesh.material.map = newTex;
+		this.particleMesh.material.map.needsUpdate = true;
 		this.particleMesh.position.set(this.x,this.y,this.z)
 		scene.add( this.particleMesh );
 
@@ -61,9 +64,8 @@ class Particle{
 				stage = this.animation_stages-1
 			}
 			if(stage != this.prev_animation_stage){
-				let newTex = new THREE.TextureLoader().load('minecraft/textures/particle/' +this.textures[parseInt(stage)])
-				newTex.magFilter = THREE.NearestFilter;
-				newTex.minFilter = THREE.NearestFilter;
+				let tex_index = registry.registerParticleTexture(this.textures[parseInt(stage)])
+				let newTex = registry.textures[tex_index]
 				this.particleMesh.material.map = newTex;
 				this.particleMesh.material.map.needsUpdate = true;
 				this.prev_animation_stage = stage;
@@ -92,7 +94,6 @@ class Particle{
 				}else{
 					new_scale = (targetScale - 1)*dec_through_anim
 				}
-				//console.log(new_scale)
 				this.particleMesh.scale.set(new_scale,new_scale,new_scale)
 			}
 				
