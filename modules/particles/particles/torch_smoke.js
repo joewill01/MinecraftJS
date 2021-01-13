@@ -13,7 +13,7 @@ class TorchSmoke extends Particle{
 		  ]
 		this.baseSize = 0.2;
 		this.targetSize = 0.2;
-		this.targetPos.y = this.y+1.5;
+		this.targetPos.y = this.y+(randomIntFromInterval(5,18)/10);
 	}
 
 	postInit(){
