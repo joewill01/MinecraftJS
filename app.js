@@ -40,6 +40,8 @@ function initScene(){
 
 	pause_menu = new PauseMenu(ui);
 	options_menu = new OptionsMenu(ui);
+	main_menu = new MainMenu(ui)
+
 	inventory = new Inventory(ui, hotbar);
 
 	scene = new Physijs.Scene;
