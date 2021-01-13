@@ -33,7 +33,7 @@ class Particle{
 		this.createdAt = performance.now();
 		let geometry = new THREE.PlaneBufferGeometry( this.baseSize, this.baseSize, this.baseSize );
 
-		let tex = THREE.ImageUtils.loadTexture('minecraft/textures/particle/' + this.textures[0])
+		let tex = new THREE.TextureLoader().load('minecraft/textures/particle/' + this.textures[0])
 		tex.magFilter = THREE.NearestFilter;
 		tex.minFilter = THREE.NearestFilter;
 		
@@ -61,7 +61,7 @@ class Particle{
 				stage = this.animation_stages-1
 			}
 			if(stage != this.prev_animation_stage){
-				let newTex = THREE.ImageUtils.loadTexture('minecraft/textures/particle/' +this.textures[parseInt(stage)])
+				let newTex = new THREE.TextureLoader().load('minecraft/textures/particle/' +this.textures[parseInt(stage)])
 				newTex.magFilter = THREE.NearestFilter;
 				newTex.minFilter = THREE.NearestFilter;
 				this.particleMesh.material.map = newTex;
@@ -107,6 +107,17 @@ class Particle{
 	}
 
 	remove(){
+		registry.unRegisterParticle(this.id)
 		scene.remove(this.particleMesh)
+		this.particleMesh.geometry.dispose()
+		this.particleMesh.geometry = undefined;
+		this.particleMesh.material.dispose()
+		this.particleMesh.material = undefined;
+		if (this.particleMesh.texture)
+        {
+            this.particleMesh.texture.dispose();
+            this.particleMesh.texture = undefined;
+        }
+		this.particleMesh = null;
 	}
 }

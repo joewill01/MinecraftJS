@@ -4,13 +4,21 @@ class TorchEmitter extends Emitter{
 
 		this.name="TorchEmitter"
 		this.init();
+		this.delay = 0;
+		this.lastEmittedFire = 0;
 	}
 
 	tick(){
-		//Check if we should emit. Determines delay
+		this.fireEmitTimer = performance.now()
+		if(this.fireEmitTimer-this.lastEmittedFire>this.delay){
+			this.emit();
+			this.delay = randomIntFromInterval(900,4000);
+			this.lastEmittedFire = performance.now()
+		}
 	}
 
 	emit(){
-		//Create the particle
+		let x = new TorchFlame(this.x,this.y,this.z);
+		x.init()
 	}
 }
