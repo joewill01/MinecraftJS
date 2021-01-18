@@ -66,7 +66,7 @@ class Chunk{
 	    	}
 		}, this);
 
-		let chunk_mesh = new THREE.Mesh(chunk_geom, registry.materials);
+		let chunk_mesh = new THREE.Mesh(chunk_geom, registry.shaderMats);
 		chunk_mesh.geometry.computeFaceNormals();
 		chunk_mesh.geometry.computeVertexNormals();
 

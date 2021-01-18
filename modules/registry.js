@@ -1,41 +1,66 @@
 class Registry{
 	constructor(){
-		this.last_entity_id = 0;
-		this.last_emitter_id = 0;
-		this.last_particle_id = 0;
+		this.loadedResourcesRegister = {};
+		this.loadedResources = [];
 
-		this.textures = [];
-		this.textureRegister = {};
-
-		this.materials = [];
+		this.blockShaderMaterial;
 		this.materialRegister = {};
-
+		this.materials = [];
+		this.shaderMats = [];
+		
 		this.itemRegister = {};
 
 		this.emitterBuffer = [];
-		this.particleRegister = {};
 		this.particleBuffer = [];
-
 		this.entityBuffer = [];
+
+		this.last_entity_id = 0;
+		this.last_emitter_id = 0;
+		this.last_particle_id = 0;
 	}
 
-	_registerBlockTexture(texName){
-		if (!this.textureRegister.hasOwnProperty(texName)){
-			let texture = new THREE.TextureLoader().load(`minecraft/textures/block/${texName}`)
+	loadResource(name){
+		if (!this.loadedResourcesRegister.hasOwnProperty(name)){
+			let texture = new THREE.TextureLoader().load(name)
 			texture.magFilter = THREE.NearestFilter;
 			texture.minFilter = THREE.NearestFilter;
-			this.textures.push(texture);
-			this.textureRegister[texName] = this.textures.length-1;
-			return this.textures.length-1;
+			this.loadedResources.push(texture);
+			this.loadedResourcesRegister[name] = this.loadedResources.length-1;
+			return this.loadedResources.length-1;
 		}else{
-			return this.textureRegister[texName]
+			return this.loadedResourcesRegister[name]
 		}
 	}
 
+	registerBlockShaderMaterial(texture_name,transparent){
+		let texID = this.loadResource("minecraft/textures/block/"+texture_name)
+		let texture = this.loadedResources[texID]
+		if(!this.blockShaderMaterial){
+			console.log(texture)
+			let mat = new THREE.ShaderMaterial( {
+				uniforms: {
+					tex: { 
+						value: texture,
+						type: "t"
+					}
+				},
+				vertexShader: document.getElementById( 'blockVertexShader' ).textContent,
+				fragmentShader: document.getElementById( 'blockFragmentShader' ).textContent
+			} );
+			this.blockShaderMaterial = mat
+			this.shaderMats.push(mat)
+		}else{
+			let new_mat = this.blockShaderMaterial.clone()
+			new_mat.uniforms.tex.value = texture
+			this.shaderMats.push(new_mat)
+		}
+		return this.shaderMats.length-1
+	}
+
 	registerMaterial(texture_name,transparent){
-		let texID = this._registerBlockTexture(texture_name)
+		let texID = this.loadResource("minecraft/textures/block/"+texture_name)
 		if (!this.materialRegister.hasOwnProperty(texture_name)){
-			let material = new THREE.MeshBasicMaterial( {map: this.textures[texID],transparent: transparent, side: THREE.DoubleSide} );
+			let material = new THREE.MeshBasicMaterial( {map: this.loadedResources[texID],transparent: !transparent, side: THREE.DoubleSide} );
 			this.materials.push(material);
 			this.materialRegister[texture_name] = this.materials.length-1;
 			return this.materials.length-1;
@@ -44,23 +69,10 @@ class Registry{
 		}
 	}
 
-	registerParticleTexture(texName){
-		if (!this.particleRegister.hasOwnProperty(texName)){
-			let texture = new THREE.TextureLoader().load(`minecraft/textures/particle/${texName}`)
-			texture.magFilter = THREE.NearestFilter;
-			texture.minFilter = THREE.NearestFilter;
-			this.textures.push(texture);
-			this.particleRegister[texName] = this.textures.length-1;
-			return this.textures.length-1;
-		}else{
-			return this.particleRegister[texName]
-		}
-	}
-
 	registerParticleMaterial(texture_name,transparent){
-		let texID = this.registerParticleTexture(texture_name)
+		let texID = this.loadResource("minecraft/textures/particle/"+texture_name)
 		if (!this.materialRegister.hasOwnProperty(texture_name)){
-			let material = new THREE.MeshBasicMaterial( {map: this.textures[texID],transparent: transparent} );
+			let material = new THREE.MeshBasicMaterial( {map: this.loadedResources[texID],transparent: transparent} );
 			this.materials.push(material);
 			this.materialRegister[texture_name] = this.materials.length-1;
 			return this.materials.length-1;

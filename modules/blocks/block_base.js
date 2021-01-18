@@ -56,8 +56,7 @@ class Block {
 		}
 	
 		function setPlane(axis, angle, texture_name, obj, name) {
-			let mat_index = registry.registerMaterial(texture_name, obj.solid)
-			let material = registry.materials[mat_index]
+			let mat_index = registry.registerBlockShaderMaterial(texture_name, obj.solid)
 			//obj.ctex.push(material)
 
 			let planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
