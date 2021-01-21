@@ -18,25 +18,56 @@ class MainMenu extends UIBase {
 
     extraShow() {
         // this runs AS WELL AS showing this.element
+        console.log(`Show MainMenu`)
     }
 
     extraHide() {
         // this runs AS WELL AS hiding this.element
+
     }
 
     createStylesheet() {
         this.stylesheet = this.ui.dom.createElement("style");
-        this.stylesheet.innerHTML = `
+        this.stylesheet.innerHTML = `   
+        .ui_screen.main_menu {
+            background-image: url("/background.png");
+            background-size: cover;
+        }
+
+        .ui_container.main_menu {
+            margin-top: 75px;
+            width: 450px;
+        }
+
+        .ui_container.logo {
+            width: 548px;
+            height: 90px;
+            margin-top: 50px;
+        }
         `;
         this.element.appendChild(this.stylesheet);
     }
 
     createScreen() {
-        this.menu_container = this.ui.dom.createElement("div");
-        this.element.appendChild(this.menu_container);
-        this.menu_container.id = "main_menu";
-        this.menu_container.classList.add("ui_menu_container");
-        this.menu_container.classList.add("main");
+        this.logo_container = makeUIContainer(this.element, 'logo')
+        this.menu_container = makeUIContainer(this.element, 'main_menu')
+
+        this.UIelements = {};
+
+        this.UIelements["buttons"] = {};
+        this.UIelements["buttons"]["singleplayer"] = new UIButton(this.menu_container, 0, 0, 450,"main_menu-singleplayer", "Singleplayer");
+        this.UIelements["buttons"]["multiplayer"] = new UIButton(this.menu_container, 0, 50, 450,"main_menu-multiplayer", "Multiplayer");
+        this.UIelements["buttons"]["realms"] = new UIButton(this.menu_container, 0, 100, 450,"main_menu-realms", "Minecraft Realms");
+        this.UIelements["buttons"]["options"] = new UIButton(this.menu_container, 0, 175, 220,"main_menu-options", "Options");
+        this.UIelements["buttons"]["quit"] = new UIButton(this.menu_container, 230, 175, 220,"main_menu-quit", "Quit Game");
+
+        this.UIelements["images"] = {};
+        this.UIelements["images"]["logo-left"] = new UIImage(this.logo_container, 0, 0, 310, 90  , "main_menu-logo-left", "/minecraft/textures/gui/title/minecraft.png", 512, 512, 0, 0)
+        this.UIelements["images"]["logo-right"] = new UIImage(this.logo_container, 310, 0, 238, 90  , "main_menu-logo-right", "/minecraft/textures/gui/title/minecraft.png", 512, 512, 0, -90)
+
+        this.UIelements["texts"] = {};
+        this.UIelements["texts"]["title"] =  new UIText(this.element, 0, 0, "main_menu-minecraft_version", "JSCraft pre-alpha 1.12", false, true);
+        this.UIelements["texts"]["copyright"] =  new UIText(this.element, 0, 0, "main_menu-copyright", "Copyright John and Joe. Do not distribute!", true, true);
 
     }
 }

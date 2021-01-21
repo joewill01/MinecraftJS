@@ -81,6 +81,27 @@ class UI {
                 font-size: 20px;
                 text-shadow: 2px 2px #444
             }
+
+            /* image css */
+            
+            .standard_image {
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                image-rendering: pixelated;
+            }
+
+            .standard_image .image {
+                position: absolute;
+                display: block;
+                background-size: cover;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
             
             /* button css */
             

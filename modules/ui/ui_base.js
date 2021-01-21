@@ -18,7 +18,8 @@ class UIBase {
             height: 100vh;
             width: 100vw;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
             z-index: 5;
         }
         
@@ -26,19 +27,12 @@ class UIBase {
             display: flex;
             visibility: visible;
         }
-        
-        .ui_menu_container {
+
+        .ui_container {
             margin-top: 150px;
             height: 240px;
             position: relative;
-        }
-        
-        .ui_menu_container.pause {
-            width: 400px;
-        }
-        
-        .ui_menu_container.options {
-            width: 600px;
+            width: 500px;
         }
         `;
         this.ui.dom.getElementsByTagName('body')[0].appendChild(this.stylesheet);

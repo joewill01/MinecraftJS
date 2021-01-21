@@ -29,16 +29,15 @@ class PauseMenu extends UIBase {
     createStylesheet() {
         this.stylesheet = this.ui.dom.createElement("style");
         this.stylesheet.innerHTML = `
+        .ui_container.pause {
+            width: 400px;
+        }
         `;
         this.element.appendChild(this.stylesheet);
     }
 
     createScreen() {
-        this.menu_container = this.ui.dom.createElement("div");
-        this.element.appendChild(this.menu_container);
-        this.menu_container.id = "pause_menu";
-        this.menu_container.classList.add("ui_menu_container");
-        this.menu_container.classList.add("pause");
+        this.menu_container = makeUIContainer(this.element, 'pause')
 
         this.UIelements = {};
 
