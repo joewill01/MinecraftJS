@@ -66,6 +66,12 @@ class Chunk{
 	    	}
 		}, this);
 
+		this.chunk_geom = chunk_geom
+
+		chunk_geom.computeFaceNormals();
+		chunk_geom.computeVertexNormals();
+
+
 		let chunk_mesh = new THREE.Mesh(chunk_geom, registry.materials);
 		chunk_mesh.geometry.computeFaceNormals();
 		chunk_mesh.geometry.computeVertexNormals();

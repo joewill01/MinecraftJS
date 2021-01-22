@@ -35,7 +35,12 @@ class Registry{
 	registerMaterial(texture_name,transparent){
 		let texID = this._registerBlockTexture(texture_name)
 		if (!this.materialRegister.hasOwnProperty(texture_name)){
-			let material = new THREE.MeshBasicMaterial( {map: this.textures[texID],transparent: transparent, side: THREE.DoubleSide} );
+			let material = new THREE.MeshBasicMaterial( {
+				map: this.textures[texID],
+				transparent: transparent, 
+				side: THREE.DoubleSide,
+				vertexColors: THREE.VertexColors
+			});
 			this.materials.push(material);
 			this.materialRegister[texture_name] = this.materials.length-1;
 			return this.materials.length-1;

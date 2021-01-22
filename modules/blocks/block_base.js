@@ -30,6 +30,7 @@ class Block {
 		this.rotatable = false;
 		this.allowedRotations = []; //N,S,E,W,D,U Letter is where the old Top face will end up
 		this.droppedItemId = null; 
+		this.biomeTints = {};//ex: plains:{r:1,g:1,b:1.2} Multiplicative
 	}
 
 	render(chunk_geom){
@@ -58,9 +59,49 @@ class Block {
 		function setPlane(axis, angle, texture_name, obj, name) {
 			let mat_index = registry.registerMaterial(texture_name, obj.solid)
 			let material = registry.materials[mat_index]
-			//obj.ctex.push(material)
+
+			//Lowest possible light level
+			const ambient = 0.14
+
+			//Get biome block is in 
+			let biome = "plains"
+
+			//Get tint from block tint obj
+			let tint = {};
+			if(obj.biomeTints[biome] === 'undefined'){
+				tint = obj.biomeTints[biome]
+			}else{
+				tint = {r:1,b:1,g:1}
+			}
+
+			//Sky Light Level 0-15
+			let skylight = 15
+
+			//Block Light Level 0-15
+			let blocklight = 0
+
+			//Calculate result of block+sky and find range between 0-0.6 to add to the light
+			let combinedLight = ((skylight + blocklight) ) * 0.05
+			if(combinedLight>0.75){
+				combinedLight=0.75
+			}
+
+			//Final Light Vals
+			let finalLights = {
+				r:(ambient*tint.r)+combinedLight,
+				g:(ambient*tint.g)+combinedLight,
+				b:(ambient*tint.b)+combinedLight
+			}
 
 			let planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
+
+			let tl = new THREE.Color(finalLights.r,finalLights.g,finalLights.b)
+			let tr = new THREE.Color(finalLights.r,finalLights.g,finalLights.b)
+			let bl = new THREE.Color(finalLights.r,finalLights.g,finalLights.b)
+			let br = new THREE.Color(finalLights.r,finalLights.g,finalLights.b)
+
+			planeGeom.faces[0].vertexColors.push(tl,bl,tr)
+			planeGeom.faces[1].vertexColors.push(bl,br,tr)
 			planeGeom.translate(0, 0, 0.5);
 			switch (axis) {
 		    	case 'y':
