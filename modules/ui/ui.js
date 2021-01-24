@@ -82,6 +82,21 @@ class UI {
                 text-shadow: 2px 2px #444
             }
 
+            @keyframes flashy-yellow-text-animation {
+              from {transform: rotate(-22deg) scale(1);}
+              to {transform: rotate(-22deg) scale(1.05);}
+            }
+
+            .standard_text.flashy-yellow-text {
+                transform: rotate(-22deg);
+                color: yellow;
+                animation-name: flashy-yellow-text-animation;
+                animation-duration: 0.25s;
+                animation-iteration-count: infinite;
+                animation-direction: alternate;
+                white-space: nowrap
+            }
+
             /* image css */
             
             .standard_image {
