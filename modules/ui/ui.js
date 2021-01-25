@@ -104,7 +104,6 @@ class UI {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                cursor: pointer;
                 image-rendering: pixelated;
             }
 
@@ -291,7 +290,6 @@ class UI {
 
             .skybox .position {
                 position: relative;
-                cursor: pointer;
                 transform: translateZ(100vh);
                 transform-style: preserve-3d;
             }
