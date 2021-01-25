@@ -30,8 +30,13 @@ class MainMenu extends UIBase {
         this.stylesheet = this.ui.dom.createElement("style");
         this.stylesheet.innerHTML = `   
         .ui_screen.main_menu {
-            background-image: url("/background.png");
-            background-size: cover;
+            
+        }
+
+        .ui_screen.main_menu .skybox {
+            position: fixed;
+            top: 0;
+            left: 0
         }
 
         .ui_container.main_menu {
@@ -49,6 +54,22 @@ class MainMenu extends UIBase {
     }
 
     createScreen() {
+        this.background_panorama = this.ui.dom.createElement('div');
+        this.background_panorama.classList.add('skybox');
+        this.background_panorama.innerHTML = `
+          <div class="position">
+            <div class="faces">
+              <img src="minecraft/textures/gui/title/background/panorama_0.png" />
+              <img src="minecraft/textures/gui/title/background/panorama_1.png" />
+              <img src="minecraft/textures/gui/title/background/panorama_2.png" />
+              <img src="minecraft/textures/gui/title/background/panorama_3.png" />
+            </div>
+          </div>
+          `;
+
+        this.element.appendChild(this.background_panorama);
+
+
         this.logo_container = makeUIContainer(this.element, 'logo')
         this.menu_container = makeUIContainer(this.element, 'main_menu')
 

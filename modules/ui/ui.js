@@ -274,6 +274,67 @@ class UI {
                 padding: 0;
                 z-index: 10
             }
+
+            /* skybox */
+
+            @keyframes rotate {
+                0% {transform: rotateY(0deg) translateZ(0);}
+                100% {transform: rotateY(360deg) translateZ(0);}
+            }
+
+            .skybox {
+                width: 100%;
+                height: 100vh;
+                overflow: hidden;
+                -webkit-perspective: 100vh;
+            }
+
+            .skybox .position {
+                position: relative;
+                cursor: pointer;
+                transform: translateZ(100vh);
+                transform-style: preserve-3d;
+            }
+
+            .skybox .faces {
+                position: relative;
+                width: 0;
+                height: 0;
+                top: 50vh;
+                margin: 0 auto;
+                transform-style: preserve-3d;
+                animation-name: rotate;
+                animation-duration: 120s;
+                animation-iteration-count:infinite;
+                animation-timing-function: linear;
+            }
+
+            .skybox .faces img {
+                position: absolute;
+                display: block;
+                width: 100vw;
+                height: 100vw;
+                left: -50vw;
+                top: -50vw;
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+            }
+
+            .skybox .faces img:nth-child(1) {
+                transform: rotate3d(0,1,0,180deg) translate3d(0,0,-49.9vw) scaleX(-1);
+            }
+
+            .skybox .faces img:nth-child(2) {
+                transform: translate3d(49.9vw,0,0) rotate3d(0,1,0,-90deg) scaleX(-1);
+            }
+
+            .skybox .faces img:nth-child(3) {
+                transform: translate3d(0,0,-49.9vw) scaleX(-1);
+            }
+
+            .skybox .faces img:nth-child(4) {
+                transform: translate3d(-49.9vw,0,0) rotate3d(0,1,0,90deg) scaleX(-1);
+            }
         `;
         this.element.appendChild(this.stylesheet);
     }

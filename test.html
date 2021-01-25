@@ -19,13 +19,13 @@
         width: 100%;
         height: 100vh;
         overflow: hidden;
-        -webkit-perspective: 700;
+        -webkit-perspective: 100vh;
     }
 
     .skybox .position {
         position: relative;
         cursor: pointer;
-        transform: translateZ(500px);
+        transform: translateZ(100vh);
         transform-style: preserve-3d;
     }
 
@@ -42,7 +42,7 @@
         animation-timing-function: linear;
     }
 
-    .skybox .faces span {
+    .skybox .faces img {
         position: absolute;
         display: block;
         width: 100vw;
@@ -51,28 +51,22 @@
         top: -50vw;
         -webkit-backface-visibility: hidden;
         backface-visibility: hidden;
-        display: block;
-        background-size: cover;
     }
 
-    .skybox .faces span:nth-child(1) {
+    .skybox .faces img:nth-child(1) {
         transform: rotate3d(0,1,0,180deg) translate3d(0,0,-49.9vw) scaleX(-1);
-        background-image: url("minecraft/textures/gui/title/background/panorama_0.png");
     }
 
-    .skybox .faces span:nth-child(2) {
+    .skybox .faces img:nth-child(2) {
         transform: translate3d(49.9vw,0,0) rotate3d(0,1,0,-90deg) scaleX(-1);
-        background-image: url("minecraft/textures/gui/title/background/panorama_1.png");
     }
 
-    .skybox .faces span:nth-child(3) {
+    .skybox .faces img:nth-child(3) {
         transform: translate3d(0,0,-49.9vw) scaleX(-1);
-        background-image: url("minecraft/textures/gui/title/background/panorama_2.png");
     }
 
-    .skybox .faces span:nth-child(4) {
+    .skybox .faces img:nth-child(4) {
         transform: translate3d(-49.9vw,0,0) rotate3d(0,1,0,90deg) scaleX(-1);
-        background-image: url("minecraft/textures/gui/title/background/panorama_3.png");
     }
 
     </style>
@@ -83,10 +77,10 @@
 <div class="skybox">
   <div class="position">
     <div class="faces">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
+      <img src="minecraft/textures/gui/title/background/panorama_0.png" />
+      <img src="minecraft/textures/gui/title/background/panorama_1.png" />
+      <img src="minecraft/textures/gui/title/background/panorama_2.png" />
+      <img src="minecraft/textures/gui/title/background/panorama_3.png" />
     </div>
   </div>
 </div>
