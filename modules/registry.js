@@ -77,7 +77,7 @@ class Registry{
 	getBlockInstanceFromId(id, x, y, z, ctex){ // MAKE THIS FIND THE BLOCK FROM A LIST OF REGISTERED BLOCKS
 		switch(id){
 			case 0:
-				return 0;
+				return new Air(x,y,z);
 				break;
 			case 1:
 				return new GrassBlock(x, y, z, ctex);

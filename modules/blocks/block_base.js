@@ -5,6 +5,8 @@ class Block {
 		this.z = z;
 		this.texture_names = texture_names;
 		this.ctex = ctex;//chunk_textures list from world
+		this.skylight = 0;
+		this.blocklight = 0;
 
 		//Must be changed for new blocks
 		this.ID = 0;
@@ -84,6 +86,10 @@ class Block {
 			let combinedLight = ((skylight + blocklight) ) * 0.05
 			if(combinedLight>0.75){
 				combinedLight=0.75
+			}
+
+			if(name!="D"&&name!="U"){
+				combinedLight*=0.8
 			}
 
 			//Final Light Vals

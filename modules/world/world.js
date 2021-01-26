@@ -84,13 +84,13 @@ class World{
 		}
 
 		let coords = this.world_to_chunk_coords(x,y,z);
-		let chunk = this.world[this.get_chunk_name(coords.chunk_x, coords.chunk_z)];
+		let chunk = this.chunk_instances[this.get_chunk_name(coords.chunk_x, coords.chunk_z)]
 
 		try {
 			if (chunk === undefined){
 				return "undefined_chunk";
 			} else {
-				return chunk[coords.index];
+				return chunk.chunk[coords.index];
 			}
 		} catch(e) {
 			return null;

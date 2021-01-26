@@ -103,7 +103,7 @@ class Entity {
 			let y = Math.floor(this.hitbox.position.y-1.4)+boxData[2]
 			let z = Math.floor(this.hitbox.position.z)+boxData[3]
 		  	box.position.set(x,y,z);
-		  	if(world.get_block(x,y,z) != 0){
+		  	if(world.get_block_ID(x,y,z) != 0){
 		  		box.visible = true;
 		  		box.collidable = true;
 		  	}else{
