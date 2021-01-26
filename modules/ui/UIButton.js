@@ -14,6 +14,7 @@ class UIButton {
     createButton() {
         this.element = this.dom.createElement("div");
         this.element.classList.add("standard_button");
+
         this.element.style.top = `${this.y}px`;
         this.element.style.left = `${this.x}px`;
         this.element.style.width = `${this.width}px`;
@@ -38,6 +39,14 @@ class UIButton {
         this.element.appendChild(this.button_bg_right);
 
         this.parentElement.appendChild(this.element);
+    }
+
+    enable() {
+        this.element.classList.remove("disabled");
+    }
+
+    disable() {
+        this.element.classList.add("disabled");
     }
 
     onclickInternal() {

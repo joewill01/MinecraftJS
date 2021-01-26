@@ -55,7 +55,7 @@ class PauseMenu extends UIBase {
 
         //set onclick/onchange/hover functions
         this.UIelements["buttons"]["back_to_game"].onclick = () => {this.hide()};
-        this.UIelements["buttons"]["quit"].onclick = () => {this.ui.exitFullscreen()};
+        this.UIelements["buttons"]["quit"].onclick = () => {this.ui.openScreen("main_menu")};
         this.UIelements["buttons"]["options"].onclick = () => {this.ui.openScreen("options_menu")};
     }
 }

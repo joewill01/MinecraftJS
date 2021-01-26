@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style>canvas { width: 100%; height: 100% }</style>
+</head>
+<body>
+<script src="lib/three.js"></script>
+<script>
+var scene = new THREE.Scene();
+var camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 1, 10000);
+var renderer = new THREE.WebGLRenderer();
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+scene.background = new THREE.CubeTextureLoader()
+.setPath( '/' )
+.load( [
+	'minecraft/textures/gui/title/background/panorama_1.png',//1
+	'minecraft/textures/gui/title/background/panorama_3.png',//3
+	'minecraft/textures/gui/title/background/panorama_4.png',//4
+	'minecraft/textures/gui/title/background/panorama_5.png',//5
+	'minecraft/textures/gui/title/background/panorama_0.png',//0
+	'minecraft/textures/gui/title/background/panorama_2.png'//2
+] );
+
+function render() {
+	requestAnimationFrame(render);
+	renderer.render(scene, camera);
+	camera.rotation.y -= 0.002
+};
+render();
+</script>
+</body>
+</html>

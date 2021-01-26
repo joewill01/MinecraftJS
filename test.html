@@ -6,62 +6,42 @@
 
     <style>
         html, body {
-            margin: 0;
-            padding: 0;
+            margin:0;
+            padding:0;
         }
 
-        .panorama {
-            height: 100vh;
+        .dirtbg {
             width: 100vw;
-            position: relative;
+            height: 96px;
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('minecraft/textures/gui/options_background.png');
+
+            image-rendering: pixelated;
+            background-size: 64px 64px;
         }
 
-        .panoramas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 500vh;
-            transition: linear left 30s;
-        }
+        .dirtscroll {
+            width: 100vw;
+            height: calc(100vh - 224px);
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.863), rgba(0, 0, 0, 0.863)), url('minecraft/textures/gui/options_background.png');
 
-        .panoramas:hover {
-            left: -390vh;
-        }
+            image-rendering: pixelated;
+            background-size: 64px 64px;
 
-        .panoramas span {
-            display: inline-block;
-            height: 100vh;
-            width: 100vh;
-            margin: 0;
-            padding: 0;
-            background-size: cover;
-        }
-
-        .panoramas span:nth-child(1) {
-            background-image: url("minecraft/textures/gui/title/background/panorama_0.png");
-        }
-
-        .panoramas span:nth-child(2) {
-            background-image: url("minecraft/textures/gui/title/background/panorama_1.png");
-        }
-
-        .panoramas span:nth-child(3) {
-            background-image: url("minecraft/textures/gui/title/background/panorama_2.png");
-        }
-
-        .panoramas span:nth-child(4) {
-            background-image: url("minecraft/textures/gui/title/background/panorama_3.png");
+            box-shadow: 0px 5px 5px #000 inset, 0px -5px 5px #000 inset;
         }
     </style>
 
 </head>
 <body>
 
-<div class="panorama">
-    <div class="panoramas">
-        <span></span><span></span><span></span><span></span>
-    </div>
+<div class="dirtbg">
+  
 </div>
 
+<div class="dirtscroll"></div>
+
+<div class="dirtbg" style="height: 128px">
+    
+</div>
 </body>
 </html>

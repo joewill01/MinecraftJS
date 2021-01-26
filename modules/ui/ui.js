@@ -20,9 +20,9 @@ class UI {
         this.element.classList.add("ui");
     }
 
-    closeAllScreens() {
+    closeAllScreens(captureCursor=true) {
         for (screen of this.screens) {
-            screen.hide();
+            screen.hide(captureCursor);
         }
     }
 
@@ -30,7 +30,7 @@ class UI {
         for (let screen of this.screens) {
             if (screen.element.id === id) {
                 console.log(screen);
-                this.closeAllScreens();
+                this.closeAllScreens(false);
                 screen.show();
             }
         }
@@ -82,6 +82,21 @@ class UI {
                 text-shadow: 2px 2px #444
             }
 
+            @keyframes flashy-yellow-text-animation {
+              from {transform: rotate(-22deg) scale(1);}
+              to {transform: rotate(-22deg) scale(1.05);}
+            }
+
+            .standard_text.flashy-yellow-text {
+                transform: rotate(-22deg);
+                color: yellow;
+                animation-name: flashy-yellow-text-animation;
+                animation-duration: 0.25s;
+                animation-iteration-count: infinite;
+                animation-direction: alternate;
+                white-space: nowrap
+            }
+
             /* image css */
             
             .standard_image {
@@ -89,7 +104,6 @@ class UI {
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                cursor: pointer;
                 image-rendering: pixelated;
             }
 
@@ -111,6 +125,10 @@ class UI {
                 justify-content: center;
                 align-items: center;
                 cursor: pointer;
+            }
+
+            .standard_button.disabled {
+                cursor: auto;
             }
             
             .widget.standard_button_bg_left {
@@ -138,9 +156,22 @@ class UI {
             .standard_button:hover .widget.standard_button_bg_left {
                 background-position-y: -172px;
             }
+
+            .standard_button.disabled .widget.standard_button_bg_right {
+                background-position-y: -92px;
+            }
+
+            .standard_button.disabled .widget.standard_button_bg_left {
+                background-position-y: -92px;
+            }
             
             .standard_button .standard_text {
                 margin-bottom: 2px;
+            }
+
+            .standard_button.disabled .standard_text {
+                color: #999;
+                text-shadow: none
             }
             
             /* slider css */
@@ -258,6 +289,120 @@ class UI {
                 margin: 0;
                 padding: 0;
                 z-index: 10
+            }
+
+            /* skybox */
+
+            @keyframes rotate {
+                0% {transform: rotateY(0deg) translateZ(0);}
+                100% {transform: rotateY(360deg) translateZ(0);}
+            }
+
+            .skybox {
+                width: 100%;
+                height: 100vh;
+                overflow: hidden;
+                -webkit-perspective: 100vh;
+            }
+
+            .skybox .position {
+                position: relative;
+                transform: translateZ(100vh);
+                transform-style: preserve-3d;
+            }
+
+            .skybox .faces {
+                position: relative;
+                width: 0;
+                height: 0;
+                top: 50vh;
+                margin: 0 auto;
+                transform-style: preserve-3d;
+                animation-name: rotate;
+                animation-duration: 120s;
+                animation-iteration-count:infinite;
+                animation-timing-function: linear;
+            }
+
+            .skybox .faces img {
+                position: absolute;
+                display: block;
+                width: 100vw;
+                height: 100vw;
+                left: -50vw;
+                top: -50vw;
+                -webkit-backface-visibility: hidden;
+                backface-visibility: hidden;
+            }
+
+            .skybox .faces img:nth-child(1) {
+                transform: rotate3d(0,1,0,180deg) translate3d(0,0,-49.9vw) scaleX(-1);
+            }
+
+            .skybox .faces img:nth-child(2) {
+                transform: translate3d(49.9vw,0,0) rotate3d(0,1,0,-90deg) scaleX(-1);
+            }
+
+            .skybox .faces img:nth-child(3) {
+                transform: translate3d(0,0,-49.9vw) scaleX(-1);
+            }
+
+            .skybox .faces img:nth-child(4) {
+                transform: translate3d(-49.9vw,0,0) rotate3d(0,1,0,90deg) scaleX(-1);
+            }
+
+            /* dirt containers */
+
+            .dirt-header {
+                width: 100vw;
+                height: 96px;
+                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('minecraft/textures/gui/options_background.png');
+                image-rendering: pixelated;
+                background-size: 64px 64px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .dirt-footer {
+                width: 100vw;
+                height: 128px;
+                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('minecraft/textures/gui/options_background.png');
+
+                image-rendering: pixelated;
+                background-size: 64px 64px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .dirt-scroll-container {
+                width: 100vw;
+                height: calc(100vh - 224px);
+                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.863), rgba(0, 0, 0, 0.863)), url('minecraft/textures/gui/options_background.png');
+
+                image-rendering: pixelated;
+                background-size: 64px 64px;
+
+                box-shadow: 0px 5px 5px #000 inset, 0px -5px 5px #000 inset;
+
+                overflow-y: auto;
+                background-attachment:local;
+            }
+
+            .dirt-scroll-container::-webkit-scrollbar {
+              width: 12px;
+            }
+             
+            .dirt-scroll-container::-webkit-scrollbar-track {
+                background-color: black;
+                width:12px;
+            }
+             
+            .dirt-scroll-container::-webkit-scrollbar-thumb {
+              background-color: #bbb;
+              box-shadow: #777 -2px -2px 0 0 inset;
+                width:12px;
             }
         `;
         this.element.appendChild(this.stylesheet);

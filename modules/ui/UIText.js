@@ -17,7 +17,7 @@ class UIText {
         this.element.innerText = this.text;
         this.element.id = this.id;
 
-        if (this.flipY) {
+        if (this.   flipY) {
             this.element.style.bottom = `${this.y}px`;
         } else {
             this.element.style.top = `${this.y}px`;
