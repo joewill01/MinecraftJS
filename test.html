@@ -5,85 +5,43 @@
     <title>Test</title>
 
     <style>
-    @keyframes rotate {
-        0% {transform: rotateY(0deg) translateZ(0);}
-        100% {transform: rotateY(360deg) translateZ(0);}
-    }
+        html, body {
+            margin:0;
+            padding:0;
+        }
 
-    html, body {
-        margin: 0;
-        padding: 0;
-    }
+        .dirtbg {
+            width: 100vw;
+            height: 96px;
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('minecraft/textures/gui/options_background.png');
 
-    .skybox {
-        width: 100%;
-        height: 100vh;
-        overflow: hidden;
-        -webkit-perspective: 100vh;
-    }
+            image-rendering: pixelated;
+            background-size: 64px 64px;
+        }
 
-    .skybox .position {
-        position: relative;
-        cursor: pointer;
-        transform: translateZ(100vh);
-        transform-style: preserve-3d;
-    }
+        .dirtscroll {
+            width: 100vw;
+            height: calc(100vh - 224px);
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.863), rgba(0, 0, 0, 0.863)), url('minecraft/textures/gui/options_background.png');
 
-    .skybox .faces {
-        position: relative;
-        width: 0;
-        height: 0;
-        top: 50vh;
-        margin: 0 auto;
-        transform-style: preserve-3d;
-        animation-name: rotate;
-        animation-duration: 30s;
-        animation-iteration-count:infinite;
-        animation-timing-function: linear;
-    }
+            image-rendering: pixelated;
+            background-size: 64px 64px;
 
-    .skybox .faces img {
-        position: absolute;
-        display: block;
-        width: 100vw;
-        height: 100vw;
-        left: -50vw;
-        top: -50vw;
-        -webkit-backface-visibility: hidden;
-        backface-visibility: hidden;
-    }
-
-    .skybox .faces img:nth-child(1) {
-        transform: rotate3d(0,1,0,180deg) translate3d(0,0,-49.9vw) scaleX(-1);
-    }
-
-    .skybox .faces img:nth-child(2) {
-        transform: translate3d(49.9vw,0,0) rotate3d(0,1,0,-90deg) scaleX(-1);
-    }
-
-    .skybox .faces img:nth-child(3) {
-        transform: translate3d(0,0,-49.9vw) scaleX(-1);
-    }
-
-    .skybox .faces img:nth-child(4) {
-        transform: translate3d(-49.9vw,0,0) rotate3d(0,1,0,90deg) scaleX(-1);
-    }
-
+            box-shadow: 0px 5px 5px #000 inset, 0px -5px 5px #000 inset;
+        }
     </style>
 
 </head>
 <body>
 
-<div class="skybox">
-  <div class="position">
-    <div class="faces">
-      <img src="minecraft/textures/gui/title/background/panorama_0.png" />
-      <img src="minecraft/textures/gui/title/background/panorama_1.png" />
-      <img src="minecraft/textures/gui/title/background/panorama_2.png" />
-      <img src="minecraft/textures/gui/title/background/panorama_3.png" />
-    </div>
-  </div>
+<div class="dirtbg">
+  
 </div>
 
+<div class="dirtscroll"></div>
+
+<div class="dirtbg" style="height: 128px">
+    
+</div>
 </body>
 </html>

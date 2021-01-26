@@ -65,13 +65,16 @@ class UIBase {
         this.extraShow();
     }
 
-    hide() {
+    hide(captureCursor=true) {
         this.state = false;
 
         this.element.classList.remove("active");
 
         ui.hideBlackOverlay();
-        ui.captureCursor();
+
+        if (captureCursor) {
+            ui.captureCursor();
+        }
 
         this.extraHide();
     }

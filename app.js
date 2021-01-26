@@ -41,6 +41,7 @@ function initScene(){
 	pause_menu = new PauseMenu(ui);
 	options_menu = new OptionsMenu(ui);
 	main_menu = new MainMenu(ui)
+	singleplayer_menu = new SinglePlayerMenu(ui)
 
 	inventory = new Inventory(ui, hotbar);
 

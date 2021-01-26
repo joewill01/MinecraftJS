@@ -92,6 +92,6 @@ class MainMenu extends UIBase {
         this.UIelements["texts"]["title"] = new UIText(this.element, 0, 0, "main_menu-minecraft_version", "JSCraft pre-alpha 1.12", false, true);
         this.UIelements["texts"]["copyright"] =  new UIText(this.element, 0, 0, "main_menu-copyright", "Copyright John and Joe. Do not distribute!", true, true);
 
-        this.UIelements["buttons"]["singleplayer"].onclick = () => {this.hide()}
+        this.UIelements["buttons"]["singleplayer"].onclick = () => {this.ui.openScreen("singleplayer_menu")}
     }
 }

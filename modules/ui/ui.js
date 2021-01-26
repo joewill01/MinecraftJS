@@ -20,9 +20,9 @@ class UI {
         this.element.classList.add("ui");
     }
 
-    closeAllScreens() {
+    closeAllScreens(captureCursor=true) {
         for (screen of this.screens) {
-            screen.hide();
+            screen.hide(captureCursor);
         }
     }
 
@@ -30,7 +30,7 @@ class UI {
         for (let screen of this.screens) {
             if (screen.element.id === id) {
                 console.log(screen);
-                this.closeAllScreens();
+                this.closeAllScreens(false);
                 screen.show();
             }
         }
@@ -126,6 +126,10 @@ class UI {
                 align-items: center;
                 cursor: pointer;
             }
+
+            .standard_button.disabled {
+                cursor: auto;
+            }
             
             .widget.standard_button_bg_left {
                 position: absolute;
@@ -152,9 +156,22 @@ class UI {
             .standard_button:hover .widget.standard_button_bg_left {
                 background-position-y: -172px;
             }
+
+            .standard_button.disabled .widget.standard_button_bg_right {
+                background-position-y: -92px;
+            }
+
+            .standard_button.disabled .widget.standard_button_bg_left {
+                background-position-y: -92px;
+            }
             
             .standard_button .standard_text {
                 margin-bottom: 2px;
+            }
+
+            .standard_button.disabled .standard_text {
+                color: #999;
+                text-shadow: none
             }
             
             /* slider css */
@@ -332,6 +349,60 @@ class UI {
 
             .skybox .faces img:nth-child(4) {
                 transform: translate3d(-49.9vw,0,0) rotate3d(0,1,0,90deg) scaleX(-1);
+            }
+
+            /* dirt containers */
+
+            .dirt-header {
+                width: 100vw;
+                height: 96px;
+                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('minecraft/textures/gui/options_background.png');
+                image-rendering: pixelated;
+                background-size: 64px 64px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .dirt-footer {
+                width: 100vw;
+                height: 128px;
+                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('minecraft/textures/gui/options_background.png');
+
+                image-rendering: pixelated;
+                background-size: 64px 64px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .dirt-scroll-container {
+                width: 100vw;
+                height: calc(100vh - 224px);
+                background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.863), rgba(0, 0, 0, 0.863)), url('minecraft/textures/gui/options_background.png');
+
+                image-rendering: pixelated;
+                background-size: 64px 64px;
+
+                box-shadow: 0px 5px 5px #000 inset, 0px -5px 5px #000 inset;
+
+                overflow-y: auto;
+                background-attachment:local;
+            }
+
+            .dirt-scroll-container::-webkit-scrollbar {
+              width: 12px;
+            }
+             
+            .dirt-scroll-container::-webkit-scrollbar-track {
+                background-color: black;
+                width:12px;
+            }
+             
+            .dirt-scroll-container::-webkit-scrollbar-thumb {
+              background-color: #bbb;
+              box-shadow: #777 -2px -2px 0 0 inset;
+                width:12px;
             }
         `;
         this.element.appendChild(this.stylesheet);
