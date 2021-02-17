@@ -92,14 +92,23 @@ class Block {
 				combinedLight*=0.8
 			}
 
+			let face_multiplier = 1.0;
+			 if (name == "E" || name == "W") {
+			 	face_multiplier = 0.80;
+			 } else if (name == "N" || name == "S") {
+			 	face_multiplier = 0.86;
+			 }
+
 			//Final Light Vals
 			let finalLights = {
-				r:(ambient*tint.r)+combinedLight,
-				g:(ambient*tint.g)+combinedLight,
-				b:(ambient*tint.b)+combinedLight
+				r:((ambient*tint.r)+combinedLight)*face_multiplier,
+				g:((ambient*tint.g)+combinedLight)*face_multiplier,
+				b:((ambient*tint.b)+combinedLight)*face_multiplier
 			}
 
 			let planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
+
+			
 
 			let tl = new THREE.Color(finalLights.r,finalLights.g,finalLights.b)
 			let tr = new THREE.Color(finalLights.r,finalLights.g,finalLights.b)
