@@ -133,7 +133,7 @@ class Inventory extends UIBase {
         this.items[45].mirrorTo(this.hotbar.items[8]);
 
         this.items[37].setItem({"texture": "wooden_pickaxe", amount: 1});
-        this.items[38].setItem({"texture": "wooden_sword", amount: 1});
+        this.items[38].setItem({"texture": "wooden_sword", amount: 90});
         this.items[39].setItem({"texture": "wooden_axe", amount: 1});
         this.items[40].setItem({"texture": "wooden_shovel", amount: 1});
         this.items[41].setItem({"texture": "wooden_hoe", amount: 1});
