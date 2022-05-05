@@ -10,7 +10,7 @@ class SinglePlayerMenu extends UIBase {
         this.createScreen();
 
         this.addEl();
-        this.show();
+        //this.show();
     }
 
     extraCreate() {
