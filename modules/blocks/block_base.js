@@ -47,57 +47,54 @@ class Block {
 
 		if(faces.S == 0){
 			around_faces_for_side = [
-										blocks_around[7],
-										blocks_around[11],
-										blocks_around[19],
-										blocks_around[6],
-										blocks_around[18],
-										blocks_around[5],
-										blocks_around[10],
-										blocks_around[17]
-									];
-
+				blocks_around[7],
+				blocks_around[11],
+				blocks_around[19],
+				blocks_around[6],
+				blocks_around[18],
+				blocks_around[5],
+				blocks_around[10],
+				blocks_around[17]
+			];
 			setPlane("y",  Math.PI * 0.5, this.texture_names["S"], this, "S", around_faces_for_side, true); //side
 		}
 		if(faces.N == 0){
 			around_faces_for_side = [
-										blocks_around[0],
-										blocks_around[8],
-										blocks_around[12],
-										blocks_around[1],
-										blocks_around[13],
-										blocks_around[2],
-										blocks_around[9],
-										blocks_around[14]
-									];
+				blocks_around[0],
+				blocks_around[8],
+				blocks_around[12],
+				blocks_around[1],
+				blocks_around[13],
+				blocks_around[2],
+				blocks_around[9],
+				blocks_around[14]
+			];
 			setPlane("y", -Math.PI * 0.5, this.texture_names["N"] , this, "N", around_faces_for_side, true); //side
-		
 		}
 		if(faces.E == 0){
 			around_faces_for_side = [
-										blocks_around[2],
-										blocks_around[9],
-										blocks_around[14],
-										blocks_around[4],
-										blocks_around[16],
-										blocks_around[7],
-										blocks_around[11],
-										blocks_around[19]
-									];
+				blocks_around[2],
+				blocks_around[9],
+				blocks_around[14],
+				blocks_around[4],
+				blocks_around[16],
+				blocks_around[7],
+				blocks_around[11],
+				blocks_around[19]
+			];
 			setPlane("y",  0, this.texture_names["E"] , this, "E", around_faces_for_side, true); //side
 		}
 		if(faces.W == 0){
 			around_faces_for_side = [
-										blocks_around[5],
-										blocks_around[10],
-										blocks_around[17],
-										blocks_around[3],
-										blocks_around[15],
-										blocks_around[0],
-										blocks_around[8],
-										blocks_around[12]
-									];
-
+				blocks_around[5],
+				blocks_around[10],
+				blocks_around[17],
+				blocks_around[3],
+				blocks_around[15],
+				blocks_around[0],
+				blocks_around[8],
+				blocks_around[12]
+			];
 			setPlane("y",  Math.PI, this.texture_names["W"] , this, "W", around_faces_for_side, true);// side
 		}
 		if(faces.D == 0){
@@ -175,13 +172,13 @@ class Block {
 			let planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
 
 			//tl
-			let tlBlockCount = (blocks_around_face[0] != 0 ? 1 : 0) + (blocks_around_face[1] != 0 ? 1 : 0) + (blocks_around_face[3] != 0 ? 1 : 0)
+			let tlBlockCount = ((blocks_around_face[0] != 0 && blocks_around_face[0] != -1) ? 1 : 0) + ((blocks_around_face[1] != 0 && blocks_around_face[1] != -1) ? 1 : 0) + ((blocks_around_face[3] != 0 && blocks_around_face[3] != -1) ? 1 : 0)
 			//tr
-			let blBlockCount = (blocks_around_face[1] != 0 ? 1 : 0) + (blocks_around_face[2] != 0 ? 1 : 0) + (blocks_around_face[4] != 0 ? 1 : 0)
+			let blBlockCount = ((blocks_around_face[1] != 0 && blocks_around_face[1] != -1) ? 1 : 0) + ((blocks_around_face[2] != 0 && blocks_around_face[2] != -1) ? 1 : 0) + ((blocks_around_face[4] != 0 && blocks_around_face[4] != -1) ? 1 : 0)
 			//br
-			let brBlockCount = (blocks_around_face[4] != 0 ? 1 : 0) + (blocks_around_face[6] != 0 ? 1 : 0) + (blocks_around_face[7] != 0 ? 1 : 0)
+			let brBlockCount = ((blocks_around_face[4] != 0 && blocks_around_face[4] != -1) ? 1 : 0) + ((blocks_around_face[6] != 0 && blocks_around_face[6] != -1) ? 1 : 0) + ((blocks_around_face[7] != 0 && blocks_around_face[7] != -1) ? 1 : 0)
 			//bl
-			let trBlockCount = (blocks_around_face[3] != 0 ? 1 : 0) + (blocks_around_face[5] != 0 ? 1 : 0) + (blocks_around_face[6] != 0 ? 1 : 0)
+			let trBlockCount = ((blocks_around_face[3] != 0 && blocks_around_face[3] != -1) ? 1 : 0) + ((blocks_around_face[5] != 0 && blocks_around_face[5] != -1) ? 1 : 0) + ((blocks_around_face[6] != 0 && blocks_around_face[6] != -1) ? 1 : 0)
 			
 			let AOMultiplier;
 			if (ao) {

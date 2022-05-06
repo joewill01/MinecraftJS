@@ -120,7 +120,7 @@ class Entity {
 		let flipVec = this.vec.clone()
 		flipVec.crossVectors( toMove.up, flipVec );
 
-		let collided_with = null;
+		let moveVec = new THREE.Vector3(0,0,0);
 
 		let vecX = this.vec.clone()
 		let flipVecX = flipVec.clone()
@@ -128,41 +128,119 @@ class Entity {
 		flipVecX.z = 0;
 		vecX.x = vecX.x * x
 		flipVecX.x = flipVecX.x * z
-		collided_with = mesh_collision_check(vecX.add(flipVecX), this.hitbox, this)
-		if(!collided_with.collidedWorld){
-			toMove.position.add(vecX);
-		}else{
-			this.velocity.z *= 0.001
-			this.velocity.x *= 0.001
-		}
-
+		
 		let vecZ = this.vec.clone()
 		let flipVecZ = flipVec.clone()
 		vecZ.x = 0;
 		flipVecZ.x = 0;
 		vecZ.z = vecZ.z * x
 		flipVecZ.z = flipVecZ.z * z
-		collided_with = mesh_collision_check(vecZ.add(flipVecZ), this.hitbox, this)
-		if(!collided_with.collidedWorld){
-			toMove.position.add(vecZ);
-		}else{
-			this.velocity.z *= 0.001
-			this.velocity.x *= 0.001
-		}
 
-		let vecY = this.vec.clone()
-		vecY.z = 0;
-		vecY.x = 0;
-		vecY.y = y;
-		collided_with = mesh_collision_check(vecY, this.hitbox, this)
-		this.handleCollisions(collided_with);
-		if(!collided_with.collidedWorld){
-			toMove.position.y += y;
+		moveVec.x = vecX.add(flipVecX).x;
+		moveVec.z = vecZ.add(flipVecZ).z;
+		moveVec.y = y;
+
+		let collisionTime;
+		let colliders = this.boxes.filter(block => block[0].collidable==true).map(block => block[0])
+
+		if (colliders.length == 0) {
+			toMove.position.x += moveVec.x;
+			toMove.position.y += moveVec.y;
+			toMove.position.z += moveVec.z;
+
+		} else {
+			//STAGE 1
+			let times = []
+			for (var i = colliders.length - 1; i >= 0; i--) {
+				times.push(sweptAABB(this.hitbox, moveVec, colliders[i], this));
+			}
+
+			collisionTime = times.reduce((prev, curr) => {
+				return prev.entryTime < curr.entryTime ? prev : curr;
+			})
+
+			if (collisionTime.entryTime > 1) {collisionTime.entryTime = 1}
+
+			toMove.position.x += moveVec.x * collisionTime.entryTime
+			toMove.position.y += moveVec.y * collisionTime.entryTime
+			toMove.position.z += moveVec.z * collisionTime.entryTime
+
+			//STAGE 2
+			let remainingTime = 1 - collisionTime.entryTime;
+
+			moveVec.x *= remainingTime;
+			moveVec.y *= remainingTime;
+			moveVec.z *= remainingTime;
+
+			if (remainingTime > 0) {
+				if (collisionTime.normal.x != 0) {
+					moveVec.x = 0;
+				}
+				if (collisionTime.normal.y != 0) {
+					moveVec.y = 0;
+					this.velocity.y = 0;
+					this.onHitGround();
+				}
+				if (collisionTime.normal.z != 0) {
+					moveVec.z = 0;
+				}
+			}
+
+			times = []
+			for (var i = colliders.length - 1; i >= 0; i--) {
+				times.push(sweptAABB(this.hitbox, moveVec, colliders[i], this));
+			}
+
+			collisionTime = times.reduce((prev, curr) => {
+				return prev.entryTime < curr.entryTime ? prev : curr;
+			})
+
+			if (collisionTime.entryTime > 1) {collisionTime.entryTime = 1}
+
+			toMove.position.x += moveVec.x * collisionTime.entryTime
+			toMove.position.y += moveVec.y * collisionTime.entryTime
+			toMove.position.z += moveVec.z * collisionTime.entryTime
+
+			//STAGE 3
+			remainingTime = 1 - collisionTime.entryTime;
+
+			moveVec.x *= remainingTime;
+			moveVec.y *= remainingTime;
+			moveVec.z *= remainingTime;
+
+			if (remainingTime > 0) {
+				if (collisionTime.normal.x != 0) {
+					moveVec.x = 0;
+				}
+				if (collisionTime.normal.y != 0) {
+					moveVec.y = 0;
+					this.velocity.y = 0;
+					this.onHitGround();
+				}
+				if (collisionTime.normal.z != 0) {
+					moveVec.z = 0;
+				}
+			}
+
+			times = []
+			for (var i = colliders.length - 1; i >= 0; i--) {
+				times.push(sweptAABB(this.hitbox, moveVec, colliders[i], this));
+			}
+
+			collisionTime = times.reduce((prev, curr) => {
+				return prev.entryTime < curr.entryTime ? prev : curr;
+			})
+
+			if (collisionTime.entryTime > 1) {collisionTime.entryTime = 1}
+
+			toMove.position.x += moveVec.x * collisionTime.entryTime
+			toMove.position.y += moveVec.y * collisionTime.entryTime
+			toMove.position.z += moveVec.z * collisionTime.entryTime
+
+
+
 		}
-		else{
-			this.velocity.y *= 0.001;
-			this.onHitGround();
-		}
+		
 
 		if(this.eyeLevelHitbox != undefined){
 			this.eyeLevelHitbox.position.x = toMove.position.x
