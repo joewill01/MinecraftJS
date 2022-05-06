@@ -51,6 +51,64 @@ class World{
 		return faces
 	}
 
+	get_blocks_around_faces(x,y,z){
+		let blocks = [];
+		// Starting from TL move ltr to BR
+		blocks.push(this.get_block_ID(x-1, y+1, z-1))
+		blocks.push(this.get_block_ID(x-1, y+1, z))
+		blocks.push(this.get_block_ID(x-1, y+1, z+1))
+		blocks.push(this.get_block_ID(x, y+1, z-1))
+		blocks.push(this.get_block_ID(x, y+1, z+1))
+		blocks.push(this.get_block_ID(x+1, y+1, z-1))
+		blocks.push(this.get_block_ID(x+1, y+1, z))
+		blocks.push(this.get_block_ID(x+1, y+1, z+1))
+
+		blocks.push(this.get_block_ID(x-1, y, z-1))
+		blocks.push(this.get_block_ID(x-1, y, z+1))
+		blocks.push(this.get_block_ID(x+1, y, z-1))
+		blocks.push(this.get_block_ID(x+1, y, z+1))
+
+		blocks.push(this.get_block_ID(x-1, y-1, z-1))
+		blocks.push(this.get_block_ID(x-1, y-1, z))
+		blocks.push(this.get_block_ID(x-1, y-1, z+1))
+		blocks.push(this.get_block_ID(x, y-1, z-1))
+		blocks.push(this.get_block_ID(x, y-1, z+1))
+		blocks.push(this.get_block_ID(x+1, y-1, z-1))
+		blocks.push(this.get_block_ID(x+1, y-1, z))
+		blocks.push(this.get_block_ID(x+1, y-1, z+1))
+
+		return blocks
+	}
+
+	get_block_coords_around_faces(x,y,z){
+		let blocks = [];
+		// Starting from TL move ltr to BR
+		blocks.push([x-1, y+1, z-1])
+		blocks.push([x-1, y+1, z])
+		blocks.push([x-1, y+1, z+1])
+		blocks.push([x, y+1, z-1])
+		blocks.push([x, y+1, z+1])
+		blocks.push([x+1, y+1, z-1])
+		blocks.push([x+1, y+1, z])
+		blocks.push([x+1, y+1, z+1])
+
+		blocks.push([x-1, y, z-1])
+		blocks.push([x-1, y, z+1])
+		blocks.push([x+1, y, z-1])
+		blocks.push([x+1, y, z+1])
+
+		blocks.push([x-1, y-1, z-1])
+		blocks.push([x-1, y-1, z])
+		blocks.push([x-1, y-1, z+1])
+		blocks.push([x, y-1, z-1])
+		blocks.push([x, y-1, z+1])
+		blocks.push([x+1, y-1, z-1])
+		blocks.push([x+1, y-1, z])
+		blocks.push([x+1, y-1, z+1])
+
+		return blocks
+	}
+
 	get_block_ID(x,y,z){
 		if (y < 0 || y > 255) {
 			return 0

@@ -7,13 +7,14 @@ Menu.setApplicationMenu(false);
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 550,
+    width: 1450,
+    height: 900,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
   });
 
+  mainWindow.webContents.openDevTools()
   mainWindow.setIcon(path.join(__dirname, '/src/assets/logo.png'));
 
   // and load the index.html of the app.

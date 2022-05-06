@@ -151,6 +151,11 @@ document.addEventListener('mousemove', function(event) {
 
 document.addEventListener('contextmenu', event => event.preventDefault());
 
+
+window.addEventListener('resize', function(event){
+    ui.updateSize();
+});
+
 var onKeyDown = function ( event ) {
 	//console.log(event.keyCode)
 	if(pressed.indexOf(event.keyCode) == -1){

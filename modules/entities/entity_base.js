@@ -32,7 +32,7 @@ class Entity {
 		}
 
 		let hitboxGeom = new THREE.CubeGeometry( 1.001,1.001,1.001 );
-		let mat = new THREE.MeshBasicMaterial({ color: 0x888888 });
+		let mat = new THREE.MeshBasicMaterial({ color: 0x888888, visible:false });
 
 		this.boxes = [
 			//Floor
