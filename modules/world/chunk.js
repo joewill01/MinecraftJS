@@ -44,46 +44,68 @@ class Chunk{
 	}
 
 	calculateSkylight(){
-		for (let y = 255; y >= 0; y--){
-			for (let z = 0; z < 16; z++) {
-				for (let x = 0; x < 16; x++) {
-					if(y==255){
-						this.chunk[y*256 + x*16 + z].skylight = 15;
-					}else{
-						let global_x = (this.x * 16) + x 
-						let global_z = (this.z * 16) + z
+		for (let perms=0;perms<16;perms++){
+			for (let y = 255; y >= 0; y--){
+				for (let z = 0; z < 16; z++) {
+					for (let x = 0; x < 16; x++) {
+						if(this.cdata[y*256 + x*16 + z]==0){
+							if(y==255){
+								this.chunk[y*256 + x*16 + z].skylight = 15;
+							}else{
+								let global_x = (this.x * 16) + x 
+								let global_z = (this.z * 16) + z
 
-						let above = world.get_block(global_x,y+1,global_z)
-						if(above.skylight == 15 && above.ID == 0){
-							this.chunk[y*256 + x*16 + z].skylight = 15;
-						}else{
-							let max;
+								let above = world.get_block(global_x,y+1,global_z)
+								if(above.skylight == 15 && above.ID == 0){
+									this.chunk[y*256 + x*16 + z].skylight = 15;
+								}else{
+									let max;
 
-							let left = world.get_block(global_x-1,y,global_z)
-							if(left !== "undefined_chunk"){
-								if(max == null || left.skylight>max.skylight){
-									max = left
+									let left = world.get_block(global_x-1,y,global_z)
+									if(left !== "undefined_chunk"){
+										if((max == null || left.skylight>max.skylight) && left!=undefined){
+											max = left
+										}
+									}
+
+									if(max == 15){
+										this.chunk[y*256 + x*16 + z].skylight = 14;
+										continue;
+									}
+
+									let right = world.get_block(global_x+1,y,global_z)
+									if(right !== "undefined_chunk"){
+										if((max == null || right.skylight>max.skylight) && right!=undefined){
+											max = right
+										}
+									}
+
+									if(max == 15){
+										this.chunk[y*256 + x*16 + z].skylight = 14;
+										continue;
+									}
+
+									let forward = world.get_block(global_x,y,global_z+1)
+									if(forward !== "undefined_chunk"){
+										if((max == null || forward.skylight>max.skylight) && forward!=undefined){
+											max = forward
+										}
+									}
+
+									if(max == 15){
+										this.chunk[y*256 + x*16 + z].skylight = 14;
+										continue;
+									}
+
+									let back = world.get_block(global_x,y,global_z-1)
+									if(back !== "undefined_chunk"){
+										if((max == null || back.skylight>max.skylight) && back!=undefined){
+											max = back
+										}
+									}
+									this.chunk[y*256 + x*16 + z].skylight = max.skylight-1;
 								}
 							}
-							let right = world.get_block(global_x+1,y,global_z)
-							if(right !== "undefined_chunk"){
-								if(max == null || right.skylight>max.skylight){
-									max = right
-								}
-							}
-							let forward = world.get_block(global_x,y,global_z+1)
-							if(forward !== "undefined_chunk"){
-								if(max == null || forward.skylight>max.skylight){
-									max = forward
-								}
-							}
-							let back = world.get_block(global_x,y,global_z-1)
-							if(back !== "undefined_chunk"){
-								if(max == null || back.skylight>max.skylight){
-									max = back
-								}
-							}
-							this.chunk[y*256 + x*16 + z].skylight = max.skylight-1;
 						}
 					}
 				}
