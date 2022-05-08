@@ -37,26 +37,92 @@ class Block {
 
 		let faces = world.get_block_faces(this.x, this.y, this.z)
 
+		let blocks_around = world.get_blocks_around_faces(this.x, this.y, this.z)
+
+		let blocks_around_coords = world.get_block_coords_around_faces(this.x, this.y, this.z)
+
+		let around_faces_for_side;
+
 		if(faces.S == 0){
-			setPlane("y",  Math.PI * 0.5, this.texture_names["S"], this, "S"); //side
+			around_faces_for_side = [
+				blocks_around[7],
+				blocks_around[11],
+				blocks_around[19],
+				blocks_around[6],
+				blocks_around[18],
+				blocks_around[5],
+				blocks_around[10],
+				blocks_around[17]
+			];
+			setPlane("y",  Math.PI * 0.5, this.texture_names["S"], this, "S", around_faces_for_side, true); //side
 		}
 		if(faces.N == 0){
-			setPlane("y", -Math.PI * 0.5, this.texture_names["N"] , this, "N"); //side
+			around_faces_for_side = [
+				blocks_around[0],
+				blocks_around[8],
+				blocks_around[12],
+				blocks_around[1],
+				blocks_around[13],
+				blocks_around[2],
+				blocks_around[9],
+				blocks_around[14]
+			];
+			setPlane("y", -Math.PI * 0.5, this.texture_names["N"] , this, "N", around_faces_for_side, true); //side
 		}
 		if(faces.E == 0){
-			setPlane("y",  0, this.texture_names["E"] , this, "E"); //side
+			around_faces_for_side = [
+				blocks_around[2],
+				blocks_around[9],
+				blocks_around[14],
+				blocks_around[4],
+				blocks_around[16],
+				blocks_around[7],
+				blocks_around[11],
+				blocks_around[19]
+			];
+			setPlane("y",  0, this.texture_names["E"] , this, "E", around_faces_for_side, true); //side
 		}
 		if(faces.W == 0){
-			setPlane("y",  Math.PI, this.texture_names["W"] , this, "W");// side
+			around_faces_for_side = [
+				blocks_around[5],
+				blocks_around[10],
+				blocks_around[17],
+				blocks_around[3],
+				blocks_around[15],
+				blocks_around[0],
+				blocks_around[8],
+				blocks_around[12]
+			];
+			setPlane("y",  Math.PI, this.texture_names["W"] , this, "W", around_faces_for_side, true);// side
 		}
 		if(faces.D == 0){
-			setPlane("x",  Math.PI * 0.5, this.texture_names["D"] , this, "D"); //bottom
+			around_faces_for_side = [
+				blocks_around[14],
+				blocks_around[13],
+				blocks_around[12],
+				blocks_around[16],
+				blocks_around[15],
+				blocks_around[19],
+				blocks_around[18],
+				blocks_around[17]
+			];
+			setPlane("x",  Math.PI * 0.5, this.texture_names["D"] , this, "D", around_faces_for_side, true); //bottom
 		}
 		if(faces.U == 0){
-			setPlane("x", -Math.PI * 0.5, this.texture_names["U"] , this, "U"); //top
+			around_faces_for_side = [
+				blocks_around[0],
+				blocks_around[1],
+				blocks_around[2],
+				blocks_around[3],
+				blocks_around[4],
+				blocks_around[5],
+				blocks_around[6],
+				blocks_around[7]
+			]; 
+			setPlane("x", -Math.PI * 0.5, this.texture_names["U"] , this, "U", around_faces_for_side, true); //top
 		}
 	
-		function setPlane(axis, angle, texture_name, obj, name) {
+		function setPlane(axis, angle, texture_name, obj, name, blocks_around_face, ao) {
 			let mat_index = registry.registerMaterial(texture_name, obj.solid)
 			let material = registry.materials[mat_index]
 
@@ -87,6 +153,10 @@ class Block {
 			}
 
 			if(name!="D"&&name!="U"){
+				combinedLight*=0.9
+			}
+
+			if(name=="S"||name=="N"){
 				combinedLight*=0.8
 			}
 
@@ -99,10 +169,33 @@ class Block {
 
 			let planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
 
-			let tl = new THREE.Color(finalLights.r,finalLights.g,finalLights.b)
-			let tr = new THREE.Color(finalLights.r,finalLights.g,finalLights.b)
-			let bl = new THREE.Color(finalLights.r,finalLights.g,finalLights.b)
-			let br = new THREE.Color(finalLights.r,finalLights.g,finalLights.b)
+			//tl
+			let tlBlockCount = ((blocks_around_face[0] != 0 && blocks_around_face[0] != -1) ? 1 : 0) + ((blocks_around_face[1] != 0 && blocks_around_face[1] != -1) ? 1 : 0) + ((blocks_around_face[3] != 0 && blocks_around_face[3] != -1) ? 1 : 0)
+			//tr
+			let blBlockCount = ((blocks_around_face[1] != 0 && blocks_around_face[1] != -1) ? 1 : 0) + ((blocks_around_face[2] != 0 && blocks_around_face[2] != -1) ? 1 : 0) + ((blocks_around_face[4] != 0 && blocks_around_face[4] != -1) ? 1 : 0)
+			//br
+			let brBlockCount = ((blocks_around_face[4] != 0 && blocks_around_face[4] != -1) ? 1 : 0) + ((blocks_around_face[6] != 0 && blocks_around_face[6] != -1) ? 1 : 0) + ((blocks_around_face[7] != 0 && blocks_around_face[7] != -1) ? 1 : 0)
+			//bl
+			let trBlockCount = ((blocks_around_face[3] != 0 && blocks_around_face[3] != -1) ? 1 : 0) + ((blocks_around_face[5] != 0 && blocks_around_face[5] != -1) ? 1 : 0) + ((blocks_around_face[6] != 0 && blocks_around_face[6] != -1) ? 1 : 0)
+			
+			let AOMultiplier;
+			if (ao) {
+				if (name=="D"||name=="U"){
+					AOMultiplier = -0.2
+				} else {
+					AOMultiplier = -0.16
+				}
+			} else {
+				AOMultiplier = 0;
+			}
+
+
+
+			let tl = new THREE.Color(finalLights.r + (AOMultiplier * tlBlockCount),finalLights.g + (AOMultiplier * tlBlockCount),finalLights.b + (AOMultiplier * tlBlockCount))
+			let tr = new THREE.Color(finalLights.r + (AOMultiplier * trBlockCount),finalLights.g + (AOMultiplier * trBlockCount),finalLights.b + (AOMultiplier * trBlockCount))
+			let bl = new THREE.Color(finalLights.r + (AOMultiplier * blBlockCount),finalLights.g + (AOMultiplier * blBlockCount),finalLights.b + (AOMultiplier * blBlockCount))
+			let br = new THREE.Color(finalLights.r + (AOMultiplier * brBlockCount),finalLights.g + (AOMultiplier * brBlockCount),finalLights.b + (AOMultiplier * brBlockCount))
+			
 
 			planeGeom.faces[0].vertexColors.push(tl,bl,tr)
 			planeGeom.faces[1].vertexColors.push(bl,br,tr)

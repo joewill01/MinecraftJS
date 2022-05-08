@@ -14,10 +14,11 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
-    "electron": "^10.1.1",
+    "electron": "^18.2.0",
     "electron-packager": "^15.1.0"
   },
   "dependencies": {
+    "nodemon": "^2.0.16",
     "noise": "0.0.0",
     "websocket": "^1.0.32"
   }

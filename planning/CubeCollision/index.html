@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script src="three.js"></script>
+		<script>
+
+			var moveLeft, moveRight, moveForward, moveBackward, moveUp, moveDown;
+
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			const geometry = new THREE.BoxGeometry();
+			const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+			const cube = new THREE.Mesh( geometry, material );
+			scene.add( cube );
+
+			camera.position.z = 5;
+			camera.position.y = 5;
+			camera.position.x = 2;
+			camera.lookAt(cube.position);
+
+
+			// Borders
+			const wallMat = new THREE.MeshBasicMaterial( { color: 0x0000ff } );
+
+			const wallCube1 = new THREE.Mesh( geometry, wallMat );
+			scene.add( wallCube1 );
+			wallCube1.position.set(0,0,-2);
+
+			const wallCube2 = new THREE.Mesh( geometry, wallMat );
+			scene.add( wallCube2 );
+			wallCube2.position.set(1,0,-2);
+
+			const wallCube3 = new THREE.Mesh( geometry, wallMat );
+			scene.add( wallCube3 );
+			wallCube3.position.set(2,0,-2);
+
+			const wallCube4 = new THREE.Mesh( geometry, wallMat );
+			scene.add( wallCube4 );
+			wallCube4.position.set(3,0,-2);
+
+			const wallCube5 = new THREE.Mesh( geometry, wallMat );
+			scene.add( wallCube5 );
+			wallCube5.position.set(3,0,-1);
+
+			//Floors
+			const floorMat = new THREE.MeshBasicMaterial( { color: 0xff0000 } );
+
+			const floorCube1 = new THREE.Mesh( geometry, floorMat );
+			scene.add( floorCube1 );
+			floorCube1.position.set(0,-1,-1);
+
+			const floorCube2 = new THREE.Mesh( geometry, floorMat );
+			scene.add( floorCube2 );
+			floorCube2.position.set(1,-1,-1);
+
+			const floorCube3 = new THREE.Mesh( geometry, floorMat );
+			scene.add( floorCube3 );
+			floorCube3.position.set(2,-1,-1);
+
+
+			var onKeyDown = function ( event ) {
+				switch ( event.keyCode ) {
+					case 87: // w
+						moveForward = true;
+						break;
+					case 65: // a
+						moveLeft = true;
+						break;
+					case 83: // s
+						moveBackward = true;
+						break;
+					case 68: // d
+						moveRight = true;
+						break;
+					case 32: // space
+						moveUp = true;
+						break;
+					case 16:
+						moveDown = true;
+						break;
+				}
+			};
+
+			var onKeyUp = function ( event ) {
+				switch ( event.keyCode ) {
+					case 87: // w
+						moveForward = false;
+						break;
+					case 65: // a
+						moveLeft = false;
+						break;
+					case 83: // s
+						moveBackward = false;
+						break;
+					case 68: // d
+						moveRight = false;
+						break;
+					case 32: // space
+						moveUp = false;
+						break;
+					case 16:
+						moveDown = false;
+						break;
+				}
+			};
+
+			document.addEventListener( 'keydown', onKeyDown, false );
+			document.addEventListener( 'keyup', onKeyUp, false );
+
+			let colliders = [wallCube1, wallCube2, wallCube3, wallCube4, wallCube5, floorCube1, floorCube2, floorCube3]
+
+			function sweptAABB(cube, cubeVelocity, collider){
+
+				// b1 = cube
+				// b2 = box
+
+				let normalx;
+				let normaly;
+				let normalz;
+
+				box = collider
+				let xInvEntry, yInvEntry, zInvEntry;
+				let xInvExit, yInvExit, zInvExit;
+
+				if (cubeVelocity.x > 0) {
+					xInvEntry = (box.position.x - 0.5) - (cube.position.x + 0.5);
+					xInvExit = (box.position.x + 0.5) - (cube.position.x - 0.5);
+				}else{
+					xInvEntry = (box.position.x + 0.5) - (cube.position.x - 0.5);
+					xInvExit =  (box.position.x - 0.5) - (cube.position.x + 0.5);
+				}
+
+				if (cubeVelocity.y > 0) {
+					yInvEntry = (box.position.y - 0.5) - (cube.position.y + 0.5);
+					yInvExit = (box.position.y + 0.5) - (cube.position.y - 0.5);
+				}else{
+					yInvEntry = (box.position.y + 0.5) - (cube.position.y - 0.5);
+					yInvExit =  (box.position.y - 0.5) - (cube.position.y + 0.5);
+				}
+
+				if (cubeVelocity.z > 0) {
+					zInvEntry = (box.position.z - 0.5) - (cube.position.z + 0.5);
+					zInvExit = (box.position.z + 0.5) - (cube.position.z - 0.5);
+				}else{
+					zInvEntry = (box.position.z + 0.5) - (cube.position.z - 0.5);
+					zInvExit =  (box.position.z - 0.5) - (cube.position.z + 0.5);
+				}
+
+				let xEntry, yEntry, zEntry; 
+				let xExit, yExit, zExit; 
+
+				if (cubeVelocity.x == 0) { 
+					xEntry = -Infinity; 
+					xExit = Infinity; 
+				} else {
+					xEntry = xInvEntry / cubeVelocity.x; 
+					xExit = xInvExit / cubeVelocity.x;
+				}
+
+				if (cubeVelocity.y == 0) { 
+					yEntry = -Infinity; 
+					yExit = Infinity; 
+				} else {
+					yEntry = yInvEntry / cubeVelocity.y; 
+					yExit = yInvExit / cubeVelocity.y;
+				}
+
+				if (cubeVelocity.z == 0) { 
+					zEntry = -Infinity; 
+					zExit = Infinity; 
+				} else {
+					zEntry = zInvEntry / cubeVelocity.z; 
+					zExit = zInvExit / cubeVelocity.z;
+				}
+
+
+				if (yEntry > 1) entryY = -Infinity;
+				if (xEntry > 1) entryX = -Infinity;
+				if (zEntry > 1) entryX = -Infinity;
+				let entryTime = Math.max(xEntry, yEntry, zEntry);
+				let exitTime = Math.min(xExit, yExit, zExit);
+
+				// console.log(entryTime, exitTime);
+
+				if (entryTime > exitTime) return {'entryTime':1, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}}; // This check was correct.
+				if (xEntry < 0 && yEntry < 0 && zEntry < 0) return {'entryTime':1, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}};
+
+				let cubeMaxX = (cube.position.x + 0.4999)
+				let cubeMinX = (cube.position.x - 0.4999)
+				let cubeMaxY = (cube.position.y + 0.4999)
+				let cubeMinY = (cube.position.y - 0.4999)
+				let cubeMaxZ = (cube.position.z + 0.4999)
+				let cubeMinZ = (cube.position.z - 0.4999)
+
+				let boxMaxX = (box.position.x + 0.5)
+				let boxMinX = (box.position.x - 0.5)
+				let boxMaxY = (box.position.y + 0.5)
+				let boxMinY = (box.position.y - 0.5)
+				let boxMaxZ = (box.position.z + 0.5)
+				let boxMinZ = (box.position.z - 0.5)
+
+				if (xEntry < 0) {
+				    // Check that the bounding box started overlapped or not.
+				    if (boxMaxX < cubeMinX || boxMinX > cubeMaxX) return {'entryTime':1, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}};
+				}
+				if (yEntry < 0) {
+				    // Check that the bounding box started overlapped or not.
+				    if (boxMaxY < cubeMinY || boxMinY > cubeMaxY) return {'entryTime':1, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}};
+				}
+				if (zEntry < 0) {
+				    // Check that the bounding box started overlapped or not.
+				    if (boxMaxZ < cubeMinZ || boxMinZ > cubeMaxZ) return {'entryTime':1, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}};
+				}
+
+
+				if (xEntry > yEntry) {
+		            if(xEntry > zEntry){
+		                normalx = cubeVelocity.x >= 0 ? -1 : 1;
+		                normaly = 0;
+		                normalz = 0;
+		            }else{
+		                normalz = cubeVelocity.z >= 0 ? -1 : 1;
+		                normalx = 0;
+		                normaly = 0;
+		            }
+		        } else {
+		            if (yEntry > zEntry) {
+		                normaly = cubeVelocity.y >= 0 ? -1 : 1;
+		                normalx = 0;
+		                normalz = 0;
+
+		            } else {
+		                normalz = cubeVelocity.z >= 0 ? -1 : 1;
+		                normalx = 0;
+		                normaly = 0;
+		            }
+		        }
+
+				return {'entryTime':entryTime, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}}; 
+
+			}
+
+			function animate() {
+				requestAnimationFrame( animate );
+
+				let cubeVelocity = new THREE.Vector3(0,0,0);
+
+				if (moveLeft) {
+					cubeVelocity.x -= 0.05;
+				}
+				if (moveRight) {
+					cubeVelocity.x += 0.05;
+				}
+				if (moveDown) {
+					cubeVelocity.y -= 0.05;
+				}
+				if (moveUp) {
+					cubeVelocity.y += 0.05;
+				}
+				if (moveForward) {
+					cubeVelocity.z -= 0.05;
+				}
+				if (moveBackward) {
+					cubeVelocity.z += 0.05;
+				}
+
+				//STAGE 1
+				let times = []
+				for (var i = colliders.length - 1; i >= 0; i--) {
+					times.push(sweptAABB(cube, cubeVelocity, colliders[i]));
+				}
+
+				collisionTime = times.reduce((prev, curr) => {
+					return prev.entryTime < curr.entryTime ? prev : curr;
+				})
+
+				if (collisionTime.entryTime > 1) {collisionTime.entryTime = 1}
+
+				cube.position.x += cubeVelocity.x * collisionTime.entryTime
+				cube.position.y += cubeVelocity.y * collisionTime.entryTime
+				cube.position.z += cubeVelocity.z * collisionTime.entryTime
+
+
+
+				//STAGE 2
+				let remainingTime = 1 - collisionTime.entryTime;
+
+				cubeVelocity.x *= remainingTime;
+				cubeVelocity.y *= remainingTime;
+				cubeVelocity.z *= remainingTime;
+
+				if (remainingTime > 0) {
+					if (collisionTime.normal.x != 0) {
+						cubeVelocity.x = 0;
+					}
+					if (collisionTime.normal.y != 0) {
+						cubeVelocity.y = 0;
+					}
+					if (collisionTime.normal.z != 0) {
+						cubeVelocity.z = 0;
+					}
+				}
+
+				times = []
+				for (var i = colliders.length - 1; i >= 0; i--) {
+					times.push(sweptAABB(cube, cubeVelocity, colliders[i]));
+				}
+
+				collisionTime = times.reduce((prev, curr) => {
+					return prev.entryTime < curr.entryTime ? prev : curr;
+				})
+
+				if (collisionTime.entryTime > 1) {collisionTime.entryTime = 1}
+
+				cube.position.x += cubeVelocity.x * collisionTime.entryTime
+				cube.position.y += cubeVelocity.y * collisionTime.entryTime
+				cube.position.z += cubeVelocity.z * collisionTime.entryTime
+
+
+
+				//STAGE 3
+				remainingTime = 1 - collisionTime.entryTime;
+
+				cubeVelocity.x *= remainingTime;
+				cubeVelocity.y *= remainingTime;
+				cubeVelocity.z *= remainingTime;
+
+				if (remainingTime > 0) {
+					if (collisionTime.normal.x != 0) {
+						cubeVelocity.x = 0;
+					}
+					if (collisionTime.normal.y != 0) {
+						cubeVelocity.y = 0;
+					}
+					if (collisionTime.normal.z != 0) {
+						cubeVelocity.z = 0;
+					}
+				}
+
+				times = []
+				for (var i = colliders.length - 1; i >= 0; i--) {
+					times.push(sweptAABB(cube, cubeVelocity, colliders[i]));
+				}
+
+				collisionTime = times.reduce((prev, curr) => {
+					return prev.entryTime < curr.entryTime ? prev : curr;
+				})
+
+				if (collisionTime.entryTime > 1) {collisionTime.entryTime = 1}
+
+				cube.position.x += cubeVelocity.x * collisionTime.entryTime
+				cube.position.y += cubeVelocity.y * collisionTime.entryTime
+				cube.position.z += cubeVelocity.z * collisionTime.entryTime
+ 
+ 
+				renderer.render( scene, camera );
+			};
+			animate();
+		</script>
+	</body>
+</html>

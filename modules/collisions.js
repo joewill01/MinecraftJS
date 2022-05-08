@@ -68,3 +68,142 @@ function entity_collision_check(){
 	}
 	collidingEntities = cols;
 }
+
+function sweptAABB(cube, cubeVelocity, collider, entity){
+
+	// b1 = cube
+	// b2 = box
+
+	let normalx;
+	let normaly;
+	let normalz;
+
+	box = collider
+	let xInvEntry, yInvEntry, zInvEntry;
+	let xInvExit, yInvExit, zInvExit;
+
+	if (cubeVelocity.x > 0) {
+		xInvEntry = (box.position.x - 0.5) - (cube.position.x + (entity.hitboxWidth / 2));
+		xInvExit = (box.position.x + 0.5) - (cube.position.x - (entity.hitboxWidth / 2));
+	}else{
+		xInvEntry = (box.position.x + 0.5) - (cube.position.x - (entity.hitboxWidth / 2));
+		xInvExit =  (box.position.x - 0.5) - (cube.position.x + (entity.hitboxWidth / 2));
+	}
+
+	if (cubeVelocity.y > 0) {
+		yInvEntry = (box.position.y - 0.5) - (cube.position.y + (entity.hitboxHeight / 2));
+		yInvExit = (box.position.y + 0.5) - (cube.position.y - (entity.hitboxHeight / 2));
+		if (cube.position.y == -1.4) {
+			yInvEntry = 0;
+			yInvExit = 2.8;
+		}
+	}else{
+		yInvEntry = (box.position.y + 0.5) - (cube.position.y - (entity.hitboxHeight / 2));
+		yInvExit =  (box.position.y - 0.5) - (cube.position.y + (entity.hitboxHeight / 2));
+		if (cube.position.y == 1.4) {
+			yInvEntry = 0;
+			yInvExit = -2.8;
+		}
+	}
+
+	if (cubeVelocity.z > 0) {
+		zInvEntry = (box.position.z - 0.5) - (cube.position.z + (entity.hitboxWidth / 2));
+		zInvExit = (box.position.z + 0.5) - (cube.position.z - (entity.hitboxWidth / 2));
+	}else{
+		zInvEntry = (box.position.z + 0.5) - (cube.position.z - (entity.hitboxWidth / 2));
+		zInvExit =  (box.position.z - 0.5) - (cube.position.z + (entity.hitboxWidth / 2));
+	}
+
+	let xEntry, yEntry, zEntry; 
+	let xExit, yExit, zExit; 
+
+	if (cubeVelocity.x == 0) { 
+		xEntry = -Infinity; 
+		xExit = Infinity; 
+	} else {
+		xEntry = xInvEntry / cubeVelocity.x; 
+		xExit = xInvExit / cubeVelocity.x;
+	}
+
+	if (cubeVelocity.y == 0) { 
+		yEntry = -Infinity; 
+		yExit = Infinity; 
+	} else {
+		yEntry = yInvEntry / cubeVelocity.y; 
+		yExit = yInvExit / cubeVelocity.y;
+	}
+
+	if (cubeVelocity.z == 0) { 
+		zEntry = -Infinity; 
+		zExit = Infinity; 
+	} else {
+		zEntry = zInvEntry / cubeVelocity.z; 
+		zExit = zInvExit / cubeVelocity.z;
+	}
+
+
+	if (yEntry > 1) entryY = -Infinity;
+	if (xEntry > 1) entryX = -Infinity;
+	if (zEntry > 1) entryX = -Infinity;
+	let entryTime = Math.max(xEntry, yEntry, zEntry);
+	let exitTime = Math.min(xExit, yExit, zExit);
+
+	// console.log(entryTime, exitTime);
+
+	if (entryTime > exitTime) return {'entryTime':1, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}}; // This check was correct.
+	if (xEntry < 0 && yEntry < 0 && zEntry < 0) return {'entryTime':1, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}};
+
+	let cubeMaxX = (cube.position.x + ((entity.hitboxWidth / 2) - 0.0001))
+	let cubeMinX = (cube.position.x - ((entity.hitboxWidth / 2) - 0.0001))
+	let cubeMaxY = (cube.position.y + ((entity.hitboxHeight / 2) - 0.0001))
+	let cubeMinY = (cube.position.y - ((entity.hitboxHeight / 2) - 0.0001))
+	let cubeMaxZ = (cube.position.z + ((entity.hitboxWidth / 2) - 0.0001))
+	let cubeMinZ = (cube.position.z - ((entity.hitboxWidth / 2) - 0.0001))
+
+	let boxMaxX = (box.position.x + 0.5)
+	let boxMinX = (box.position.x - 0.5)
+	let boxMaxY = (box.position.y + 0.5)
+	let boxMinY = (box.position.y - 0.5)
+	let boxMaxZ = (box.position.z + 0.5)
+	let boxMinZ = (box.position.z - 0.5)
+
+	if (xEntry < 0) {
+	    // Check that the bounding box started overlapped or not.
+	    if (boxMaxX < cubeMinX || boxMinX > cubeMaxX) return {'entryTime':1, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}};
+	}
+	if (yEntry < 0) {
+	    // Check that the bounding box started overlapped or not.
+	    if (boxMaxY < cubeMinY || boxMinY > cubeMaxY) return {'entryTime':1, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}};
+	}
+	if (zEntry < 0) {
+	    // Check that the bounding box started overlapped or not.
+	    if (boxMaxZ < cubeMinZ || boxMinZ > cubeMaxZ) return {'entryTime':1, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}};
+	}
+
+
+	if (xEntry > yEntry) {
+        if(xEntry > zEntry){
+            normalx = cubeVelocity.x >= 0 ? -1 : 1;
+            normaly = 0;
+            normalz = 0;
+        }else{
+            normalz = cubeVelocity.z >= 0 ? -1 : 1;
+            normalx = 0;
+            normaly = 0;
+        }
+    } else {
+        if (yEntry > zEntry) {
+            normaly = cubeVelocity.y >= 0 ? -1 : 1;
+            normalx = 0;
+            normalz = 0;
+
+        } else {
+            normalz = cubeVelocity.z >= 0 ? -1 : 1;
+            normalx = 0;
+            normaly = 0;
+        }
+    }
+
+	return {'entryTime':entryTime, 'normal': {'x': normalx, 'y':normaly, 'z':normalz}}; 
+
+}

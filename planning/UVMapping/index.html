@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		<script src="three.js"></script>
+		<script>
+			const degsToRads = deg => (deg * Math.PI) / 180.0;
+
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			var sideGeometry = new THREE.PlaneGeometry( 2, 10, 1, 1 );
+
+			let texMap1 = [
+				new THREE.Vector2(7/16, 10/16),
+				new THREE.Vector2(7/16, 0),
+				new THREE.Vector2(9/16, 10/16)
+			]
+
+			let texMap2 = [
+				new THREE.Vector2(7/16, 0),
+				new THREE.Vector2(9/16, 0),
+				new THREE.Vector2(9/16, 10/16)
+			]
+
+			sideGeometry.faceVertexUvs[0][0] = texMap1;
+			sideGeometry.faceVertexUvs[0][1] = texMap2;
+
+			var verticalGeometry = new THREE.PlaneGeometry( 2, 2, 1, 1 );
+
+			let VtexMap1 = [
+				new THREE.Vector2(7/16, 10/16),
+				new THREE.Vector2(7/16, 8/16),
+				new THREE.Vector2(9/16, 10/16)
+			]
+
+			let VtexMap2 = [
+				new THREE.Vector2(7/16, 8/16),
+				new THREE.Vector2(9/16, 8/16),
+				new THREE.Vector2(9/16, 10/16)
+			]
+
+			verticalGeometry.faceVertexUvs[0][0] = VtexMap1;
+			verticalGeometry.faceVertexUvs[0][1] = VtexMap2; 
+
+			var face1, face2;
+
+			// texture
+			var texture = new THREE.TextureLoader().load( "torch.png" ,
+				function(texture){
+
+					texture.magFilter = THREE.NearestFilter;
+					texture.minFilter = THREE.NearestFilter;
+					const material = new THREE.MeshBasicMaterial( { map: texture, transparent: true } );
+					const debugMat = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+
+					face1 = new THREE.Mesh( sideGeometry, material );
+					face1.position.z = 1
+					scene.add(face1);
+
+					face2 = new THREE.Mesh( sideGeometry, material );
+					face2.rotation.y = degsToRads(90);
+					face2.position.x = 1;
+					scene.add(face2);
+
+					topFace = new THREE.Mesh( verticalGeometry, material );
+					topFace.rotation.x = degsToRads(-90)
+					topFace.position.y = 5;
+					scene.add(topFace);
+
+					camera.position.z = 20;
+					camera.position.y = 20;
+					camera.position.x = 20;
+					camera.lookAt(face1.position);
+				}
+			);
+
+			
+			function animate() {
+				requestAnimationFrame( animate );
+
+				renderer.render( scene, camera );
+			};
+			animate();
+		</script>
+	</body>
+</html>
