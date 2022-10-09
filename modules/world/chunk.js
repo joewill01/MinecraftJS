@@ -26,6 +26,10 @@ class Chunk{
 			for (let z = 0; z < 16; z++) {
 				let height = Math.ceil(Math.abs(noise.perlin2((this.x*16+x+offset) / zoom, (this.z*16 + z + offset) / zoom)) * scale) + raise;
 				for (let y = 0; y <= height; y++){
+					if(y==0){
+						this.cdata[y*256 + x*16 + z] = 4
+					}
+
 					if(y==height){
 						this.cdata[y*256 + x*16 + z] = 1
 					}else if(y==height-1 || y==height-2 || y==height-3){
@@ -116,6 +120,10 @@ class Chunk{
 	render(){
 		this.chunk = [];
 		let chunk_geom = new THREE.Geometry();
+		let chunk_geom_buffer = new THREE.BufferGeometry();
+		const positions = [];
+	    const normals = [];
+	    const indices = [];
 		this.uuid = chunk_geom.uuid
 
 		this.cdata.forEach(function(id, e) {
@@ -129,22 +137,39 @@ class Chunk{
 
 		this.chunk.forEach(function(block, e) {
 			if(!(block instanceof Air)){
-	    		block.render(chunk_geom)
+	    		block.render(chunk_geom, positions, normals, indices)
 	    	}
 		}, this);
+
+		//console.log(positions)
+		//console.log(normals)
+		//console.log(indices)
 
 		this.chunk_geom = chunk_geom
 
 		chunk_geom.computeFaceNormals();
 		chunk_geom.computeVertexNormals();
 
-		let chunk_mesh = new THREE.Mesh(chunk_geom, registry.materials);
-		chunk_mesh.geometry.computeFaceNormals();
-		chunk_mesh.geometry.computeVertexNormals();
+		const material = new THREE.MeshBasicMaterial({color: 'green'});
+		const positionNumComponents = 3;
+		const normalNumComponents = 3;
+		chunk_geom_buffer.addAttribute(
+		    'position',
+		    new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents));
+		chunk_geom_buffer.addAttribute(
+		    'normal',
+		    new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents));
+		chunk_geom_buffer.setIndex(indices);
+		const mesh = new THREE.Mesh(chunk_geom_buffer, material);
+		scene.add(mesh);
 
-		chunk_mesh.name = this.name + "_mesh"
-		this.chunk_mesh = chunk_mesh
-		scene.add(chunk_mesh);
+		// let chunk_mesh = new THREE.Mesh(chunk_geom_buffer, registry.materials);
+		// chunk_mesh.geometry.computeFaceNormals();
+		// chunk_mesh.geometry.computeVertexNormals();
+
+		// chunk_mesh.name = this.name + "_mesh"
+		// this.chunk_mesh = chunk_mesh
+		// scene.add(chunk_mesh);
 	}
 }
 
