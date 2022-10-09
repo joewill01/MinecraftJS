@@ -435,7 +435,7 @@ rendererStats.domElement.style.zIndex	= '100'
 document.body.appendChild( rendererStats.domElement )
 
 var frames = 0;
-var infinite_terrain = true;
+var infinite_terrain = false;
 
 function animate() {
 	frames+=1;

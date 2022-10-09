@@ -14,7 +14,7 @@ class Block {
 
 		//Should be changed
 		this.hardness = 0; // difficulty to mine. 0 is instant mine -1 is unbreakable. any positive number determines time
-		this.resistance = 0; // multiplier for explosions. 0 makes explosion do nothing.. 1 doesn't stop it
+		this.resistance = 0; // https://minecraft.fandom.com/wiki/Explosion#Blast_resistance
 		this.solid = true; 
 		this.affectedByGravity = false;
 		this.soundType = null; // object of sounds to be played when walked on, hit or broken.
@@ -24,7 +24,7 @@ class Block {
 		this.baseLightIntensity = 0;
 		this.needsRandomTick = false;
 		this.slipperiness = 0; // momentum multiplier for movement  
-		this.harvestLevel = 0; // 0:hand, 1:wood, 2:iron, 3:gold, 4:diamond
+		this.harvestLevel = 0; // 0:hand, 1:wood, 2:stone, 3:iron, 4:gold, 5:diamond
 		this.replaceableByLeaves = false;
 		this.replaceableByWorldGenOres = false;
 		this.rotatable = false;

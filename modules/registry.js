@@ -100,6 +100,18 @@ class Registry{
 			case 7:
 				return new Dirt(x, y, z, ctex);
 				break;
+			case 8:
+				return new Cobblestone(x,y,z,ctex);
+				break;
+			case 9:
+				return new OakPlanks(x,y,z,ctex);
+				break;
+			case 10:
+				return new IronOre(x,y,z,ctex);
+				break;
+			case 11:
+				return new Furnace(x,y,z,ctex);
+				break;
 		}
 	}
 
@@ -142,10 +154,22 @@ class Registry{
 				return new DiamondBootsItem();
 				break;
 			case 12:
-				return new DirtBlockItem();
+				return new DirtItem();
 				break;
 			case 13:
 				return new SeedsItem();
+				break;
+			case 14:
+				return new CobblestoneItem();
+				break;
+			case 15:
+				return new OakPlanksItem();
+				break;
+			case 16:
+				return new IronOreItem();
+				break;
+			case 17:
+				return new FurnaceItem();
 				break;
 		}
 	}

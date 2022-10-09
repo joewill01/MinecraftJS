@@ -16,7 +16,7 @@ class GrassBlock extends Block{
 		this.prefferedTool = "shovel";
 
 		this.hardness = 0.6;
-		this.resistance = 0.2;
+		this.resistance = 0.6;
 		this.droppedItemId = randomIntFromInterval(1,13);
 	}
 }
