@@ -112,6 +112,24 @@ class Registry{
 			case 11:
 				return new Furnace(x,y,z,ctex);
 				break;
+			case 12:
+				return new CoalOre(x,y,z,ctex);
+				break;
+			case 13:
+				return new GoldOre(x,y,z,ctex);
+				break;
+			case 14:
+				return new DiamondOre(x,y,z,ctex);
+				break;
+			case 15:
+				return new RedstoneOre(x,y,z,ctex);
+				break;
+			case 16:
+				return new EmeraldOre(x,y,z,ctex);
+				break;
+			case 17:
+				return new LapisOre(x,y,z,ctex);
+				break;
 		}
 	}
 
@@ -170,6 +188,24 @@ class Registry{
 				break;
 			case 17:
 				return new FurnaceItem();
+				break;
+			case 18:
+				return new CoalOreItem();
+				break;
+			case 19:
+				return new GoldOreItem();
+				break;
+			case 20:
+				return new DiamondOreItem();
+				break;
+			case 21:
+				return new RedstoneOreItem();
+				break;
+			case 22:
+				return new EmeraldOreItem();
+				break;
+			case 23:
+				return new LapisOreItem();
 				break;
 		}
 	}
