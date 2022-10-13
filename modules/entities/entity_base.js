@@ -15,6 +15,9 @@ class Entity {
 		let geom = new THREE.CubeGeometry( this.hitboxWidth, this.hitboxHeight, this.hitboxWidth);
 		let wireMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF, wireframe:true } );
 		this.hitbox = new THREE.Mesh( geom, wireMaterial);
+		const axesHelper = new THREE.AxesHelper( 5 );
+		this.hitbox.add( axesHelper );
+
 		this.hitbox.visible = renderHitboxes;
 		this.hitbox.name= name+"-hitbox"
 		this.hitbox.position.x = this.x

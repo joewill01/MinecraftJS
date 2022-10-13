@@ -33,7 +33,7 @@ class Block {
 		this.biomeTints = {};//ex: plains:{r:1,g:1,b:1.2} Multiplicative
 	}
 
-	render(chunk_geom, positions, normals, indices){
+	render(chunk_geom, positions, normals, indices, uvs, chunk_geom_buffer){
 
 		let faces = world.get_block_faces(this.x, this.y, this.z)
 
@@ -54,7 +54,7 @@ class Block {
 				blocks_around[10],
 				blocks_around[17]
 			];
-			setPlane("y",  Math.PI * 0.5, this.texture_names["S"], this, "S", around_faces_for_side, true, positions, normals, indices); //side
+			setPlane("y",  Math.PI * 0.5, this.texture_names["S"], this, "S", around_faces_for_side, true, positions, normals, indices, uvs, chunk_geom_buffer); //side
 		}
 		if(faces.N == 0){
 			around_faces_for_side = [
@@ -67,7 +67,7 @@ class Block {
 				blocks_around[9],
 				blocks_around[14]
 			];
-			setPlane("y", -Math.PI * 0.5, this.texture_names["N"] , this, "N", around_faces_for_side, true, positions, normals, indices); //side
+			setPlane("y", -Math.PI * 0.5, this.texture_names["N"] , this, "N", around_faces_for_side, true, positions, normals, indices, uvs, chunk_geom_buffer); //side
 		}
 		if(faces.E == 0){
 			around_faces_for_side = [
@@ -80,7 +80,7 @@ class Block {
 				blocks_around[11],
 				blocks_around[19]
 			];
-			setPlane("y",  0, this.texture_names["E"] , this, "E", around_faces_for_side, true, positions, normals, indices); //side
+			setPlane("y",  0, this.texture_names["E"] , this, "E", around_faces_for_side, true, positions, normals, indices, uvs, chunk_geom_buffer); //side
 		}
 		if(faces.W == 0){
 			around_faces_for_side = [
@@ -93,7 +93,7 @@ class Block {
 				blocks_around[8],
 				blocks_around[12]
 			];
-			setPlane("y",  Math.PI, this.texture_names["W"] , this, "W", around_faces_for_side, true, positions, normals, indices);// side
+			setPlane("y",  Math.PI, this.texture_names["W"] , this, "W", around_faces_for_side, true, positions, normals, indices, uvs, chunk_geom_buffer);// side
 		}
 		if(faces.D == 0){
 			around_faces_for_side = [
@@ -106,7 +106,7 @@ class Block {
 				blocks_around[18],
 				blocks_around[17]
 			];
-			setPlane("x",  Math.PI * 0.5, this.texture_names["D"] , this, "D", around_faces_for_side, true, positions, normals, indices); //bottom
+			setPlane("x",  Math.PI * 0.5, this.texture_names["D"] , this, "D", around_faces_for_side, true, positions, normals, indices, uvs, chunk_geom_buffer); //bottom
 		}
 		if(faces.U == 0){
 			around_faces_for_side = [
@@ -119,10 +119,10 @@ class Block {
 				blocks_around[6],
 				blocks_around[7]
 			]; 
-			setPlane("x", -Math.PI * 0.5, this.texture_names["U"] , this, "U", around_faces_for_side, true, positions, normals, indices); //top
+			setPlane("x", -Math.PI * 0.5, this.texture_names["U"] , this, "U", around_faces_for_side, true, positions, normals, indices, uvs, chunk_geom_buffer); //top
 		}
 	
-		function setPlane(axis, angle, texture_name, obj, name, blocks_around_face, ao, positions, normals, indices) {
+		function setPlane(axis, angle, texture_name, obj, name, blocks_around_face, ao, positions, normals, indices, uvs, chunk_geom_buffer) {
 			let mat_index = registry.registerMaterial(texture_name, obj.solid)
 			let material = registry.materials[mat_index]
 
@@ -219,55 +219,55 @@ class Block {
 			  "N":{ // left
 			    dir: [ -1,  0,  0, ],
 			    corners: [
-			      [ 0, 1, 0 ],
-			      [ 0, 0, 0 ],
-			      [ 0, 1, 1 ],
-			      [ 0, 0, 1 ],
+			      { pos: [ 0, 1, 0 ], uv: [ 0, 1 ], },
+			      { pos: [ 0, 0, 0 ], uv: [ 0, 0 ], },
+			      { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
+			      { pos: [ 0, 0, 1 ], uv: [ 1, 0 ], },
 			    ],
 			  },
 			  "S":{ // right
 			    dir: [  1,  0,  0, ],
 			    corners: [
-			      [ 1, 1, 1 ],
-			      [ 1, 0, 1 ],
-			      [ 1, 1, 0 ],
-			      [ 1, 0, 0 ],
+			      { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
+			      { pos: [ 1, 0, 1 ], uv: [ 0, 0 ], },
+			      { pos: [ 1, 1, 0 ], uv: [ 1, 1 ], },
+			      { pos: [ 1, 0, 0 ], uv: [ 1, 0 ], },
 			    ],
 			  },
 			  "D":{ // bottom Definately D
 			    dir: [  0, -1,  0, ],
 			    corners: [
-			      [ 1, 0, 1 ],
-			      [ 0, 0, 1 ],
-			      [ 1, 0, 0 ],
-			      [ 0, 0, 0 ],
+			      { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
+			      { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
+			      { pos: [ 1, 0, 0 ], uv: [ 1, 1 ], },
+			      { pos: [ 0, 0, 0 ], uv: [ 0, 1 ], },
 			    ],
 			  },
-			  "U":{ // top Definately U
+			  "U":{ // top definetely U
 			    dir: [  0,  1,  0, ],
 			    corners: [
-			      [ 0, 1, 1 ],
-			      [ 1, 1, 1 ],
-			      [ 0, 1, 0 ],
-			      [ 1, 1, 0 ],
+			      { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
+			      { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
+			      { pos: [ 0, 1, 0 ], uv: [ 1, 0 ], },
+			      { pos: [ 1, 1, 0 ], uv: [ 0, 0 ], },
 			    ],
 			  },
 			  "W":{ // back
 			    dir: [  0,  0, -1, ],
 			    corners: [
-			      [ 1, 0, 0 ],
-			      [ 0, 0, 0 ],
-			      [ 1, 1, 0 ],
-			      [ 0, 1, 0 ],
+			      { pos: [ 1, 0, 0 ], uv: [ 0, 0 ], },
+			      { pos: [ 0, 0, 0 ], uv: [ 1, 0 ], },
+			      { pos: [ 1, 1, 0 ], uv: [ 0, 1 ], },
+			      { pos: [ 0, 1, 0 ], uv: [ 1, 1 ], },
 			    ],
 			  },
 			  "E":{ // front
 			    dir: [  0,  0,  1, ],
 			    corners: [
-			      [ 0, 0, 1 ],
-			      [ 1, 0, 1 ],
-			      [ 0, 1, 1 ],
-			      [ 1, 1, 1 ],
+			      { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
+			      { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
+			      { pos: [ 0, 1, 1 ], uv: [ 0, 1 ], },
+			      { pos: [ 1, 1, 1 ], uv: [ 1, 1 ], },
 			    ],
 			  },
 			};
@@ -275,9 +275,10 @@ class Block {
 			//if(name == "E"){
 				let {dir, corners} = face_vals[name]
 			  	const ndx = positions.length / 3;
-	            for (const pos of corners) {
-	              positions.push(pos[0] + obj.x, pos[1] + obj.y, pos[2] + obj.z);
+	            for (const {pos, uv} of corners) {
+	              positions.push(pos[0] + obj.x - 0.5, pos[1] + obj.y - 0.5, pos[2] + obj.z - 0.5);
 	              normals.push(...dir);
+	              uvs.push(uv[0],uv[1])
 	            }
 	            indices.push(
 	              ndx, ndx + 1, ndx + 2,
@@ -286,7 +287,9 @@ class Block {
 			//}
 
 		  	plane.updateMatrix();
-		  	chunk_geom.merge(planeGeom, plane.matrix, mat_index);
+
+		  	//deprecated
+		  	//chunk_geom.merge(planeGeom, plane.matrix, mat_index);
 		}
 	}
 

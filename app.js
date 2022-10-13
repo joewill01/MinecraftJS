@@ -427,7 +427,7 @@ function createStats() {
 stats = createStats();
 document.body.appendChild( stats.domElement );
 
-var rendererStats	= new THREEx.RendererStats()
+var rendererStats = new THREEx.RendererStats()
 rendererStats.domElement.style.position	= 'absolute'
 rendererStats.domElement.style.left	= '0px'
 rendererStats.domElement.style.bottom	= '0px'

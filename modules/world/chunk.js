@@ -117,13 +117,14 @@ class Chunk{
 		}
 	}
 
-	render(){
+	async render(){
 		this.chunk = [];
 		let chunk_geom = new THREE.Geometry();
 		let chunk_geom_buffer = new THREE.BufferGeometry();
 		const positions = [];
 	    const normals = [];
 	    const indices = [];
+	    const uvs = [];
 		this.uuid = chunk_geom.uuid
 
 		this.cdata.forEach(function(id, e) {
@@ -133,13 +134,14 @@ class Chunk{
 			this.chunk.push(registry.getBlockInstanceFromId(id, this.x * 16 + x, y, this.z * 16 + z, this.ctextures))
 		}, this);
 
-		this.calculateSkylight()
-
+		// this.calculateSkylight()
 		this.chunk.forEach(function(block, e) {
 			if(!(block instanceof Air)){
-	    		block.render(chunk_geom, positions, normals, indices)
+	    		block.render(chunk_geom, positions, normals, indices, uvs, chunk_geom_buffer)
 	    	}
 		}, this);
+
+		console.log(registry.materials)
 
 		//console.log(positions)
 		//console.log(normals)
@@ -153,14 +155,19 @@ class Chunk{
 		const material = new THREE.MeshBasicMaterial({color: 'green'});
 		const positionNumComponents = 3;
 		const normalNumComponents = 3;
-		chunk_geom_buffer.addAttribute(
+		chunk_geom_buffer.setAttribute(
 		    'position',
 		    new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents));
-		chunk_geom_buffer.addAttribute(
+		chunk_geom_buffer.setAttribute(
 		    'normal',
 		    new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents));
+		chunk_geom_buffer.setAttribute(
+		    'uv',
+		    new THREE.BufferAttribute(new Float32Array(uvs), 2));
 		chunk_geom_buffer.setIndex(indices);
-		const mesh = new THREE.Mesh(chunk_geom_buffer, material);
+		chunk_geom_buffer.addGroup((0),8, 1)
+		chunk_geom_buffer.addGroup((8),24, 2)
+		const mesh = new THREE.Mesh(chunk_geom_buffer, registry.materials);
 		scene.add(mesh);
 
 		// let chunk_mesh = new THREE.Mesh(chunk_geom_buffer, registry.materials);

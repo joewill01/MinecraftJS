@@ -39,7 +39,7 @@ class Registry{
 				map: this.textures[texID],
 				transparent: transparent, 
 				side: THREE.DoubleSide,
-				vertexColors: THREE.VertexColors
+				//vertexColors: THREE.VertexColors
 			});
 			this.materials.push(material);
 			this.materialRegister[texture_name] = this.materials.length-1;
