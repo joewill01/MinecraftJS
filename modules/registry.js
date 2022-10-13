@@ -130,6 +130,12 @@ class Registry{
 			case 17:
 				return new LapisLazuliOre(x,y,z,ctex);
 				break;
+			case 18:
+				return new BirchLog(x,y,z,ctex);
+				break;
+			case 19:
+				return new BirchLeaves(x,y,z,ctex);
+				break;
 		}
 	}
 
@@ -221,6 +227,27 @@ class Registry{
 				break;
 			case 28:
 				return new LapisLazuliItem();
+				break;
+			case 29:
+				return new GrassItem();
+				break;
+			case 30:
+				return new StoneItem();
+				break;
+			case 31:
+				return new BedrockItem();
+				break;
+			case 32:
+				return new OakLogItem();
+				break;
+			case 33:
+				return new OakLeavesItem();
+				break;
+			case 34:
+				return new BirchLogItem();
+				break;
+			case 35:
+				return new BirchLeavesItem();
 				break;
 		}
 	}

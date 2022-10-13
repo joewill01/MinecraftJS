@@ -14,7 +14,7 @@ class OakLeaves extends Block{
 		this.name = "oak_leaves";
 		this.displayName = "Oak Leaves"
 		this.prefferedTool = "shears";
-
+		this.droppedItemId = 33;
 		this.solid = false;
 		this.replaceableByLeaves = true;
 		this.needsRandomTick = true;
