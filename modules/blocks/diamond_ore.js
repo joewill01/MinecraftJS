@@ -17,7 +17,7 @@ class DiamondOre extends Block{
 		this.hardness = 3;
 		this.resistance = 3;
 		this.harvestLevel = 3;
-		this.droppedItemId = 20;
+		this.droppedItemId = 24;
 
 	}
 }

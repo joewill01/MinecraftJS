@@ -17,7 +17,7 @@ class EmeraldOre extends Block{
 		this.hardness = 3;
 		this.resistance = 3;
 		this.harvestLevel = 2;
-		this.droppedItemId = 22;
+		this.droppedItemId = 27;
 
 	}
 }

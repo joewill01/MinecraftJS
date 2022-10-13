@@ -17,7 +17,7 @@ class CoalOre extends Block{
 		this.hardness = 3;
 		this.resistance = 3;
 		this.harvestLevel = 1;
-		this.droppedItemId = 18;
+		this.droppedItemId = 26;
 
 	}
 }

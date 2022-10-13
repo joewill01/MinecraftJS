@@ -17,7 +17,7 @@ class RedstoneOre extends Block{
 		this.hardness = 3;
 		this.resistance = 3;
 		this.harvestLevel = 2;
-		this.droppedItemId = 21;
+		this.droppedItemId = 25;
 
 	}
 }

@@ -128,7 +128,7 @@ class Registry{
 				return new EmeraldOre(x,y,z,ctex);
 				break;
 			case 17:
-				return new LapisOre(x,y,z,ctex);
+				return new LapisLazuliOre(x,y,z,ctex);
 				break;
 		}
 	}
@@ -205,7 +205,22 @@ class Registry{
 				return new EmeraldOreItem();
 				break;
 			case 23:
-				return new LapisOreItem();
+				return LapisLazuliOreItem();
+				break;
+			case 24:
+				return new DiamondItem();
+				break;
+			case 25:
+				return new RedstoneItem();
+				break;
+			case 26:
+				return new CoalItem();
+				break;
+			case 27:
+				return new EmeraldItem();
+				break;
+			case 28:
+				return new LapisLazuliItem();
 				break;
 		}
 	}

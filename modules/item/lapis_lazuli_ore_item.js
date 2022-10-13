@@ -1,9 +1,9 @@
-class LapisOreItem extends Item{
+class LapisLazuliOreItem extends Item{
 	constructor(){
 		super();
 		this.ID = 23;
-		this.name = "lapis_ore"; // Item name such as lapis_sword
-		this.displayName = "Lapis Ore"; // Same as name but able to be overwritten for custom item names
+		this.name = "lapis_lazuli_ore"; // Item name such as lapis_sword
+		this.displayName = "Lapis Lazuli Ore"; // Same as name but able to be overwritten for custom item names
 		this.type = "block"; // material, tool, food, block, armour
 		this.displayType = "3d"; // 2d/3d 
 
