@@ -31,6 +31,8 @@ class Block {
 		this.allowedRotations = []; //N,S,E,W,D,U Letter is where the old Top face will end up
 		this.droppedItemId = null; 
 		this.biomeTints = {};//ex: plains:{r:1,g:1,b:1.2} Multiplicative
+		this.dropNumberMin = 1;
+		this.dropNumberMax = 1;
 	}
 
 	render(chunk_geom){
@@ -228,10 +230,14 @@ class Block {
 		this.onBreak();
 		if(this.droppedItemId != null){
 			let item = registry.getItemInstanceFromId(this.droppedItemId);
-			let item_entity = new ItemEntity(this.x, this.y, this.z, item);
-			item_entity.velocity.y = randomIntFromInterval(5,10);
-			item_entity.velocity.x = randomIntFromInterval(-3,3)/100;
-			item_entity.velocity.z = randomIntFromInterval(-3,3)/100;
+			const amountOfDrops = randomIntFromInterval(this.dropNumberMin,this.dropNumberMax)
+			for (let i = 0; i < amountOfDrops; i++) {
+				let item_entity = new ItemEntity(this.x, this.y, this.z, item);
+				item_entity.velocity.y = randomIntFromInterval(5,10);
+				item_entity.velocity.x = randomIntFromInterval(-3,3)/100;
+				item_entity.velocity.z = randomIntFromInterval(-3,3)/100;
+			}
+
 		}
 	}
 }

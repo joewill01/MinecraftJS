@@ -18,6 +18,8 @@ class LapisLazuliOre extends Block{
 		this.resistance = 3;
 		this.harvestLevel = 2;
 		this.droppedItemId = 28;
+		this.dropNumberMin = 4;
+		this.dropNumberMax = 9;
 
 	}
 }
