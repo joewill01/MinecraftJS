@@ -19,7 +19,7 @@ class Stone extends Block{
 		this.resistance = 6;
 		this.replaceableByWorldGenOres = true;
 		this.harvestLevel = 1;
-		this.droppedItemId = 14;
+		this.droppedItemId = 31; //should be 14
 
 	}
 }
