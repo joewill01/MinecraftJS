@@ -2,11 +2,25 @@
 
 /* global THREE */
 
+var scene;
+var world;
+
+function randInt(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
 class VoxelWorld {
   constructor(cellSize) {
     this.cellSize = cellSize;
     this.cellSliceSize = cellSize * cellSize;
-    this.cell = new Uint8Array(cellSize * 255 * cellSize);
+    this.cells = {};
+  }
+  computeCellId(x, y, z) {
+    const {cellSize} = this;
+    const cellX = Math.floor(x / cellSize);
+    const cellY = Math.floor(y / 255);
+    const cellZ = Math.floor(z / cellSize);
+    return `${cellX},${cellY},${cellZ}`;
   }
   computeVoxelOffset(x, y, z) {
     const {cellSize, cellSliceSize} = this;
@@ -18,22 +32,23 @@ class VoxelWorld {
            voxelX;
   }
   getCellForVoxel(x, y, z) {
-    const {cellSize} = this;
-    const cellX = Math.floor(x / cellSize);
-    const cellY = Math.floor(y / 255);
-    const cellZ = Math.floor(z / cellSize);
-    if (cellX !== 0 || cellY !== 0 || cellZ !== 0) {
-      return null;
-    }
-    return this.cell;
+    return this.cells[this.computeCellId(x, y, z)];
   }
   setVoxel(x, y, z, v) {
-    const cell = this.getCellForVoxel(x, y, z);
+    let cell = this.getCellForVoxel(x, y, z);
     if (!cell) {
-      return;  // TODO: add a new cell?
+      console.log("Here")
     }
     const voxelOffset = this.computeVoxelOffset(x, y, z);
     cell[voxelOffset] = v;
+  }
+  addCellForVoxel(x, y, z) {
+    const cellId = this.computeCellId(x, y, z);
+    let cell = this.cells[cellId];
+    if (!cell) {
+      return 0;
+    }
+    return cell;
   }
   getVoxel(x, y, z) {
     const cell = this.getCellForVoxel(x, y, z);
@@ -96,7 +111,34 @@ class VoxelWorld {
       block_ids
     };
   }
+  generateCell(cellX, cellY, cellZ){
+    const cellId = `${cellX},${cellY},${cellZ}`
+    const {cellSize} = this;
+    let cell = new Uint8Array(cellSize * 255 * cellSize);
+    this.cells[cellId] = cell;
+
+    for (let y = 0; y < 255; ++y) {
+      for (let z = cellZ*cellSize; z < (cellZ*cellSize) + cellSize; ++z) {
+        for (let x = cellX*cellSize; x < (cellX*cellSize) + cellSize; ++x) {
+          //const height = (Math.sin(x / cellSize * Math.PI * 2) + Math.sin(z / cellSize * Math.PI * 3)) * (cellSize / 6) + (cellSize / 2);
+          
+            if (y < 3) {
+              this.setVoxel(x, y, z, 1);
+            } else if (y < 6) {
+              this.setVoxel(x, y, z, 2)
+            } else if (y < 9) {
+              this.setVoxel(x, y, z, 3)
+            }else if (y < 12) {
+              this.setVoxel(x, y, z, 4)
+            }
+        }
+      }
+    }
+  }
 }
+
+//grass 2, orange 4
+//bedrock 3, cobble 1
 
 VoxelWorld.faces = [
   { // left
@@ -178,7 +220,7 @@ function main() {
   controls.target.set(cellSize / 2, 255 / 3, cellSize / 2);
   controls.update();
 
-  const scene = new THREE.Scene();
+  scene = new THREE.Scene();
   scene.background = new THREE.Color('lightblue');
 
   function addLight(x, y, z) {
@@ -243,77 +285,109 @@ function main() {
   orange_concrete_powder_texture.magFilter = THREE.NearestFilter;
   orange_concrete_powder_texture.minFilter = THREE.NearestFilter;
 
-  const world = new VoxelWorld(cellSize);
-
-  for (let y = 0; y < 255; ++y) {
-    for (let z = 0; z < cellSize; ++z) {
-      for (let x = 0; x < cellSize; ++x) {
-        const height = (Math.sin(x / cellSize * Math.PI * 2) + Math.sin(z / cellSize * Math.PI * 3)) * (cellSize / 6) + (cellSize / 2);
-        if (y < height + 150) {
-          world.setVoxel(x, y, z, randInt(1, 6));
-        }
-      }
-    }
-  }
-
-  function randInt(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
-  }
-
-  const {positions, normals, uvs, indices, block_ids} = world.generateGeometryDataForCell(0, 0, 0);
-  const geometry = new THREE.BufferGeometry();
-
-  //Setup texture groups for geometry
-  const offset = 6
-  let currentIndex = 0
-  let prev = null
-  let count = 0
-  let added_any = false
-  for(let block_id of block_ids){
-    if (block_id != prev) {
-      if (prev != null) {
-        // Add group and reset
-        geometry.addGroup(currentIndex, count*offset, block_id-1);
-        prev = block_id
-        currentIndex += (count*offset)
-        count = 1
-        added_any = true
-      }else{
-        // Reset
-        prev = block_id
-        count = 1
-      }
-    }else{
-      count+=1;
-    }
-  }
-  if(!added_any){
-    geometry.addGroup(currentIndex, count*offset, block_ids[block_ids.length-1]-2);  
-  }
+  world = new VoxelWorld(cellSize);
   
 
-  const positionNumComponents = 3;
-  const normalNumComponents = 3;
-  const uvNumComponents = 2;
-  geometry.setAttribute(
-      'position',
-      new THREE.BufferAttribute(new Float32Array(positions), positionNumComponents));
-  geometry.setAttribute(
-      'normal',
-      new THREE.BufferAttribute(new Float32Array(normals), normalNumComponents));
-  geometry.setAttribute(
-      'uv',
-      new THREE.BufferAttribute(new Float32Array(uvs), uvNumComponents));
-  geometry.setIndex(indices);
-  const mesh = new THREE.Mesh(geometry, 
-    [
-      glass_material, 
-      cobblestone_material, 
-      grass_material, 
-      bedrock_material,
-      orange_concrete_powder_material
-    ]);
-  scene.add(mesh);
+  const cellIdToMesh = {};
+  function updateCellGeometry(x, y, z, reloadOnly){
+    const cellX = Math.floor(x / cellSize);
+    const cellY = Math.floor(y / 255);
+    const cellZ = Math.floor(z / cellSize);
+    const cellId = world.computeCellId(x, y, z);
+    let mesh = cellIdToMesh[cellId];
+    if (!mesh) {
+      if(reloadOnly){
+        return
+      }
+      const geometry = new THREE.BufferGeometry();
+      const positionNumComponents = 3;
+      const normalNumComponents = 3;
+      const uvNumComponents = 2;
+
+      geometry.setAttribute(
+          'position',
+          new THREE.BufferAttribute(new Float32Array(0), positionNumComponents));
+      geometry.setAttribute(
+          'normal',
+          new THREE.BufferAttribute(new Float32Array(0), normalNumComponents));
+      geometry.setAttribute(
+          'uv',
+          new THREE.BufferAttribute(new Float32Array(0), uvNumComponents));
+
+      mesh = new THREE.Mesh(geometry, 
+      [
+        glass_material, 
+        glass_material, 
+        cobblestone_material, 
+        grass_material, 
+        bedrock_material,
+        orange_concrete_powder_material
+      ]);
+      mesh.name = cellId;
+      cellIdToMesh[cellId] = mesh;
+      scene.add(mesh);
+      mesh.position.set(cellX * cellSize, cellY * cellSize, cellZ * cellSize);
+    }
+
+    const {positions, normals, uvs, indices, block_ids} = world.generateGeometryDataForCell(cellX, cellY, cellZ);
+    const geometry = mesh.geometry;
+
+    //Setup texture groups for geometry
+    const offset = 6
+    let currentIndex = 0
+    let prev = null
+    let count = 0
+    geometry.clearGroups()
+    for(let block_id of block_ids){
+      if (block_id != prev) {
+        if (prev != null) {
+          // Add group and reset
+          geometry.addGroup(currentIndex, count*offset, prev);
+          prev = block_id
+          currentIndex += (count*offset)
+          count = 1
+        }else{
+          // Reset
+          prev = block_id
+          count = 1
+        }
+      }else{
+        count+=1;
+        prev = block_id
+      }
+    }
+    geometry.addGroup(currentIndex, count*offset, prev);  
+
+    geometry.setAttribute('position',new THREE.BufferAttribute(new Float32Array(positions), 3));
+    geometry.getAttribute('position').needsUpdate = true;
+
+    geometry.setAttribute('normal',new THREE.BufferAttribute(new Float32Array(normals), 3));
+    geometry.getAttribute('normal').needsUpdate = true;
+
+    geometry.setAttribute('uv',new THREE.BufferAttribute(new Float32Array(uvs), 2));
+    geometry.getAttribute('uv').needsUpdate = true;
+
+    geometry.setIndex(indices);
+    geometry.computeBoundingSphere();
+  }
+
+
+  for(let x=-31;x<32;x++){
+    for(let z=-31;z<32;z++){
+      world.generateCell(x,0,z);
+      updateCellGeometry(x*16,0,z*16);
+      const offsets = [
+        [0,1],
+        [1,0],
+        [-1,0],
+        [0,-1]
+      ]
+      for (let offset of offsets){
+        updateCellGeometry((x+offset[0])*cellSize, 0, (z+offset[1]) * cellSize, true)
+      }
+    } 
+  }
+
 
   function resizeRendererToDisplaySize(renderer) {
     const canvas = renderer.domElement;
@@ -328,6 +402,28 @@ function main() {
 
   let renderRequested = false;
 
+  var stats;
+  function createStats() {
+    var stats = new Stats();
+    stats.setMode(0);
+
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left = '0';
+    stats.domElement.style.top = '0';
+
+    return stats;
+  }
+
+  stats = createStats();
+  document.body.appendChild( stats.domElement );
+
+  var rendererStats = new THREEx.RendererStats()
+  rendererStats.domElement.style.position = 'absolute'
+  rendererStats.domElement.style.left = '0px'
+  rendererStats.domElement.style.bottom = '0px'
+  rendererStats.domElement.style.zIndex = '100'
+  document.body.appendChild( rendererStats.domElement )
+
   function render() {
     renderRequested = undefined;
 
@@ -339,6 +435,8 @@ function main() {
 
     controls.update();
     renderer.render(scene, camera);
+    rendererStats.update(renderer);
+    stats.update();
   }
   render();
 
