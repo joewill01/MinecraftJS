@@ -136,6 +136,30 @@ class Registry{
 			case 19:
 				return new BirchLeaves(x,y,z,ctex);
 				break;
+			case 20:
+				return new JungleLog(x,y,z,ctex);
+				break;
+			case 21:
+				return new JungleLeaves(x,y,z,ctex);
+				break;
+			case 22:
+				return new SpruceLog(x,y,z,ctex);
+				break;
+			case 23:
+				return new SpruceLeaves(x,y,z,ctex);
+				break;
+			case 24:
+				return new AcaciaLog(x,y,z,ctex);
+				break;
+			case 25:
+				return new AcaciaLeaves(x,y,z,ctex);
+				break;
+			case 26:
+				return new DarkOakLog(x,y,z,ctex);
+				break;
+			case 27:
+				return new DarkOakLeaves(x,y,z,ctex);
+				break;
 		}
 	}
 
@@ -248,6 +272,30 @@ class Registry{
 				break;
 			case 35:
 				return new BirchLeavesItem();
+				break;
+			case 36:
+				return new JungleLogItem();
+				break;
+			case 37:
+				return new JungleLeavesItem();
+				break;
+			case 38:
+				return new SpruceLogItem();
+				break;
+			case 39:
+				return new SpruceLeavesItem();
+				break;
+			case 40:
+				return new AcaciaLogItem();
+				break;
+			case 41:
+				return new AcaciaLeavesItem();
+				break;
+			case 42:
+				return new DarkOakLogItem();
+				break;
+			case 43:
+				return new DarkOakLeavesItem();
 				break;
 		}
 	}
