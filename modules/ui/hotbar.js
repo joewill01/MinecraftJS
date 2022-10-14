@@ -21,16 +21,27 @@ class Hotbar {
         this.items_div = document.createElement("div");
         this.items_div.classList.add("items_div");
         this.items = [];
+        this.item_slots = [];
 
-        this.items.push(new UIItem(this.items_div, 6, 6, 400, 0, "", true));
-        this.items.push(new UIItem(this.items_div, 46, 6, 400, 0, "", true));
-        this.items.push(new UIItem(this.items_div, 86, 6, 400, 0, "", true));
-        this.items.push(new UIItem(this.items_div, 126, 6, 400, 0, "", true));
-        this.items.push(new UIItem(this.items_div, 166, 6, 400, 0, "", true));
-        this.items.push(new UIItem(this.items_div, 206, 6, 400, 0, "", true));
-        this.items.push(new UIItem(this.items_div, 246, 6, 400, 0, "", true));
-        this.items.push(new UIItem(this.items_div, 286, 6, 400, 0, "", true));
-        this.items.push(new UIItem(this.items_div, 326, 6, 400, 0, "", true));
+        this.item_slots.push(new ItemSlot());
+        this.item_slots.push(new ItemSlot());
+        this.item_slots.push(new ItemSlot());
+        this.item_slots.push(new ItemSlot());
+        this.item_slots.push(new ItemSlot());
+        this.item_slots.push(new ItemSlot());
+        this.item_slots.push(new ItemSlot());
+        this.item_slots.push(new ItemSlot());
+        this.item_slots.push(new ItemSlot());
+
+        this.items.push(new UIItem(this.items_div, this.item_slots[0], 6, 6, 400, true));
+        this.items.push(new UIItem(this.items_div, this.item_slots[1], 46, 6, 400, true));
+        this.items.push(new UIItem(this.items_div, this.item_slots[2], 86, 6, 400, true));
+        this.items.push(new UIItem(this.items_div, this.item_slots[3], 126, 6, 400, true));
+        this.items.push(new UIItem(this.items_div, this.item_slots[4], 166, 6, 400, true));
+        this.items.push(new UIItem(this.items_div, this.item_slots[5], 206, 6, 400, true));
+        this.items.push(new UIItem(this.items_div, this.item_slots[6], 246, 6, 400, true));
+        this.items.push(new UIItem(this.items_div, this.item_slots[7], 286, 6, 400, true));
+        this.items.push(new UIItem(this.items_div, this.item_slots[8], 326, 6, 400, true));
 
         this.element.append(this.items_div);
 

@@ -88,9 +88,12 @@ class MainMenu extends UIBase {
         this.UIelements["images"]["edition"] = new UIImage(this.logo_container, 176, 80, 196, 28  , "main_menu-edition", "minecraft/textures/gui/title/edition.png",32, 256)
 
         this.UIelements["texts"] = {};
-        this.UIelements["texts"]["splash"] = new UIFlashyYellowText(this.logo_container, 380, 50, "main_menu-logo-splash", "Spiders everywhere!",)
+        this.UIelements["texts"]["splash"] = new UIFlashyYellowText(this.logo_container, 380, 50, "main_menu-logo-splash", "Actually JavaScript edition!",)
+
         this.UIelements["texts"]["title"] = new UIText(this.element, 0, 0, "main_menu-minecraft_version", "JSCraft pre-alpha 1.12", false, true);
         this.UIelements["texts"]["copyright"] =  new UIText(this.element, 0, 0, "main_menu-copyright", "Copyright John and Joe. Do not distribute!", true, true);
+
+
 
         this.UIelements["buttons"]["singleplayer"].onclick = () => {this.ui.openScreen("singleplayer_menu")}
     }

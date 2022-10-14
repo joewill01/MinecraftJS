@@ -7,6 +7,7 @@ class UIBase {
     }
 
     createReusableCSS() {
+        //DO CHECK TO SEE IF ALREADY EXISTS
         this.stylesheet = this.ui.dom.createElement("style");
         this.stylesheet.innerHTML = `
         .ui_screen {

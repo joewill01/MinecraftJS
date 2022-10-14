@@ -1,10 +1,10 @@
 class GrassBlock extends Block{
 	constructor(x,y,z,ctex){
 		let textures = {
-			'N': 'grass_block_side.png',
-			'S': 'grass_block_side.png',
-			'E': 'grass_block_side.png',
-			'W': 'grass_block_side.png',
+			'N': 'grass_block_side-NORMAL-BY-JOE.png',
+			'S': 'grass_block_side-NORMAL-BY-JOE.png',
+			'E': 'grass_block_side-NORMAL-BY-JOE.png',
+			'W': 'grass_block_side-NORMAL-BY-JOE.png',
 			'U': 'grass_block_top-NORMAL-BY-JOE.png',
 			'D': 'dirt.png',
 		};

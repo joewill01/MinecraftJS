@@ -27,7 +27,7 @@ var serverConn = null;
 var m1Pressed = false;
 var currentItem = null;
 
-var ui, hotbar, pause_menu,options_menu,inventory, scene, renderer
+var ui, hotbar, pause_menu,options_menu, player_inventory, player_inventory_ui, scene, renderer
 var selectionCube, breakCube, registry, player, world, chunkLoadManager
 var control_type, breaktextures
 
@@ -43,7 +43,8 @@ function initScene(){
 	main_menu = new MainMenu(ui)
 	singleplayer_menu = new SinglePlayerMenu(ui)
 
-	inventory = new Inventory(ui, hotbar);
+	player_inventory = new PlayerInventory()
+	player_inventory_ui = new PlayerInventoryUI(ui, player_inventory, hotbar);
 
 	scene = new Physijs.Scene;
 	scene.fog = new THREE.Fog(0x99ccff, 70, 90);
@@ -146,7 +147,7 @@ function initScene(){
 document.addEventListener('mousemove', function(event) {
     event.preventDefault();
     ui.hand.setPosition(event.clientX - 16, event.clientY - 16);
-    inventory.mousemove(event.clientX - 16, event.clientY - 16)
+    player_inventory_ui.mousemove(event.clientX - 16, event.clientY - 16)
 }, true);
 
 document.addEventListener('contextmenu', event => event.preventDefault());
@@ -169,7 +170,7 @@ var onKeyDown = function ( event ) {
 			ui.toggleFullscreen();
 			break;
 		case 69: //e
-			inventory.toggle();
+			player_inventory_ui.toggle();
 			break;
 		case 87: // w
 			moveForward = true;
@@ -197,31 +198,40 @@ var onKeyDown = function ( event ) {
 			}
 			break;
 		case 49: // 1
-			hotbar.selectItem(0);
+			hotbar.selectItem(0)
+			blockToPlace = 1;
 			break;
 		case 50: // 2
 			hotbar.selectItem(1);
+			blockToPlace = 2;
 			break;
 		case 51: // 3
 			hotbar.selectItem(2);
+			blockToPlace = 3;
 			break;
 		case 52: // 4
 			hotbar.selectItem(3);
+			blockToPlace = 4;
 			break;
 		case 53: // 5
 			hotbar.selectItem(4);
+			blockToPlace = 5;
 			break;
 		case 54: // 6
 			hotbar.selectItem(5);
+			blockToPlace = 6;
 			break;
 		case 55: // 7
 			hotbar.selectItem(6);
+			blockToPlace = 7;
 			break;
 		case 56: // 8
 			hotbar.selectItem(7);
+			blockToPlace = 8;
 			break;
 		case 57: // 9
 			hotbar.selectItem(8);
+			blockToPlace = 9;
 			break;
 		case 191:// slash
 			player.velocity.y = 0;

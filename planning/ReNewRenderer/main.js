@@ -372,8 +372,8 @@ function main() {
   }
 
 
-  for(let x=-31;x<32;x++){
-    for(let z=-31;z<32;z++){
+  for(let x=-3;x<4;x++){
+    for(let z=-3;z<4;z++){
       world.generateCell(x,0,z);
       updateCellGeometry(x*16,0,z*16);
       const offsets = [

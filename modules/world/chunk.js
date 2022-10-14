@@ -28,6 +28,15 @@ class Chunk{
 				for (let y = 0; y <= height; y++){
 					if(y==height){
 						this.cdata[y*256 + x*16 + z] = 1
+						// TREE
+						if (Math.floor(Math.random() * 100) == 1) {
+							this.buildTree(this.cdata, x*16, y*256, z);
+						}
+
+						// BIG STICK
+						if (Math.floor(Math.random() * 100000) == 1) {
+							this.buildBigStick(this.cdata, x*16, y*256, z);
+						}
 					}else if(y==height-1 || y==height-2 || y==height-3){
 						this.cdata[y*256 + x*16 + z] = 7
 					}else if(y==0){
@@ -41,6 +50,66 @@ class Chunk{
 
 		world.world[this.name] = this.cdata
 		this.render()
+	}
+
+	buildTree(cdata, x, y, z) {
+		cdata[y + x + z] = 7
+		cdata[y + x + z+256] = 2
+		cdata[y + x + z+512] = 2
+		cdata[y + x + z+768] = 2
+		cdata[y + x + z+768+1] = 3
+		cdata[y + x + z+768-1] = 3
+		cdata[y + x + z+768+16-1] = 3
+		cdata[y + x + z+768+16+1] = 3
+		cdata[y + x + z+768-16-1] = 3
+		cdata[y + x + z+768-16+1] = 3
+		cdata[y + x + z+768+16] = 3
+		cdata[y + x + z+768-16] = 3
+		cdata[y + x + z+768+2] = 3
+		cdata[y + x + z+768-2] = 3
+		cdata[y + x + z+768+16+2] = 3
+		cdata[y + x + z+768+16-2] = 3
+		cdata[y + x + z+768-16+2] = 3
+		cdata[y + x + z+768-16-2] = 3
+		cdata[y + x + z+768+32] = 3
+		cdata[y + x + z+768-32] = 3
+		cdata[y + x + z+768+32+1] = 3
+		cdata[y + x + z+768+32-1] = 3
+		cdata[y + x + z+768-32+1] = 3
+		cdata[y + x + z+768-32-1] = 3
+		cdata[y + x + z+1024] = 2
+		cdata[y + x + z+1024+1] = 3
+		cdata[y + x + z+1024-1] = 3
+		cdata[y + x + z+1024+16-1] = 3
+		cdata[y + x + z+1024-16-1] = 3
+		cdata[y + x + z+1024+16+1] = 3
+		cdata[y + x + z+1024-16+1] = 3
+		cdata[y + x + z+1024+16] = 3
+		cdata[y + x + z+1024-16] = 3
+		cdata[y + x + z+1280] = 3
+	}
+
+	buildBigStick(cdata, x, y, z) {
+		cdata[x+y+x+(256*1)] = 4
+		cdata[x+y+x+(256*2)] = 4
+		cdata[x+y+x+(256*3)] = 4
+		cdata[x+y+x+(256*4)] = 4
+		cdata[x+y+x+(256*5)] = 4
+		cdata[x+y+x+(256*6)] = 4
+		cdata[x+y+x+(256*7)] = 4
+		cdata[x+y+x+(256*8)] = 4
+		cdata[x+y+x+(256*9)] = 4
+		cdata[x+y+x+(256*10)] = 4
+		cdata[x+y+x+(256*11)] = 4
+		cdata[x+y+x+(256*12)] = 4
+		cdata[x+y+x+(256*13)] = 4
+		cdata[x+y+x+(256*14)] = 4
+		cdata[x+y+x+(256*15)] = 4
+		cdata[x+y+x+(256*16)] = 4
+		cdata[x+y+x+(256*17)] = 4
+		cdata[x+y+x+(256*18)] = 4
+		cdata[x+y+x+(256*19)] = 4
+		cdata[x+y+x+(256*20)] = 4
 	}
 
 	calculateSkylight(){

@@ -38,7 +38,7 @@ class Item{
 
 		//If Armour
 		this.defense = 0;
-		this.specialAllowedInventorySlots = []; //helmet, chestplate, leggings, boots
+		this.specialAllowedInventorySlots = []; //helmet, chestplate, leggings, boots, offhand, fuel
 	}
 
 	onUse(){//Right click on air
@@ -51,5 +51,9 @@ class Item{
 
 	onEaten(){// When eaten
 
+	}
+
+	sameAs(item){
+		return true
 	}
 }

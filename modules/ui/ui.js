@@ -9,7 +9,8 @@ class UI {
 
         this.appendUI(parent_element);
 
-        this.hand = new UIItem(this.element, 0, 0, "hand", 0, "");
+        this.hand_slot = new ItemSlot();
+        this.hand = new UIItem(this.element, this.hand_slot, 0, 0, "hand", 0, "");
         this.hand.element.style.pointerEvents = "none";
         this.hand.item_hover_overlay.style.visibility = 'hidden';
     }
@@ -290,6 +291,50 @@ class UI {
                 padding: 0;
                 z-index: 10
             }
+
+            .standard_item .block_holder {
+                height: 32px;
+                width: 32px;
+                z-index: 10;
+            }
+
+            .standard_item .block_holder .block {
+                position: absolute;
+                height: 20px;
+                width: 20px;
+                transform-style: preserve-3d;
+                transform: rotateX(-30deg) rotateY(-45deg);
+                z-index: 10;
+            }
+
+            .standard_item .block_holder .block span {
+                display: block;
+                image-rendering: pixelated;
+                width: 100%;
+                height: 100%;
+                top: 3px;
+                left: 9px;
+                position: absolute;
+            }
+
+            .standard_item .block_holder .block span.top {
+                transform: rotateX(90deg) translateZ(10px); 
+                background-size: cover;
+
+            }
+
+            .standard_item .block_holder .block span.right {
+                transform: rotateY(90deg) translateZ(10px);
+                /*background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("minecraft/textures/block/stone.png");*/
+                background-size: cover;
+            }
+
+            .standard_item .block_holder .block span.front {
+                transform: rotateY(0deg) translateZ(10px);
+                /*background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("minecraft/textures/block/stone.png");*/
+                background-size: cover;
+            }
+
 
             /* skybox */
 
