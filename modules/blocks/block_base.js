@@ -15,7 +15,6 @@ class Block {
 		//Should be changed
 		this.hardness = 0; // difficulty to mine. 0 is instant mine -1 is unbreakable. any positive number determines time
 		this.resistance = 0; // https://minecraft.fandom.com/wiki/Explosion#Blast_resistance
-		this.solid = true; 
 		this.affectedByGravity = false;
 		this.soundType = null; // object of sounds to be played when walked on, hit or broken.
 		this.placeable = true;
@@ -33,6 +32,7 @@ class Block {
 		this.biomeTints = {};//ex: plains:{r:1,g:1,b:1.2} Multiplicative
 		this.dropNumberMin = 1;
 		this.dropNumberMax = 1;
+		this.opacity = 2; //0: transparent, 1: attenuates light, 2:opaque
 	}
 
 	render(chunk_geom){

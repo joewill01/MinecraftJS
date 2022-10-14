@@ -15,7 +15,7 @@ class DarkOakLeaves extends Block{
 		this.displayName = "Dark Oak Leaves"
 		this.prefferedTool = "shears";
 		this.droppedItemId = 43;
-		this.solid = false;
+		this.opacity = 1;
 		this.replaceableByLeaves = true;
 		this.needsRandomTick = true;
 		this.hardness = 0.2

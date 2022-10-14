@@ -15,7 +15,7 @@ class SpruceLeaves extends Block{
 		this.displayName = "Spruce Leaves"
 		this.prefferedTool = "shears";
 		this.droppedItemId = 39;
-		this.solid = false;
+		this.opacity = 1;
 		this.replaceableByLeaves = true;
 		this.needsRandomTick = true;
 		this.hardness = 0.2
