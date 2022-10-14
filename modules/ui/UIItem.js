@@ -200,6 +200,10 @@ class UIItem {
 
 
     moveItemTo(UIItem) {
+        if (UIItem.item_slot.locked) {
+            console.log(`UIItem (id: ${this.id}): Attempt to move into locked slot (id: ${UIItem.id})`)
+            return
+        }
         UIItem.setItem(this.getItem());
         this.removeItem();
     }
@@ -209,8 +213,12 @@ class UIItem {
     }
 
     moveItemsTo(UIItem, amount=1) {
-        if (this.item_slot.item.id === UIItem.item_slot.item.id || UIItem.isEmpty()) {
-            // if UIItem has same item type OR is empty
+        if (UIItem.item_slot.locked) {
+            console.log(`UIItem (id: ${this.id}): Attempt to move into locked slot (id: ${UIItem.id})`)
+            return
+        }
+        if ((this.item_slot.item.id === UIItem.item_slot.item.id || UIItem.isEmpty())) {
+            // if UIItem has same item type OR is empty AND isnt locked
             if (this.getAmount() >= amount) {
                 // if there are enough items to move
                 UIItem.setItemInstance(this.item_slot.item);
