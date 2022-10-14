@@ -1,5 +1,5 @@
 class Sand extends Block{
-	constructor(x,y,z,ctex){
+	constructor(x,y,z,ctex) {
 		let textures = {
 			'N': 'sand.png',
 			'S': 'sand.png',
@@ -8,7 +8,7 @@ class Sand extends Block{
 			'U': 'sand.png',
 			'D': 'sand.png',
 		};
-		super(x,y,z,textures,ctex);
+		super(x, y, z, textures, ctex);
 
 		this.ID = 28;
 		this.name = "sand"
@@ -20,4 +20,11 @@ class Sand extends Block{
 		this.droppedItemId = 44;
 		this.canFall = true;
 	}
+
+	break() {
+		super.break();
+		let falling_block = new FallingBlock(this.x, this.y, this.z, this);
+
+	}
+
 }
