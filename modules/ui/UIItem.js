@@ -180,7 +180,7 @@ class UIItem {
     }
 
     isEmpty() {
-        return (this.item_slot.item === "")
+        return (this.item_slot.amount === 0)
     }
 
     getItem() {
@@ -218,7 +218,7 @@ class UIItem {
             return
         }
         if ((this.item_slot.item.id === UIItem.item_slot.item.id || UIItem.isEmpty())) {
-            // if UIItem has same item type OR is empty AND isnt locked
+            // if UIItem has same item type OR is empty
             if (this.getAmount() >= amount) {
                 // if there are enough items to move
                 UIItem.setItemInstance(this.item_slot.item);
@@ -284,8 +284,11 @@ class UIItem {
                 this.moveItemTo(ui.hand)
             } else {
                 // if the hand is not empty
-                if (ui.hand.item_slot.item.id === this.item_slot.item.id) {
+                if (ui.hand.item_slot.item.ID === this.item_slot.item.ID) {
                     // if the item in slot is same as item in hand
+
+                    // !!!! what if the hand + the slot moving into is more than 64....
+
                     ui.hand.moveItemsTo(this, ui.hand.getAmount());
                 } else {
                     this.swapItemWith(ui.hand);
