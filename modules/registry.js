@@ -160,6 +160,12 @@ class Registry{
 			case 27:
 				return new DarkOakLeaves(x,y,z,ctex);
 				break;
+			case 28:
+				return new Sand(x,y,z,ctex);
+				break;
+			case 29:
+				return new Gravel(x,y,z,ctex);
+				break;
 		}
 	}
 
@@ -296,6 +302,12 @@ class Registry{
 				break;
 			case 43:
 				return new DarkOakLeavesItem();
+				break;
+			case 44:
+				return new SandItem();
+				break;
+			case 45:
+				return new GravelItem();
 				break;
 		}
 	}
