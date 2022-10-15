@@ -20,4 +20,9 @@ class Gravel extends Block{
 		this.droppedItemId = 45;
 		this.canFall = true;
 	}
+	break() {
+		super.break();
+		let falling_block = new FallingBlock(this.x, this.y, this.z, this);
+
+	}
 }

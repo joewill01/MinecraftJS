@@ -3,7 +3,9 @@ class FallingBlock extends Entity{
         super(1,1,false,x,y+3,z,"entity_"+uuid());
 
         const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-        let mat_index = registry.registerMaterial("sand.png", false)
+        let texture = block.texture_names["N"]
+        this.block = block
+        let mat_index = registry.registerMaterial(texture, false)
         let material = registry.materials[mat_index]
         this.cube = new THREE.Mesh( geometry, material );
         this.cube.position.set(x,y+3,z)
@@ -25,5 +27,21 @@ class FallingBlock extends Entity{
         this.y = this.hitbox.position.y
         this.z = this.hitbox.position.z
         this.cube.position.set(this.x,this.y,this.z)
+    }
+    onHitGround() {
+
+        world.set_block(this.x,Math.floor(this.y),this.z,this.block.ID)
+        this.cleanup()
+
+    }
+    cleanup(){
+        this.boxes.forEach((box, index) => {
+            box[0].geometry.dispose( );
+            box[0].material.dispose( );
+            scene.remove(box[0])
+        })
+        this.boxes = null;
+        registry.unRegisterEntity(this.entityId)
+        scene.remove(this.cube)
     }
 }
