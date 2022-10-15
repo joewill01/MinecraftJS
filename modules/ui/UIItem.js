@@ -11,11 +11,15 @@ class UIItem {
         this.mirroring = false;
 
         this.item_slot = item_slot;
+        this.item_slot.updateUIItem = () => {
+            this.updateTexture();
+            this.updateAmount();
+        }
 
         this.onchange = () => {};
         this.onclick = () => {};
         this.oncontextmenu = () => {};
-        this.createItem()
+        this.createItem();
     }
 
     createItem() {
@@ -24,7 +28,6 @@ class UIItem {
         this.element.oncontextmenu = () => {this.oncontextmenuInternal()};
         this.element.classList.add("standard_item");
         this.element.id = this.id;
-
 
         this.item_hover_overlay = this.dom.createElement("span");
         this.item_hover_overlay.id = `${this.id}:item_hover_overlay`;
@@ -201,11 +204,15 @@ class UIItem {
 
     moveItemTo(UIItem) {
         if (UIItem.item_slot.locked) {
-            console.log(`UIItem (id: ${this.id}): Attempt to move into locked slot (id: ${UIItem.id})`)
+            console.error(`UIItem (id: ${this.id}): Attempt to move into locked slot (id: ${UIItem.id})`)
             return
         }
-        UIItem.setItem(this.getItem());
-        this.removeItem();
+
+
+        if (UIItem.item_slot.type == "standard" || this.item_slot.item.specialAllowedInventorySlots.includes(UIItem.item_slot.type)) {
+            UIItem.setItem(this.getItem());
+            this.removeItem();
+        }
     }
 
     getItemFrom(UIItem) {
@@ -214,22 +221,29 @@ class UIItem {
 
     moveItemsTo(UIItem, amount=1) {
         if (UIItem.item_slot.locked) {
-            console.log(`UIItem (id: ${this.id}): Attempt to move into locked slot (id: ${UIItem.id})`)
+            console.error(`UIItem (id: ${this.id}): Attempt to move into locked slot (id: ${UIItem.id})`)
             return
         }
-        if ((this.item_slot.item.id === UIItem.item_slot.item.id || UIItem.isEmpty())) {
-            // if UIItem has same item type OR is empty
-            if (this.getAmount() >= amount) {
-                // if there are enough items to move
-                UIItem.setItemInstance(this.item_slot.item);
-                UIItem.setAmount(UIItem.getAmount() + amount);
 
-                this.setAmount(this.getAmount() - amount);
+        if (UIItem.item_slot.type == "standard") {
+            if ((this.item_slot.item.id === UIItem.item_slot.item.id || UIItem.isEmpty())) {
+                // if UIItem has same item type OR is empty
+                if (this.getAmount() >= amount) {
+                    // if there are enough items to move
+                    if (UIItem.getAmount() < 64) {
+                        UIItem.setItemInstance(this.item_slot.item);
+                        UIItem.setAmount(UIItem.getAmount() + amount);
+
+                        this.setAmount(this.getAmount() - amount);
+                    } else {
+                        console.error(`UIItem (id: ${this.id}): Attempt to move items into a full stack.`)
+                    }
+                } else {
+                    console.error(`UIItem (id: ${this.id}): Attempt to move more items than available.`)
+                }
             } else {
-                console.error(`UIItem (id: ${this.id}): Attempt to move more items than available.`)
+                console.error(`UIItem (id: ${this.id}): Attempt to move item(s) to different item type.`)
             }
-        } else {
-            console.error(`UIItem (id: ${this.id}): Attempt to move item(s) to different item type.`)
         }
     }
 
@@ -289,7 +303,13 @@ class UIItem {
 
                     // !!!! what if the hand + the slot moving into is more than 64....
 
-                    ui.hand.moveItemsTo(this, ui.hand.getAmount());
+                    if ((ui.hand.getAmount() + this.getAmount()) > 64) {
+                        // if the hand + the slot moving into is more than 64
+                        ui.hand.moveItemsTo(this, 64 - this.getAmount());
+                    } else {
+                        ui.hand.moveItemsTo(this, ui.hand.getAmount());
+                    }
+
                 } else {
                     this.swapItemWith(ui.hand);
                 }

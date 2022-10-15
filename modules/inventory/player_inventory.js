@@ -39,7 +39,7 @@ class PlayerInventory extends Inventory {
 		this.item_slots[0].item = new DiamondLeggingsItem();
 		this.item_slots[1].item = new CobblestoneItem();
 		this.item_slots[2].item = new IronOreItem();
-		this.item_slots[3].item = new OakPlanksItem();
+		this.item_slots[3].item = new IronOreItem();
 		this.item_slots[4].item = new LapisLazuliOreItem();
 		this.item_slots[5].item = new CoalOreItem();
 		this.item_slots[6].item = new GoldOreItem();
@@ -48,8 +48,8 @@ class PlayerInventory extends Inventory {
 
 		this.item_slots[0].amount = 1;
 		this.item_slots[1].amount = 1;
-		this.item_slots[2].amount = 64;
-		this.item_slots[3].amount = 1;
+		this.item_slots[2].amount = 48;
+		this.item_slots[3].amount = 48;
 		this.item_slots[4].amount = 1;
 		this.item_slots[5].amount = 1;
 		this.item_slots[6].amount = 1;
