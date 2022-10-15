@@ -1,6 +1,6 @@
 class FallingBlock extends Entity{
     constructor(x,y,z,block) {
-        super(1,1,false,x,y+3,z,"entity_"+uuid());
+        super(1,1,false,x,y,z,"entity_"+uuid());
 
         const geometry = new THREE.BoxGeometry( 1, 1, 1 );
         let texture = block.texture_names["N"]
@@ -8,7 +8,7 @@ class FallingBlock extends Entity{
         let mat_index = registry.registerMaterial(texture, false)
         let material = registry.materials[mat_index]
         this.cube = new THREE.Mesh( geometry, material );
-        this.cube.position.set(x,y+3,z)
+        this.cube.position.set(x,y,z)
         scene.add( this.cube );
     }
     update(){

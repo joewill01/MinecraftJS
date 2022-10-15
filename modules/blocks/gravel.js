@@ -9,7 +9,7 @@ class Gravel extends Block{
 			'D': 'gravel.png',
 		};
 		super(x,y,z,textures,ctex);
-
+		this.fallingCheck()
 		this.ID = 29;
 		this.name = "gravel"
 		this.displayName = "Gravel"
@@ -19,10 +19,5 @@ class Gravel extends Block{
 		this.resistance = 0.5;
 		this.droppedItemId = 45;
 		this.canFall = true;
-	}
-	break() {
-		super.break();
-		let falling_block = new FallingBlock(this.x, this.y, this.z, this);
-
 	}
 }

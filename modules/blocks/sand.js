@@ -9,7 +9,7 @@ class Sand extends Block{
 			'D': 'sand.png',
 		};
 		super(x, y, z, textures, ctex);
-
+		this.fallingCheck()
 		this.ID = 28;
 		this.name = "sand"
 		this.displayName = "Sand"
@@ -20,11 +20,4 @@ class Sand extends Block{
 		this.droppedItemId = 44;
 		this.canFall = true;
 	}
-
-	break() {
-		super.break();
-		let falling_block = new FallingBlock(this.x, this.y, this.z, this);
-
-	}
-
 }
