@@ -33,6 +33,7 @@ class Block {
 		this.dropNumberMin = 1;
 		this.dropNumberMax = 1;
 		this.opacity = 2; //0: transparent, 1: attenuates light, 2:opaque
+		this.canFall = false;
 	}
 
 	render(chunk_geom){
@@ -238,6 +239,13 @@ class Block {
 				item_entity.velocity.z = randomIntFromInterval(-3,3)/100;
 			}
 
+		}
+	}
+	fallingCheck(){
+		let faces = world.get_block_faces(this.x, this.y, this.z)
+		if(faces.D == 0){
+			this.onBreak()
+			let falling_block = new FallingBlock(this.x, this.y, this.z, this);
 		}
 	}
 }
