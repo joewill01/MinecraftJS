@@ -63,6 +63,7 @@ class VoxelWorld {
     const positions = [];
     const normals = [];
     const indices = [];
+    const colours = [];
     const uvs = [];
     const block_ids = [];
     const startX = cellX * cellSize;
@@ -96,6 +97,7 @@ class VoxelWorld {
                   ndx + 2, ndx + 1, ndx + 3,
                 );
                 block_ids.push(voxel)
+                colours.push(0, 0, 0);
               }
             }
           }
@@ -108,7 +110,8 @@ class VoxelWorld {
       normals,
       uvs,
       indices,
-      block_ids
+      block_ids,
+      colours
     };
   }
   generateCell(cellX, cellY, cellZ){
@@ -122,14 +125,16 @@ class VoxelWorld {
         for (let x = cellX*cellSize; x < (cellX*cellSize) + cellSize; ++x) {
           //const height = (Math.sin(x / cellSize * Math.PI * 2) + Math.sin(z / cellSize * Math.PI * 3)) * (cellSize / 6) + (cellSize / 2);
           
-            if (y < 3) {
-              this.setVoxel(x, y, z, 1);
-            } else if (y < 6) {
+            if (y < 30) {
+              this.setVoxel(x, y, z, randInt(1,6));
+            } else if (y < 60) {
               this.setVoxel(x, y, z, 2)
-            } else if (y < 9) {
+            } else if (y < 90) {
               this.setVoxel(x, y, z, 3)
-            }else if (y < 12) {
+            }else if (y < 120) {
               this.setVoxel(x, y, z, 4)
+            }else if (y < 160) {
+              this.setVoxel(x, y, z, 5)
             }
         }
       }
@@ -235,53 +240,96 @@ function main() {
 
   const loader = new THREE.TextureLoader();
 
+  function vertexShader() {
+    return `
+      varying vec2 vUv;
+
+      void main() {
+          vUv = uv;
+
+          gl_Position =   projectionMatrix * 
+                          modelViewMatrix * 
+                          vec4(position,1.0);
+      }
+    `
+  }
+
+  function fragmentShader(){
+     return `
+        uniform sampler2D texture1;
+
+        varying vec2 vUv;
+
+        void main() {
+            //gl_FragColor = texture2D(texture1, vUv);
+            if (texture2D(texture1, vUv).a == 0.0){
+              gl_FragColor = texture2D(texture1, vUv);
+            }else{
+              gl_FragColor = vec4(mix(texture2D(texture1, vUv).rgb , vec3(1,0,0), 0.5), 1);
+            }
+            
+        }
+      `
+  }
+
   const glass_texture = loader.load('glass.png', render);
-  const glass_material = new THREE.MeshBasicMaterial({
-    map: glass_texture,
-    side: THREE.DoubleSide,
-    alphaTest: 0.1,
-    transparent: true,
-  });
+  var glass_uniforms = {
+    texture1: { type: "t", value: glass_texture }
+  };
+  const glass_material = new THREE.ShaderMaterial({
+    uniforms: glass_uniforms,
+    fragmentShader: fragmentShader(),
+    vertexShader: vertexShader(),
+    transparent: true
+  })
   glass_texture.magFilter = THREE.NearestFilter;
   glass_texture.minFilter = THREE.NearestFilter;
 
   const cobblestone_texture = loader.load('cobblestone.png', render);
-  const cobblestone_material = new THREE.MeshBasicMaterial({
-    map: cobblestone_texture,
-    side: THREE.DoubleSide,
-    alphaTest: 0.1,
-    transparent: true,
-  });
+  var cobble_uniforms = {
+    texture1: { type: "t", value: cobblestone_texture }
+  };
+  const cobblestone_material = new THREE.ShaderMaterial({
+    uniforms: cobble_uniforms,
+    fragmentShader: fragmentShader(),
+    vertexShader: vertexShader(),
+  })
   cobblestone_texture.magFilter = THREE.NearestFilter;
   cobblestone_texture.minFilter = THREE.NearestFilter;
 
   const grass_texture = loader.load('grass_block_side.png', render);
-  const grass_material = new THREE.MeshBasicMaterial({
-    map: grass_texture,
-    side: THREE.DoubleSide,
-    alphaTest: 0.1,
-    transparent: true,
-  });
+  var grass_uniforms = {
+    texture1: { type: "t", value: grass_texture }
+  };
+  const grass_material = new THREE.ShaderMaterial({
+    uniforms: grass_uniforms,
+    fragmentShader: fragmentShader(),
+    vertexShader: vertexShader(),
+  })
   grass_texture.magFilter = THREE.NearestFilter;
   grass_texture.minFilter = THREE.NearestFilter;
 
   const bedrock_texture = loader.load('bedrock.png', render);
-  const bedrock_material = new THREE.MeshBasicMaterial({
-    map: bedrock_texture,
-    side: THREE.DoubleSide,
-    alphaTest: 0.1,
-    transparent: true,
-  });
+  var bedrock_uniforms = {
+    texture1: { type: "t", value: bedrock_texture }
+  };
+  const bedrock_material = new THREE.ShaderMaterial({
+    uniforms: bedrock_uniforms,
+    fragmentShader: fragmentShader(),
+    vertexShader: vertexShader(),
+  })
   bedrock_texture.magFilter = THREE.NearestFilter;
   bedrock_texture.minFilter = THREE.NearestFilter;
 
   const orange_concrete_powder_texture = loader.load('orange_concrete_powder.png', render);
-  const orange_concrete_powder_material = new THREE.MeshBasicMaterial({
-    map: orange_concrete_powder_texture,
-    side: THREE.DoubleSide,
-    alphaTest: 0.1,
-    transparent: true,
-  });
+  var orange_concrete_powder_uniforms = {
+    texture1: { type: "t", value: orange_concrete_powder_texture }
+  };
+  const orange_concrete_powder_material = new THREE.ShaderMaterial({
+    uniforms: orange_concrete_powder_uniforms,
+    fragmentShader: fragmentShader(),
+    vertexShader: vertexShader(),
+  })
   orange_concrete_powder_texture.magFilter = THREE.NearestFilter;
   orange_concrete_powder_texture.minFilter = THREE.NearestFilter;
 
@@ -303,6 +351,7 @@ function main() {
       const positionNumComponents = 3;
       const normalNumComponents = 3;
       const uvNumComponents = 2;
+      const colorComponents = 3;
 
       geometry.setAttribute(
           'position',
@@ -313,6 +362,9 @@ function main() {
       geometry.setAttribute(
           'uv',
           new THREE.BufferAttribute(new Float32Array(0), uvNumComponents));
+      geometry.setAttribute(
+          'color',
+          new THREE.BufferAttribute(new Float32Array(0), colorComponents));
 
       mesh = new THREE.Mesh(geometry, 
       [
@@ -329,7 +381,7 @@ function main() {
       mesh.position.set(cellX * cellSize, cellY * cellSize, cellZ * cellSize);
     }
 
-    const {positions, normals, uvs, indices, block_ids} = world.generateGeometryDataForCell(cellX, cellY, cellZ);
+    const {positions, normals, uvs, indices, block_ids, colors} = world.generateGeometryDataForCell(cellX, cellY, cellZ);
     const geometry = mesh.geometry;
 
     //Setup texture groups for geometry
@@ -367,13 +419,16 @@ function main() {
     geometry.setAttribute('uv',new THREE.BufferAttribute(new Float32Array(uvs), 2));
     geometry.getAttribute('uv').needsUpdate = true;
 
+    geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
+    geometry.getAttribute('color').needsUpdate = true;
+
     geometry.setIndex(indices);
     geometry.computeBoundingSphere();
   }
 
 
-  for(let x=-31;x<32;x++){
-    for(let z=-31;z<32;z++){
+  for(let x=0;x<1;x++){
+    for(let z=0;z<1;z++){
       world.generateCell(x,0,z);
       updateCellGeometry(x*16,0,z*16);
       const offsets = [
