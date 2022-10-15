@@ -82,21 +82,30 @@ class PlayerInventory extends Inventory {
 
 		}
 		if (amount > 0){
-			for (let i = 0; i < emptySlots.length; i++) {
-				if (amount > 64){
-					this.item_slots[emptySlots[i]].item = registry.getItemInstanceFromId(item)
-					this.item_slots[emptySlots[i]].amount = 64
-					this.item_slots[emptySlots[i]].updateUIItem()
-					amount -= 64
-				} else if (amount > 0){
-					this.item_slots[emptySlots[i]].item = registry.getItemInstanceFromId(item)
-					this.item_slots[emptySlots[i]].amount += amount
-					amount = 0
-					this.item_slots[emptySlots[i]].updateUIItem()
+			if (emptySlots.length == 0){
+				return false
+			}
+			else {
+				for (let i = 0; i < emptySlots.length; i++) {
+					if (amount > 64) {
+						this.item_slots[emptySlots[i]].item = registry.getItemInstanceFromId(item)
+						this.item_slots[emptySlots[i]].amount = 64
+						this.item_slots[emptySlots[i]].updateUIItem()
+						amount -= 64
+					} else if (amount > 0) {
+						this.item_slots[emptySlots[i]].item = registry.getItemInstanceFromId(item)
+						this.item_slots[emptySlots[i]].amount += amount
+						amount = 0
+						this.item_slots[emptySlots[i]].updateUIItem()
+						return true
+					}
 				}
 			}
 
 
+		} else {
+			return true
 		}
+
 	}
 }

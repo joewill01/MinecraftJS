@@ -288,28 +288,30 @@ class Player extends Entity{
 					let item = coll[i]
 
 					//item is the item class
-					player_inventory.addItem(item.item.ID,1) //change 1 to actual amount later
-					registry.unRegisterEntity(item.entityId)
+					let pickedUp = player_inventory.addItem(item.item.ID,1) //change 1 to actual amount later
+					if (pickedUp) {
+						registry.unRegisterEntity(item.entityId)
 
-					scene.remove(item.hitbox);
-					item.pivot.remove(item.pivot.children[0])
-					scene.remove(item.pivot);
+						scene.remove(item.hitbox);
+						item.pivot.remove(item.pivot.children[0])
+						scene.remove(item.pivot);
 
-					item.cleanup()
-			        item.hitbox.geometry.dispose( );
-			        item.hitbox.material.dispose( );
+						item.cleanup()
+						item.hitbox.geometry.dispose();
+						item.hitbox.material.dispose();
 
-			        item.pivot.children[0].geometry.dispose( );
-			        item.pivot.children[0].material.dispose( );
-			        
-			        item.pivot.geometry.dispose( );
-			        item.pivot.material.dispose( );
-			        
-			        item.hitbox = null;
-			        item.pivot = null;
+						item.pivot.children[0].geometry.dispose();
+						item.pivot.children[0].material.dispose();
 
-			        renderer.renderLists.dispose();
-			        renderer.dispose();
+						item.pivot.geometry.dispose();
+						item.pivot.material.dispose();
+
+						item.hitbox = null;
+						item.pivot = null;
+
+						renderer.renderLists.dispose();
+						renderer.dispose();
+					}
 				}
 			}
 		}catch(e){
