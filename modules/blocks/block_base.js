@@ -241,4 +241,11 @@ class Block {
 
 		}
 	}
+	fallingCheck(){
+		let faces = world.get_block_faces(this.x, this.y, this.z)
+		if(faces.D == 0){
+			this.onBreak()
+			let falling_block = new FallingBlock(this.x, this.y, this.z, this);
+		}
+	}
 }
