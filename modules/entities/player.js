@@ -286,10 +286,9 @@ class Player extends Entity{
 			for(let i=0;i<coll.length;i++){
 				if(coll[i] instanceof ItemEntity){
 					let item = coll[i]
-					
-					console.log("Picked up: "+item.item.displayName)
-					//item is the item class
 
+					//item is the item class
+					player_inventory.addItem(item.item.ID,1) //change 1 to actual amount later
 					registry.unRegisterEntity(item.entityId)
 
 					scene.remove(item.hitbox);

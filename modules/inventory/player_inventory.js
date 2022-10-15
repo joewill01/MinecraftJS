@@ -57,4 +57,46 @@ class PlayerInventory extends Inventory {
 		this.item_slots[8].amount = 1;
 
 	}
+	addItem(item,amount){
+		let emptySlots = []
+		for (let i = 0; i < 36; i++) {
+			if (amount > 0) {
+				if (this.item_slots[i].item == null || this.item_slots[i].item == '') {
+					emptySlots.push(i)
+				}
+				else if (this.item_slots[i].item.ID == item) {
+					this.item_slots[i].item = registry.getItemInstanceFromId(item)
+					let totalItems = this.item_slots[i].amount + amount
+					if (totalItems <= 64){ //temp 64 eventually it'll be per item
+						amount = 0
+						this.item_slots[i].amount = totalItems
+						this.item_slots[i].updateUIItem()
+
+					} else {
+						this.item_slots[i].amount = 64
+						amount = totalItems - 64
+						this.item_slots[i].updateUIItem()
+					}
+				}
+			}
+
+		}
+		if (amount > 0){
+			for (let i = 0; i < emptySlots.length; i++) {
+				if (amount > 64){
+					this.item_slots[emptySlots[i]].item = registry.getItemInstanceFromId(item)
+					this.item_slots[emptySlots[i]].amount = 64
+					this.item_slots[emptySlots[i]].updateUIItem()
+					amount -= 64
+				} else if (amount > 0){
+					this.item_slots[emptySlots[i]].item = registry.getItemInstanceFromId(item)
+					this.item_slots[emptySlots[i]].amount += amount
+					amount = 0
+					this.item_slots[emptySlots[i]].updateUIItem()
+				}
+			}
+
+
+		}
+	}
 }
