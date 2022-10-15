@@ -66,6 +66,7 @@ class VoxelWorld {
     const colours = [];
     const uvs = [];
     const block_ids = [];
+    const corners_ao = [];
     const startX = cellX * cellSize;
     const startY = cellY * 255;
     const startZ = cellZ * cellSize;
@@ -98,6 +99,11 @@ class VoxelWorld {
                 );
                 block_ids.push(voxel)
                 colours.push(0, 0, 0);
+                let [tl, tr, bl, br] = [randInt(0,2), randInt(0,2), randInt(0,2), randInt(0,2)]
+                corners_ao.push(tl, tr, bl, br);
+                corners_ao.push(tl, tr, bl, br);
+                corners_ao.push(tl, tr, bl, br);
+                corners_ao.push(tl, tr, bl, br);
               }
             }
           }
@@ -111,7 +117,8 @@ class VoxelWorld {
       uvs,
       indices,
       block_ids,
-      colours
+      colours,
+      corners_ao
     };
   }
   generateCell(cellX, cellY, cellZ){
@@ -244,8 +251,14 @@ function main() {
     return `
       varying vec2 vUv;
 
+      attribute vec4 corner;
+
+      varying vec4 corners;
+
       void main() {
           vUv = uv;
+
+          corners = corner;
 
           gl_Position =   projectionMatrix * 
                           modelViewMatrix * 
@@ -260,12 +273,23 @@ function main() {
 
         varying vec2 vUv;
 
+        varying vec4 corners;
+
+        vec4 colorTop = vec4(0,0,0,0);
+        vec4 colorBottom = vec4(0,0,0,0);
+        vec4 col = vec4(0,0,0,0);
+
         void main() {
+
+            colorTop = mix(vec4(0,0,0,corners[0]*0.5), vec4(0,0,0,corners[1]*0.5), vUv.x);
+            colorBottom = mix(vec4(0,0,0,corners[2]*0.5), vec4(0,0,0, corners[3]*0.5), vUv.x);
+            col = mix(colorTop, colorBottom, vUv.y);
+
             //gl_FragColor = texture2D(texture1, vUv);
             if (texture2D(texture1, vUv).a == 0.0){
               gl_FragColor = texture2D(texture1, vUv);
             }else{
-              gl_FragColor = vec4(mix(texture2D(texture1, vUv).rgb , vec3(1,0,0), 0.5), 1);
+              gl_FragColor = mix(vec4(texture2D(texture1, vUv).rgb, 1.0), col, col.a);
             }
             
         }
@@ -352,6 +376,7 @@ function main() {
       const normalNumComponents = 3;
       const uvNumComponents = 2;
       const colorComponents = 3;
+      const cornerComponents = 4;
 
       geometry.setAttribute(
           'position',
@@ -365,6 +390,9 @@ function main() {
       geometry.setAttribute(
           'color',
           new THREE.BufferAttribute(new Float32Array(0), colorComponents));
+      geometry.setAttribute(
+          'corner',
+          new THREE.BufferAttribute(new Float32Array(0), cornerComponents))
 
       mesh = new THREE.Mesh(geometry, 
       [
@@ -381,7 +409,7 @@ function main() {
       mesh.position.set(cellX * cellSize, cellY * cellSize, cellZ * cellSize);
     }
 
-    const {positions, normals, uvs, indices, block_ids, colors} = world.generateGeometryDataForCell(cellX, cellY, cellZ);
+    const {positions, normals, uvs, indices, block_ids, colors, corners_ao} = world.generateGeometryDataForCell(cellX, cellY, cellZ);
     const geometry = mesh.geometry;
 
     //Setup texture groups for geometry
@@ -421,6 +449,9 @@ function main() {
 
     geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3));
     geometry.getAttribute('color').needsUpdate = true;
+
+    geometry.setAttribute('corner', new THREE.BufferAttribute(new Float32Array(corners_ao), 4));
+    geometry.getAttribute('corner').needsUpdate = true;
 
     geometry.setIndex(indices);
     geometry.computeBoundingSphere();
