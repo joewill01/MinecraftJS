@@ -253,6 +253,7 @@ class Hotbar {
     }
 
     selectItem (item_number) {
+        this.selected_item = item_number
         for (let i = 0; i < this.selected_item_spans.length; i++) {
             if (i === item_number) {
                 this.selected_item_spans[i].classList.add("active")

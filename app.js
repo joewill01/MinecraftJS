@@ -199,39 +199,30 @@ var onKeyDown = function ( event ) {
 			break;
 		case 49: // 1
 			hotbar.selectItem(0)
-			blockToPlace = 1;
 			break;
 		case 50: // 2
 			hotbar.selectItem(1);
-			blockToPlace = 2;
 			break;
 		case 51: // 3
 			hotbar.selectItem(2);
-			blockToPlace = 3;
 			break;
 		case 52: // 4
 			hotbar.selectItem(3);
-			blockToPlace = 4;
 			break;
 		case 53: // 5
 			hotbar.selectItem(4);
-			blockToPlace = 5;
 			break;
 		case 54: // 6
 			hotbar.selectItem(5);
-			blockToPlace = 6;
 			break;
 		case 55: // 7
 			hotbar.selectItem(6);
-			blockToPlace = 7;
 			break;
 		case 56: // 8
 			hotbar.selectItem(7);
-			blockToPlace = 8;
 			break;
 		case 57: // 9
 			hotbar.selectItem(8);
-			blockToPlace = 9;
 			break;
 		case 191:// slash
 			player.velocity.y = 0;
@@ -266,27 +257,42 @@ document.onmousedown = function(e){
 	}else if(e.which == 2){
 		console.log("MIDDLE")
 		blockToPlace = world.get_looking_at_block().ID
-	}else if(e.which == 3){
-		if(lookingAt != null){
-			switch(lookingAt.face){
-				case "T":
-					world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y+1,lookingAt.blockCoords.z,blockToPlace)
-					break;
-				case "B":
-					world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y-1,lookingAt.blockCoords.z,blockToPlace)
-					break;
-				case "N":
-					world.set_block(lookingAt.blockCoords.x+1,lookingAt.blockCoords.y,lookingAt.blockCoords.z,blockToPlace)
-					break;
-				case "S":
-					world.set_block(lookingAt.blockCoords.x-1,lookingAt.blockCoords.y,lookingAt.blockCoords.z,blockToPlace)
-					break;
-				case "E":
-					world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z+1,blockToPlace)
-					break;
-				case "W":
-					world.set_block(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z-1,blockToPlace)
-					break;
+	}else if(e.which == 3) {
+		if (player_inventory.item_slots[hotbar.selected_item].item.type == "block") {
+			blockToPlace = player_inventory.item_slots[hotbar.selected_item].item.blockId
+			if (lookingAt != null) {
+				switch (lookingAt.face) {
+					case "T":
+						world.set_block(lookingAt.blockCoords.x, lookingAt.blockCoords.y + 1, lookingAt.blockCoords.z, blockToPlace)
+						player_inventory.item_slots[hotbar.selected_item].amount -= 1
+						player_inventory.item_slots[hotbar.selected_item].updateUIItem()
+						break;
+					case "B":
+						world.set_block(lookingAt.blockCoords.x, lookingAt.blockCoords.y - 1, lookingAt.blockCoords.z, blockToPlace)
+						player_inventory.item_slots[hotbar.selected_item].amount -= 1
+						player_inventory.item_slots[hotbar.selected_item].updateUIItem()
+						break;
+					case "N":
+						world.set_block(lookingAt.blockCoords.x + 1, lookingAt.blockCoords.y, lookingAt.blockCoords.z, blockToPlace)
+						player_inventory.item_slots[hotbar.selected_item].amount -= 1
+						player_inventory.item_slots[hotbar.selected_item].updateUIItem()
+						break;
+					case "S":
+						world.set_block(lookingAt.blockCoords.x - 1, lookingAt.blockCoords.y, lookingAt.blockCoords.z, blockToPlace)
+						player_inventory.item_slots[hotbar.selected_item].amount -= 1
+						player_inventory.item_slots[hotbar.selected_item].updateUIItem()
+						break;
+					case "E":
+						world.set_block(lookingAt.blockCoords.x, lookingAt.blockCoords.y, lookingAt.blockCoords.z + 1, blockToPlace)
+						player_inventory.item_slots[hotbar.selected_item].amount -= 1
+						player_inventory.item_slots[hotbar.selected_item].updateUIItem()
+						break;
+					case "W":
+						world.set_block(lookingAt.blockCoords.x, lookingAt.blockCoords.y, lookingAt.blockCoords.z - 1, blockToPlace)
+						player_inventory.item_slots[hotbar.selected_item].amount -= 1
+						player_inventory.item_slots[hotbar.selected_item].updateUIItem()
+						break;
+				}
 			}
 		}
 	}
