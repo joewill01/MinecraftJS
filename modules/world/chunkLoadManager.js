@@ -13,10 +13,11 @@ class ChunkLoadManager{
 		let toLoad = this.gen_diamond(playerPos.chunk_x,playerPos.chunk_z,this.rd)
 		for (var i = toLoad.length - 1; i >= 0; i--) {
 			this.loaded[world.get_chunk_name(toLoad[i][0],toLoad[i][1])] = [toLoad[i][0],toLoad[i][1]];
-			world.generate_chunk(toLoad[i][0],toLoad[i][1]);
+			world.generateChunk(toLoad[i][0],toLoad[i][1]);
+			console.log("END OF CHUNK GEN!")
 		}
 		
-		for(let y=256;y>0;y--){
+		for(let y=253;y>0;y--){
 			if(world.get_block_ID(player.x,y,player.z) != 0){
 				player.tp(player.x,y+2.5,player.z)
 				return
@@ -51,7 +52,7 @@ class ChunkLoadManager{
 			let z = toLoad[i][1];
 			if(!Object.keys(this.loaded).includes(world.get_chunk_name(x,z))){
 				this.loaded[world.get_chunk_name(x,z)] = [x,z];
-				world.generate_chunk(x,z);
+				world.generateChunk(x,z);
 
 				if(Object.keys(this.loaded).includes(world.get_chunk_name(x+1,z))){
 					this.toUpdate.push([x+1,z])

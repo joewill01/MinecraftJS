@@ -359,7 +359,6 @@ function main() {
   orange_concrete_powder_texture.minFilter = THREE.NearestFilter;
 
   world = new VoxelWorld(cellSize);
-  
 
   const cellIdToMesh = {};
   function updateCellGeometry(x, y, z, reloadOnly){
