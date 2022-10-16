@@ -4,6 +4,7 @@
 
 var scene;
 var world;
+var gen;
 
 function randInt(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
@@ -53,7 +54,7 @@ class VoxelWorld {
   getVoxel(x, y, z) {
     const cell = this.getCellForVoxel(x, y, z);
     if (!cell) {
-      return 0;
+      return 1;
     }
     const voxelOffset = this.computeVoxelOffset(x, y, z);
     return cell[voxelOffset];
@@ -130,7 +131,7 @@ class VoxelWorld {
     for (let y = 0; y < 255; ++y) {
       for (let z = cellZ*cellSize; z < (cellZ*cellSize) + cellSize; ++z) {
         for (let x = cellX*cellSize; x < (cellX*cellSize) + cellSize; ++x) {
-          //const height = (Math.sin(x / cellSize * Math.PI * 2) + Math.sin(z / cellSize * Math.PI * 3)) * (cellSize / 6) + (cellSize / 2);
+            const height = (Math.sin(x / cellSize * Math.PI * 2) + Math.sin(z / cellSize * Math.PI * 3)) * (cellSize / 6) + (cellSize / 2);
           
             if (y < 30) {
               this.setVoxel(x, y, z, randInt(1,6));
@@ -140,7 +141,7 @@ class VoxelWorld {
               this.setVoxel(x, y, z, 3)
             }else if (y < 120) {
               this.setVoxel(x, y, z, 4)
-            }else if (y < 160) {
+            }else if (y < height+160) {
               this.setVoxel(x, y, z, 5)
             }
         }
@@ -474,6 +475,20 @@ function main() {
     } 
   }
 
+
+  gen = function(x,y,z){
+    world.generateCell(x,0,z);
+    updateCellGeometry(x*16,0,z*16);
+    const offsets = [
+      [0,1],
+      [1,0],
+      [-1,0],
+      [0,-1]
+    ]
+    for (let offset of offsets){
+      updateCellGeometry((x+offset[0])*cellSize, 0, (z+offset[1]) * cellSize, true)
+    }
+  }
 
   function resizeRendererToDisplaySize(renderer) {
     const canvas = renderer.domElement;
