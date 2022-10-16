@@ -14,10 +14,11 @@ class OakLeaves extends Block{
 		this.name = "oak_leaves";
 		this.displayName = "Oak Leaves"
 		this.prefferedTool = "shears";
-
-		this.solid = false;
+		this.droppedItemId = 33;
+		this.opacity = 1;
 		this.replaceableByLeaves = true;
 		this.needsRandomTick = true;
 		this.hardness = 0.2
+		this.resistance = 0.2
 	}
 }

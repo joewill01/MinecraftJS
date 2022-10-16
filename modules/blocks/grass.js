@@ -1,5 +1,5 @@
-class GrassBlock extends Block{
-	constructor(x,y,z,ctex){
+class GrassBlock extends Block {
+	constructor(x, y, z, ctex) {
 		let textures = {
 			'N': 'grass_block_side.png',
 			'S': 'grass_block_side.png',
@@ -8,7 +8,7 @@ class GrassBlock extends Block{
 			'U': 'grass_block_top-NORMAL-BY-JOE.png',
 			'D': 'dirt.png',
 		};
-		super(x,y,z,textures,ctex);
+		super(x, y, z, textures, ctex);
 
 		this.ID = 1;
 		this.name = "grass_block"
@@ -16,7 +16,8 @@ class GrassBlock extends Block{
 		this.prefferedTool = "shovel";
 
 		this.hardness = 0.6;
-		this.resistance = 0.2;
-		this.droppedItemId = randomIntFromInterval(1,13);
+		this.resistance = 0.6;
+		this.droppedItemId = 12
+
 	}
 }

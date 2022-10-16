@@ -14,8 +14,7 @@ class Block {
 
 		//Should be changed
 		this.hardness = 0; // difficulty to mine. 0 is instant mine -1 is unbreakable. any positive number determines time
-		this.resistance = 0; // multiplier for explosions. 0 makes explosion do nothing.. 1 doesn't stop it
-		this.solid = true; 
+		this.resistance = 0; // https://minecraft.fandom.com/wiki/Explosion#Blast_resistance
 		this.affectedByGravity = false;
 		this.soundType = null; // object of sounds to be played when walked on, hit or broken.
 		this.placeable = true;
@@ -24,13 +23,17 @@ class Block {
 		this.baseLightIntensity = 0;
 		this.needsRandomTick = false;
 		this.slipperiness = 0; // momentum multiplier for movement  
-		this.harvestLevel = 0; // 0:hand, 1:wood, 2:iron, 3:gold, 4:diamond
+		this.harvestLevel = 0; // 0:hand, 1:wood, 2:stone, 3:iron, 4:gold, 5:diamond
 		this.replaceableByLeaves = false;
 		this.replaceableByWorldGenOres = false;
 		this.rotatable = false;
 		this.allowedRotations = []; //N,S,E,W,D,U Letter is where the old Top face will end up
 		this.droppedItemId = null; 
 		this.biomeTints = {};//ex: plains:{r:1,g:1,b:1.2} Multiplicative
+		this.dropNumberMin = 1;
+		this.dropNumberMax = 1;
+		this.opacity = 2; //0: transparent, 1: attenuates light, 2:opaque
+		this.canFall = false;
 	}
 
 	render(chunk_geom, positions, normals, indices, uvs, chunk_geom_buffer){
@@ -301,10 +304,21 @@ class Block {
 		this.onBreak();
 		if(this.droppedItemId != null){
 			let item = registry.getItemInstanceFromId(this.droppedItemId);
-			let item_entity = new ItemEntity(this.x, this.y, this.z, item);
-			item_entity.velocity.y = randomIntFromInterval(5,10);
-			item_entity.velocity.x = randomIntFromInterval(-3,3)/100;
-			item_entity.velocity.z = randomIntFromInterval(-3,3)/100;
+			const amountOfDrops = randomIntFromInterval(this.dropNumberMin,this.dropNumberMax)
+			for (let i = 0; i < amountOfDrops; i++) {
+				let item_entity = new ItemEntity(this.x, this.y, this.z, item);
+				item_entity.velocity.y = randomIntFromInterval(5,10);
+				item_entity.velocity.x = randomIntFromInterval(-3,3)/100;
+				item_entity.velocity.z = randomIntFromInterval(-3,3)/100;
+			}
+
+		}
+	}
+	fallingCheck(){
+		let faces = world.get_block_faces(this.x, this.y, this.z)
+		if(faces.D == 0){
+			this.onBreak()
+			let falling_block = new FallingBlock(this.x, this.y, this.z, this);
 		}
 	}
 }

@@ -16,7 +16,8 @@ class OakLog extends Block{
 		this.prefferedTool = "axe";
 
 		this.hardness = 2;
-		this.resistance = 0.4;
+		this.resistance = 2;
+		this.droppedItemId = 32;
 
 		this.rotatable = true;
 		this.allowedRotations = ["N","S","E","W","D","U"]

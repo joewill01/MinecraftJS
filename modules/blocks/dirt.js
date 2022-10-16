@@ -16,7 +16,7 @@ class Dirt extends Block{
 		this.prefferedTool = "shovel";
 
 		this.hardness = 0.5;
-		this.resistance = 0.2;
+		this.resistance = 0.5;
 		this.droppedItemId = 12;
 	}
 }

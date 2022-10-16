@@ -100,6 +100,72 @@ class Registry{
 			case 7:
 				return new Dirt(x, y, z, ctex);
 				break;
+			case 8:
+				return new Cobblestone(x,y,z,ctex);
+				break;
+			case 9:
+				return new OakPlanks(x,y,z,ctex);
+				break;
+			case 10:
+				return new IronOre(x,y,z,ctex);
+				break;
+			case 11:
+				return new Furnace(x,y,z,ctex);
+				break;
+			case 12:
+				return new CoalOre(x,y,z,ctex);
+				break;
+			case 13:
+				return new GoldOre(x,y,z,ctex);
+				break;
+			case 14:
+				return new DiamondOre(x,y,z,ctex);
+				break;
+			case 15:
+				return new RedstoneOre(x,y,z,ctex);
+				break;
+			case 16:
+				return new EmeraldOre(x,y,z,ctex);
+				break;
+			case 17:
+				return new LapisLazuliOre(x,y,z,ctex);
+				break;
+			case 18:
+				return new BirchLog(x,y,z,ctex);
+				break;
+			case 19:
+				return new BirchLeaves(x,y,z,ctex);
+				break;
+			case 20:
+				return new JungleLog(x,y,z,ctex);
+				break;
+			case 21:
+				return new JungleLeaves(x,y,z,ctex);
+				break;
+			case 22:
+				return new SpruceLog(x,y,z,ctex);
+				break;
+			case 23:
+				return new SpruceLeaves(x,y,z,ctex);
+				break;
+			case 24:
+				return new AcaciaLog(x,y,z,ctex);
+				break;
+			case 25:
+				return new AcaciaLeaves(x,y,z,ctex);
+				break;
+			case 26:
+				return new DarkOakLog(x,y,z,ctex);
+				break;
+			case 27:
+				return new DarkOakLeaves(x,y,z,ctex);
+				break;
+			case 28:
+				return new Sand(x,y,z,ctex);
+				break;
+			case 29:
+				return new Gravel(x,y,z,ctex);
+				break;
 		}
 	}
 
@@ -142,10 +208,106 @@ class Registry{
 				return new DiamondBootsItem();
 				break;
 			case 12:
-				return new DirtBlockItem();
+				return new DirtItem();
 				break;
 			case 13:
 				return new SeedsItem();
+				break;
+			case 14:
+				return new CobblestoneItem();
+				break;
+			case 15:
+				return new OakPlanksItem();
+				break;
+			case 16:
+				return new IronOreItem();
+				break;
+			case 17:
+				return new FurnaceItem();
+				break;
+			case 18:
+				return new CoalOreItem();
+				break;
+			case 19:
+				return new GoldOreItem();
+				break;
+			case 20:
+				return new DiamondOreItem();
+				break;
+			case 21:
+				return new RedstoneOreItem();
+				break;
+			case 22:
+				return new EmeraldOreItem();
+				break;
+			case 23:
+				return LapisLazuliOreItem();
+				break;
+			case 24:
+				return new DiamondItem();
+				break;
+			case 25:
+				return new RedstoneItem();
+				break;
+			case 26:
+				return new CoalItem();
+				break;
+			case 27:
+				return new EmeraldItem();
+				break;
+			case 28:
+				return new LapisLazuliItem();
+				break;
+			case 29:
+				return new GrassItem();
+				break;
+			case 30:
+				return new StoneItem();
+				break;
+			case 31:
+				return new BedrockItem();
+				break;
+			case 32:
+				return new OakLogItem();
+				break;
+			case 33:
+				return new OakLeavesItem();
+				break;
+			case 34:
+				return new BirchLogItem();
+				break;
+			case 35:
+				return new BirchLeavesItem();
+				break;
+			case 36:
+				return new JungleLogItem();
+				break;
+			case 37:
+				return new JungleLeavesItem();
+				break;
+			case 38:
+				return new SpruceLogItem();
+				break;
+			case 39:
+				return new SpruceLeavesItem();
+				break;
+			case 40:
+				return new AcaciaLogItem();
+				break;
+			case 41:
+				return new AcaciaLeavesItem();
+				break;
+			case 42:
+				return new DarkOakLogItem();
+				break;
+			case 43:
+				return new DarkOakLeavesItem();
+				break;
+			case 44:
+				return new SandItem();
+				break;
+			case 45:
+				return new GravelItem();
 				break;
 		}
 	}
