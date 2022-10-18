@@ -1,6 +1,7 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow, Menu} = require('electron')
 const path = require('path')
+//app.commandLine.appendSwitch('disable-frame-rate-limit')
 
 Menu.setApplicationMenu(false);
 
