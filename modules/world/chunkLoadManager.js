@@ -26,9 +26,13 @@ class ChunkLoadManager{
 	}
 
 	update(){
+		console.log("Start of chunk update")
+		console.log("toUpdate", this.toUpdate)
 		if(this.toUpdate.length!=0){
+			console.log("toUpdate length > 0")
 			let chunk = this.toUpdate.pop()
 			world.reload_chunk(chunk[0],chunk[1]);
+			console.log("Reloading chunk ", chunk[0], chunk[1])
 			return
 		}
 
@@ -36,6 +40,8 @@ class ChunkLoadManager{
 		let player_chunk = [playerPos.chunk_x,playerPos.chunk_z]
 		let update_chunks = false;
 		let toLoad = this.gen_diamond(playerPos.chunk_x,playerPos.chunk_z,this.rd)
+
+		console.log(toLoad)
 
 		//Unload all uneccessary chunks
 		for(var key in this.loaded){
@@ -53,23 +59,6 @@ class ChunkLoadManager{
 			if(!Object.keys(this.loaded).includes(world.get_chunk_name(x,z))){
 				this.loaded[world.get_chunk_name(x,z)] = [x,z];
 				world.generateChunk(x,z);
-
-				if(Object.keys(this.loaded).includes(world.get_chunk_name(x+1,z))){
-					this.toUpdate.push([x+1,z])
-				}
-
-				if(Object.keys(this.loaded).includes(world.get_chunk_name(x-1,z))){
-					this.toUpdate.push([x-1,z])
-				}
-
-				if(Object.keys(this.loaded).includes(world.get_chunk_name(x,z+1))){
-					this.toUpdate.push([x,z+1])
-				}
-				
-				if(Object.keys(this.loaded).includes(world.get_chunk_name(x,z-1))){
-					this.toUpdate.push([x,z-1])
-				}
-				
 				return
 			}
 		}
