@@ -183,6 +183,11 @@ class World{
   }
 
   generateChunk(chunkX, chunkZ){
+  	if (this.get_chunk_name(chunkX, chunkZ) in this.chunks){
+  		console.log("attempt to load chunk that is already loaded, reloading");
+  		this.reload_chunk(chunkX, chunkZ)
+  		return
+  	}
     const chunkId = this.get_chunk_name(chunkX, chunkZ)
     const {chunkSize} = this;
     let chunk = new Uint8Array(chunkSize * 255 * chunkSize);
@@ -369,8 +374,8 @@ class World{
 	  orange_concrete_powder_texture.minFilter = THREE.NearestFilter;
 
 		const {chunkSize, chunkSliceSize} = this;
-    const chunkX = Math.floor(x / chunkSize);
-    const chunkZ = Math.floor(z / chunkSize);
+    const chunkX = x;
+    const chunkZ = z;
     const chunkId = this.get_chunk_name(x, z);
     let mesh = this.chunkIdToMesh[chunkId];
     if (!mesh) {
@@ -465,9 +470,10 @@ class World{
 
 	unload_chunk(x, z){
 		if(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh") != undefined){
+			delete this.chunkIdToMesh[this.get_chunk_name(x,z)]
 			delete this.chunks[this.get_chunk_name(x,z)]
 			scene.remove(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh"));
-		}else{}
+		}
 	}
 
 	reload_chunk(x, z){

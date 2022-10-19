@@ -10,9 +10,13 @@ class ChunkLoadManager{
 	initial_load(){
 		let playerPos = world.world_to_chunk_coords(player.x,0,player.z)
 		this.prev_chunk = [playerPos.chunk_x,playerPos.chunk_z]
+
 		let toLoad = this.gen_diamond(playerPos.chunk_x,playerPos.chunk_z,this.rd)
+
 		for (var i = toLoad.length - 1; i >= 0; i--) {
+
 			this.loaded[world.get_chunk_name(toLoad[i][0],toLoad[i][1])] = [toLoad[i][0],toLoad[i][1]];
+			
 			world.generateChunk(toLoad[i][0],toLoad[i][1]);
 			console.log("END OF CHUNK GEN!")
 		}
