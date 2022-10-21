@@ -141,6 +141,8 @@ class World{
           if (voxel) {
             // There is a voxel here but do we need faces for it?
             const singletonBlockInstance = registry.registerSingletonBlockInstance(voxel);
+            const blocks_around = this.get_faces_for_aos(voxelX, voxelY, voxelZ);
+
             for (const {dir, corners} of this.faces) {
             	
 
@@ -150,18 +152,89 @@ class World{
                   voxelZ + dir[2]);
 
               if (!neighbor && neighbor != 'no chunk bro') {
+              	let faces_for_ao = [];
+              	let AOMultiplier = 0;
+
               	if (arraysMatch([-1,0,0], dir)) {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['N'], singletonBlockInstance.opacity != 2))
+									AOMultiplier = 0.16;
+	                faces_for_ao = [
+										blocks_around[5],
+										blocks_around[10],
+										blocks_around[17],
+										blocks_around[3],
+										blocks_around[15],
+										blocks_around[0],
+										blocks_around[8],
+										blocks_around[12]
+									];
+	                
+
 	            	} else if (arraysMatch([1,0,0], dir)) {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['S'], singletonBlockInstance.opacity != 2))
+									AOMultiplier = 0.16;
+	                faces_for_ao = [
+										blocks_around[2],
+										blocks_around[9],
+										blocks_around[14],
+										blocks_around[4],
+										blocks_around[16],
+										blocks_around[7],
+										blocks_around[11],
+										blocks_around[19]
+									];
+	                
 	              } else if (arraysMatch([0,-1,0], dir)) {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['D'], singletonBlockInstance.opacity != 2))
+									AOMultiplier = 0.2;
+	                faces_for_ao = [
+										blocks_around[14],
+										blocks_around[13],
+										blocks_around[12],
+										blocks_around[16],
+										blocks_around[15],
+										blocks_around[19],
+										blocks_around[18],
+										blocks_around[17]
+									];
 	            	} else if (arraysMatch([0,1,0], dir)) {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['U'], singletonBlockInstance.opacity != 2))
+									AOMultiplier = 0.2;
+	                faces_for_ao = [
+										blocks_around[0],
+										blocks_around[1],
+										blocks_around[2],
+										blocks_around[3],
+										blocks_around[4],
+										blocks_around[5],
+										blocks_around[6],
+										blocks_around[7]
+									]; 
 	            	} else if (arraysMatch([0,0,-1], dir)) {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['W'], singletonBlockInstance.opacity != 2))
+									AOMultiplier = 0.16;
+									faces_for_ao = [blocks_around[0],
+										blocks_around[8],
+										blocks_around[12],
+										blocks_around[1],
+										blocks_around[13],
+										blocks_around[2],
+										blocks_around[9],
+										blocks_around[14]
+									];
 	            	} else {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['E'], singletonBlockInstance.opacity != 2))
+									AOMultiplier = 0.16;
+									faces_for_ao = [
+										blocks_around[7],
+										blocks_around[11],
+										blocks_around[19],
+										blocks_around[6],
+										blocks_around[18],
+										blocks_around[5],
+										blocks_around[10],
+										blocks_around[17]
+									];
 	            	}
                 // this voxel has no neighbor in this direction so we need a face.
                 const ndx = positions.length / 3;
@@ -175,11 +248,25 @@ class World{
                   ndx + 2, ndx + 1, ndx + 3,
                 );
                 colours.push(0, 0, 0);
+
+
+            		//tl
+								let tlBlockCount = ((faces_for_ao[0] != 0 && faces_for_ao[0] != 'no chunk bro') ? 1 : 0) + ((faces_for_ao[1] != 0 && faces_for_ao[1] != 'no chunk bro') ? 1 : 0) + ((faces_for_ao[3] != 0 && faces_for_ao[3] != 'no chunk bro') ? 1 : 0)
+								//tr
+								let blBlockCount = ((faces_for_ao[1] != 0 && faces_for_ao[1] != 'no chunk bro') ? 1 : 0) + ((faces_for_ao[2] != 0 && faces_for_ao[2] != 'no chunk bro') ? 1 : 0) + ((faces_for_ao[4] != 0 && faces_for_ao[4] != 'no chunk bro') ? 1 : 0)
+								//br
+								let brBlockCount = ((faces_for_ao[4] != 0 && faces_for_ao[4] != 'no chunk bro') ? 1 : 0) + ((faces_for_ao[6] != 0 && faces_for_ao[6] != 'no chunk bro') ? 1 : 0) + ((faces_for_ao[7] != 0 && faces_for_ao[7] != 'no chunk bro') ? 1 : 0)
+								//bl
+								let trBlockCount = ((faces_for_ao[3] != 0 && faces_for_ao[3] != 'no chunk bro') ? 1 : 0) + ((faces_for_ao[5] != 0 && faces_for_ao[5] != 'no chunk bro') ? 1 : 0) + ((faces_for_ao[6] != 0 && faces_for_ao[6] != 'no chunk bro') ? 1 : 0)
+								
+								//trBlockCount brBlockCount blBlockCount tlBlockCount
+
+
                 let [tl, tr, bl, br] = [randInt(0,2), randInt(0,2), randInt(0,2), randInt(0,2)]
-                corners_ao.push(tl, tr, bl, br);
-                corners_ao.push(tl, tr, bl, br);
-                corners_ao.push(tl, tr, bl, br);
-                corners_ao.push(tl, tr, bl, br);
+                corners_ao.push(tlBlockCount*AOMultiplier, trBlockCount*AOMultiplier, blBlockCount*AOMultiplier, brBlockCount*AOMultiplier);
+                corners_ao.push(tlBlockCount*AOMultiplier, trBlockCount*AOMultiplier, blBlockCount*AOMultiplier, brBlockCount*AOMultiplier);
+                corners_ao.push(tlBlockCount*AOMultiplier, trBlockCount*AOMultiplier, blBlockCount*AOMultiplier, brBlockCount*AOMultiplier);
+                corners_ao.push(tlBlockCount*AOMultiplier, trBlockCount*AOMultiplier, blBlockCount*AOMultiplier, brBlockCount*AOMultiplier);
               }
             }
           }
@@ -332,8 +419,8 @@ class World{
 
 	        void main() {
 
-	            colorTop = mix(vec4(0,0,0,corners[0]*0.5), vec4(0,0,0,corners[1]*0.5), vUv.x);
-	            colorBottom = mix(vec4(0,0,0,corners[2]*0.5), vec4(0,0,0, corners[3]*0.5), vUv.x);
+	            colorTop = mix(vec4(0,0,0,corners[0]), vec4(0,0,0,corners[1]), vUv.x);
+	            colorBottom = mix(vec4(0,0,0,corners[2]), vec4(0,0,0, corners[3]), vUv.x);
 	            col = mix(colorTop, colorBottom, vUv.y);
 
 	            //gl_FragColor = texture2D(texture1, vUv);
@@ -557,7 +644,7 @@ class World{
 
 
 	//OLD
-	get_blocks_around_faces(x,y,z){
+	get_faces_for_aos(x,y,z){
 		let blocks = [];
 		// Starting from TL move ltr to BR
 		blocks.push(this.getVoxel(x-1, y+1, z-1))

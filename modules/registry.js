@@ -68,8 +68,8 @@ class Registry{
 
 	        void main() {
 
-	            colorTop = mix(vec4(0,0,0,corners[0]*0.5), vec4(0,0,0,corners[1]*0.5), vUv.x);
-	            colorBottom = mix(vec4(0,0,0,corners[2]*0.5), vec4(0,0,0, corners[3]*0.5), vUv.x);
+	            colorTop = mix(vec4(0,0,0,corners[0]), vec4(0,0,0,corners[1]), vUv.x);
+	            colorBottom = mix(vec4(0,0,0,corners[2]), vec4(0,0,0, corners[3]), vUv.x);
 	            col = mix(colorTop, colorBottom, vUv.y);
 
 	            //gl_FragColor = texture2D(texture1, vUv);
