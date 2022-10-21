@@ -85,7 +85,7 @@ function initScene(){
 
 	//SERVER OR CLIENT
 	world = new World()
-	let render_distance = 4;
+	let render_distance = 3;
 	chunkLoadManager = new ChunkLoadManager(player, render_distance)
 	chunkLoadManager.initial_load()
 
@@ -440,7 +440,6 @@ var infinite_terrain = true;
 function animate() {
 	frames+=1;
 
-	
 
 	getSelected(raycaster, mouse);
 	
@@ -450,13 +449,20 @@ function animate() {
 	scene.simulate();
 	registry.updateAll();
 	renderer.render( scene, player.getCamera() );
-	//every 120 updates
-	if(mod(frames,10)==0){
-		if(infinite_terrain){
-			chunkLoadManager.update()
-		}
-	}
+
+	
 	if(serverConn != null){
 		serverConn.send(JSON.stringify({"entities":{"player":{"x":player.x,"y":player.y,"z":player.z,"euler":player.euler}}}))
 	}
+
+	//every 120 updates
+	//if(mod(frames,10)==0){
+	//	if(infinite_terrain){
+	//		chunkLoadManager.update()
+	//	}
+	//}
+	if(infinite_terrain) {
+		window.requestIdleCallback(()=>{chunkLoadManager.update()})
+	}
+
 }

@@ -18,7 +18,6 @@ class ChunkLoadManager{
 			this.loaded[world.get_chunk_name(toLoad[i][0],toLoad[i][1])] = [toLoad[i][0],toLoad[i][1]];
 			
 			world.generateChunk(toLoad[i][0],toLoad[i][1]);
-			console.log("END OF CHUNK GEN!")
 		}
 		
 		for(let y=253;y>0;y--){
@@ -30,13 +29,9 @@ class ChunkLoadManager{
 	}
 
 	update(){
-		console.log("Start of chunk update")
-		console.log("toUpdate", this.toUpdate)
 		if(this.toUpdate.length!=0){
-			console.log("toUpdate length > 0")
 			let chunk = this.toUpdate.pop()
 			world.reload_chunk(chunk[0],chunk[1]);
-			console.log("Reloading chunk ", chunk[0], chunk[1])
 			return
 		}
 
@@ -45,7 +40,6 @@ class ChunkLoadManager{
 		let update_chunks = false;
 		let toLoad = this.gen_diamond(playerPos.chunk_x,playerPos.chunk_z,this.rd)
 
-		console.log(toLoad)
 
 		//Unload all uneccessary chunks
 		for(var key in this.loaded){

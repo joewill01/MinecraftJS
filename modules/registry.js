@@ -17,6 +17,8 @@ class Registry{
 		this.particleBuffer = [];
 
 		this.entityBuffer = [];
+
+		this.block_instances = {};
 	}
 
 	_registerBlockTexture(texName){
@@ -32,21 +34,82 @@ class Registry{
 		}
 	}
 
+	vertexShader() {
+	    return `
+	      varying vec2 vUv;
+
+	      attribute vec4 corner;
+
+	      varying vec4 corners;
+
+	      void main() {
+	          vUv = uv;
+
+	          corners = corner;
+
+	          gl_Position =   projectionMatrix * 
+	                          modelViewMatrix * 
+	                          vec4(position,1.0);
+	      }
+	    `
+	  }
+
+	  fragmentShader(){
+	     return `
+	        uniform sampler2D texture1;
+
+	        varying vec2 vUv;
+
+	        varying vec4 corners;
+
+	        vec4 colorTop = vec4(0,0,0,0);
+	        vec4 colorBottom = vec4(0,0,0,0);
+	        vec4 col = vec4(0,0,0,0);
+
+	        void main() {
+
+	            colorTop = mix(vec4(0,0,0,corners[0]*0.5), vec4(0,0,0,corners[1]*0.5), vUv.x);
+	            colorBottom = mix(vec4(0,0,0,corners[2]*0.5), vec4(0,0,0, corners[3]*0.5), vUv.x);
+	            col = mix(colorTop, colorBottom, vUv.y);
+
+	            //gl_FragColor = texture2D(texture1, vUv);
+	            if (texture2D(texture1, vUv).a == 0.0){
+	              gl_FragColor = texture2D(texture1, vUv);
+	            }else{
+	              gl_FragColor = mix(vec4(texture2D(texture1, vUv).rgb, 1.0), col, col.a);
+	            }
+	            
+	        }
+	      `
+	  }
+
 	registerMaterial(texture_name,transparent){
 		let texID = this._registerBlockTexture(texture_name)
 		if (!this.materialRegister.hasOwnProperty(texture_name)){
-			let material = new THREE.MeshBasicMaterial( {
-				map: this.textures[texID],
-				transparent: transparent, 
-				side: THREE.DoubleSide,
-				//vertexColors: THREE.VertexColors
-			});
+
+			const uniforms = {
+			    texture1: { type: "t", value: this.textures[texID] }
+		  	};
+		  	const material = new THREE.ShaderMaterial({
+			    uniforms: uniforms,
+			    fragmentShader: this.fragmentShader(),
+			    vertexShader: this.vertexShader(),
+			    transparent: transparent
+		  	})
+
 			this.materials.push(material);
 			this.materialRegister[texture_name] = this.materials.length-1;
 			return this.materials.length-1;
 		}else{
 			return this.materialRegister[texture_name]
 		}
+	}
+
+	registerSingletonBlockInstance(block_id) {
+		if (this.block_instances[`${block_id}`] == undefined) {
+			this.block_instances[`${block_id}`] = this.getBlockInstanceFromId(block_id);
+		} 
+		return this.block_instances[`${block_id}`]
 	}
 
 	registerParticleTexture(texName){

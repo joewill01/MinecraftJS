@@ -111,7 +111,7 @@ class World{
   getVoxel(x, y, z) {
     const chunk = this.getChunkForVoxel(x, y, z);
     if (!chunk) {
-      return 0;
+      return 'no chunk bro';
     }
     const voxelOffset = this.computeVoxelOffset(x, y, z);
     return chunk[voxelOffset];
@@ -140,12 +140,29 @@ class World{
           const voxel = this.getVoxel(voxelX, voxelY, voxelZ);
           if (voxel) {
             // There is a voxel here but do we need faces for it?
+            const singletonBlockInstance = registry.registerSingletonBlockInstance(voxel);
             for (const {dir, corners} of this.faces) {
+            	
+
               const neighbor = this.getVoxel(
                   voxelX + dir[0],
                   voxelY + dir[1],
                   voxelZ + dir[2]);
-              if (!neighbor) {
+
+              if (!neighbor && neighbor != 'no chunk bro') {
+              	if (arraysMatch([-1,0,0], dir)) {
+	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['N'], singletonBlockInstance.opacity != 2))
+	            	} else if (arraysMatch([1,0,0], dir)) {
+	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['S'], singletonBlockInstance.opacity != 2))
+	              } else if (arraysMatch([0,-1,0], dir)) {
+	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['D'], singletonBlockInstance.opacity != 2))
+	            	} else if (arraysMatch([0,1,0], dir)) {
+	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['U'], singletonBlockInstance.opacity != 2))
+	            	} else if (arraysMatch([0,0,-1], dir)) {
+	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['W'], singletonBlockInstance.opacity != 2))
+	            	} else {
+	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['E'], singletonBlockInstance.opacity != 2))
+	            	}
                 // this voxel has no neighbor in this direction so we need a face.
                 const ndx = positions.length / 3;
                 for (const {pos, uv} of corners) {
@@ -157,7 +174,6 @@ class World{
                   ndx, ndx + 1, ndx + 2,
                   ndx + 2, ndx + 1, ndx + 3,
                 );
-                block_ids.push(voxel)
                 colours.push(0, 0, 0);
                 let [tl, tr, bl, br] = [randInt(0,2), randInt(0,2), randInt(0,2), randInt(0,2)]
                 corners_ao.push(tl, tr, bl, br);
@@ -182,6 +198,35 @@ class World{
     };
   }
 
+  generate(chunkX, chunkZ, chunkSize){
+		let zoom = 100
+		let scale = 10
+		let raise = 40
+		let offset = 999999999999999
+
+
+		for (let x = 0; x < 16; x++) {
+			for (let z = 0; z < 16; z++) {
+				let height = Math.ceil(Math.abs(noise.perlin2((chunkX*chunkSize+x+offset) / zoom, (chunkZ*chunkSize + z + offset) / zoom)) * scale) + raise;
+				for (let y = 0; y <= height; y++){
+					if(y==0){
+						this.setVoxel(x, y, z, 4);
+					}
+
+					if(y==height){
+						this.setVoxel((chunkX*chunkSize)+x, y, (chunkZ*chunkSize)+z, 1);
+					}else if(y==height-1 || y==height-2 || y==height-3){
+						this.setVoxel((chunkX*chunkSize)+x, y, (chunkZ*chunkSize)+z, 7);
+					}else if(y==0){
+						this.setVoxel((chunkX*chunkSize)+x, y, (chunkZ*chunkSize)+z, 4);
+					}else{
+						this.setVoxel((chunkX*chunkSize)+x, y, (chunkZ*chunkSize)+z, 5);
+					}
+				}
+			}
+		}
+	}
+
   generateChunk(chunkX, chunkZ){
   	if (this.get_chunk_name(chunkX, chunkZ) in this.chunks){
   		console.log("attempt to load chunk that is already loaded, reloading");
@@ -193,17 +238,8 @@ class World{
     let chunk = new Uint8Array(chunkSize * 255 * chunkSize);
     this.chunks[chunkId] = chunk;
 
-    for (let y = 0; y < 255; ++y) {
-      for (let z = chunkZ*chunkSize; z < (chunkZ*chunkSize) + chunkSize; ++z) {
-        for (let x = chunkX*chunkSize; x < (chunkX*chunkSize) + chunkSize; ++x) {
-            const height = (Math.sin(x / chunkSize * Math.PI * 2) + Math.sin(z / chunkSize * Math.PI * 3)) * (chunkSize / 6) + (chunkSize / 2);
-          
-            if (y < height+30) {
-              this.setVoxel(x, y, z, 5)
-            }
-        }
-      }
-    }
+    
+    this.generate(chunkX, chunkZ, chunkSize);
 
     this.updateChunkGeometry(chunkX,0,chunkZ);
     const offsets = [
@@ -405,14 +441,7 @@ class World{
           'corner',
           new THREE.BufferAttribute(new Float32Array(0), cornerComponents))
 
-      mesh = new THREE.Mesh(geometry, [
-        glass_material, 
-        glass_material, 
-        cobblestone_material, 
-        grass_material, 
-        bedrock_material,
-        orange_concrete_powder_material
-      ]);
+      mesh = new THREE.Mesh(geometry, registry.materials);
       mesh.name = chunkId + "_mesh";
       this.chunkIdToMesh[chunkId] = mesh;
       scene.add(mesh);
