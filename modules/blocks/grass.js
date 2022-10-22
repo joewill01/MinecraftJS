@@ -8,6 +8,7 @@ class GrassBlock extends Block {
 			'U': 'grass_block_top-NORMAL-BY-JOE.png',
 			'D': 'dirt.png',
 		};
+		
 		super(x, y, z, textures, ctex);
 
 		this.ID = 1;

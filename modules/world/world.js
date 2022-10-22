@@ -10,6 +10,7 @@ class World{
 		this.chunkSliceSize = this.chunkSize * this.chunkSize;
     this.chunks = {};
     this.chunkIdToMesh = {};
+    this.blockInstances = new Array(255*this.chunkSize*this.chunkSize).fill(0);
     this.faces = [
 		  { // left - north
 		    uvRow: 0,
@@ -154,86 +155,90 @@ class World{
               if (!neighbor && neighbor != 'no chunk bro') {
               	let faces_for_ao = [];
               	let AOMultiplier = 0;
+              	let sideDarken = 0;
 
               	if (arraysMatch([-1,0,0], dir)) {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['N'], singletonBlockInstance.opacity != 2))
 									AOMultiplier = 0.16;
+									sideDarken = 0.1;
 	                faces_for_ao = [
-										blocks_around[5],
-										blocks_around[10],
-										blocks_around[17],
-										blocks_around[3],
-										blocks_around[15],
-										blocks_around[0],
+	                	blocks_around[12],
 										blocks_around[8],
-										blocks_around[12]
+										blocks_around[0],
+										blocks_around[13],
+										blocks_around[1],
+										blocks_around[14],
+										blocks_around[9],
+										blocks_around[2]
 									];
-	                
-
 	            	} else if (arraysMatch([1,0,0], dir)) {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['S'], singletonBlockInstance.opacity != 2))
 									AOMultiplier = 0.16;
+									sideDarken = 0.1;
 	                faces_for_ao = [
-										blocks_around[2],
-										blocks_around[9],
-										blocks_around[14],
-										blocks_around[4],
-										blocks_around[16],
-										blocks_around[7],
+										blocks_around[19],
 										blocks_around[11],
-										blocks_around[19]
+										blocks_around[7],
+										blocks_around[18],
+										blocks_around[6],
+										blocks_around[17],
+										blocks_around[10],
+										blocks_around[5]
 									];
-	                
 	              } else if (arraysMatch([0,-1,0], dir)) {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['D'], singletonBlockInstance.opacity != 2))
 									AOMultiplier = 0.2;
 	                faces_for_ao = [
 										blocks_around[14],
 										blocks_around[13],
-										blocks_around[12],
+										blocks_around[11],
 										blocks_around[16],
 										blocks_around[15],
 										blocks_around[19],
 										blocks_around[18],
 										blocks_around[17]
 									];
+									// DO DOWN
 	            	} else if (arraysMatch([0,1,0], dir)) {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['U'], singletonBlockInstance.opacity != 2))
 									AOMultiplier = 0.2;
 	                faces_for_ao = [
-										blocks_around[0],
-										blocks_around[1],
-										blocks_around[2],
-										blocks_around[3],
-										blocks_around[4],
 										blocks_around[5],
 										blocks_around[6],
-										blocks_around[7]
-									]; 
+										blocks_around[7],
+										blocks_around[3],
+										blocks_around[4],
+										blocks_around[0],
+										blocks_around[1],
+										blocks_around[2]
+									];
 	            	} else if (arraysMatch([0,0,-1], dir)) {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['W'], singletonBlockInstance.opacity != 2))
 									AOMultiplier = 0.16;
-									faces_for_ao = [blocks_around[0],
-										blocks_around[8],
-										blocks_around[12],
-										blocks_around[1],
-										blocks_around[13],
+									sideDarken = 0.2;
+	                faces_for_ao = [
+										blocks_around[17],
+										blocks_around[10],
+										blocks_around[5],
+										blocks_around[15],
 										blocks_around[2],
-										blocks_around[9],
-										blocks_around[14]
+										blocks_around[12],
+										blocks_around[8],
+										blocks_around[0]
 									];
 	            	} else {
 	                block_ids.push(registry.registerMaterial(singletonBlockInstance.texture_names['E'], singletonBlockInstance.opacity != 2))
 									AOMultiplier = 0.16;
+									sideDarken = 0.2;
 									faces_for_ao = [
-										blocks_around[7],
-										blocks_around[11],
+										blocks_around[14],
+										blocks_around[9],
+										blocks_around[2],
+										blocks_around[16],
+										blocks_around[4],
 										blocks_around[19],
-										blocks_around[6],
-										blocks_around[18],
-										blocks_around[5],
-										blocks_around[10],
-										blocks_around[17]
+										blocks_around[11],
+										blocks_around[7]
 									];
 	            	}
                 // this voxel has no neighbor in this direction so we need a face.
@@ -262,11 +267,11 @@ class World{
 								//trBlockCount brBlockCount blBlockCount tlBlockCount
 
 
-                let [tl, tr, bl, br] = [randInt(0,2), randInt(0,2), randInt(0,2), randInt(0,2)]
-                corners_ao.push(tlBlockCount*AOMultiplier, trBlockCount*AOMultiplier, blBlockCount*AOMultiplier, brBlockCount*AOMultiplier);
-                corners_ao.push(tlBlockCount*AOMultiplier, trBlockCount*AOMultiplier, blBlockCount*AOMultiplier, brBlockCount*AOMultiplier);
-                corners_ao.push(tlBlockCount*AOMultiplier, trBlockCount*AOMultiplier, blBlockCount*AOMultiplier, brBlockCount*AOMultiplier);
-                corners_ao.push(tlBlockCount*AOMultiplier, trBlockCount*AOMultiplier, blBlockCount*AOMultiplier, brBlockCount*AOMultiplier);
+                let [tl, tr, bl, br] = [randInt(0,2), randInt(0,2), randInt(0,2), randInt(0,2)];
+                corners_ao.push((tlBlockCount*AOMultiplier)+sideDarken, (trBlockCount*AOMultiplier)+sideDarken, (blBlockCount*AOMultiplier)+sideDarken, (brBlockCount*AOMultiplier)+sideDarken);
+                corners_ao.push((tlBlockCount*AOMultiplier)+sideDarken, (trBlockCount*AOMultiplier)+sideDarken, (blBlockCount*AOMultiplier)+sideDarken, (brBlockCount*AOMultiplier)+sideDarken);
+                corners_ao.push((tlBlockCount*AOMultiplier)+sideDarken, (trBlockCount*AOMultiplier)+sideDarken, (blBlockCount*AOMultiplier)+sideDarken, (brBlockCount*AOMultiplier)+sideDarken);
+                corners_ao.push((tlBlockCount*AOMultiplier)+sideDarken, (trBlockCount*AOMultiplier)+sideDarken, (blBlockCount*AOMultiplier)+sideDarken, (brBlockCount*AOMultiplier)+sideDarken);
               }
             }
           }
@@ -688,15 +693,15 @@ class World{
 
 	get_looking_at_block(){
 		if(lookingAt != null){
-			let coords = this.world_to_chunk_coords(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z);
+			return this.getVoxel(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z);
 			return this.chunk_instances[this.get_chunk_name(coords.chunk_x, coords.chunk_z)].chunk[coords.index];
 		}
 	}
 
 	get_chunk_instances_array(){
 		let meshs = [];
-		for (const [key, value] of Object.entries(this.chunk_instances)) {
-		  meshs.push(value.chunk_mesh);
+		for (const [key, value] of Object.entries(this.chunkIdToMesh)) {
+		  meshs.push(value);
 		}
 		return meshs
 	}
