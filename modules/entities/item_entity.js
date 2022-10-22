@@ -131,6 +131,7 @@ class ItemEntity extends Entity{
 
 			let block_geom = new THREE.Geometry();
 
+
 			setPlane("y",  Math.PI * 0.5, item.blockTextures["S"], this, "S", block_geom); //side
 			setPlane("y", -Math.PI * 0.5, item.blockTextures["N"] , this, "N", block_geom); //side
 			setPlane("y",  0, item.blockTextures["E"] , this, "E", block_geom); //side
@@ -197,13 +198,12 @@ class ItemEntity extends Entity{
 						child.position.y = -this.size/2 + offset
 					})
 				}
-				
+				console.log(this.x,this.y,this.z)
 				this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.pivot)
 			}
 		}catch(e){
 			console.log(e)
 		}
-
 		this.x = this.hitbox.position.x
 		this.y = this.hitbox.position.y
 		this.z = this.hitbox.position.z

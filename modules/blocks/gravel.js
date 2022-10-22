@@ -9,7 +9,7 @@ class Gravel extends Block{
 			'D': 'gravel.png',
 		};
 		super(x,y,z,textures,ctex);
-
+		this.fallingCheck()
 		this.ID = 29;
 		this.name = "gravel"
 		this.displayName = "Gravel"
