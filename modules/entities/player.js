@@ -194,7 +194,7 @@ class Player extends Entity{
 					}else if(percentageBroken >=90 && percentageBroken < 100){
 						stage = 9
 					}else{
-						const lastLookedAt_block = registry.registerSingletonBlockInstance(this.lastLookedAt)
+						const lastLookedAt_block = this.lastLookedAt
 						lastLookedAt_block.x=breakCube.x;
 						lastLookedAt_block.y=breakCube.y;
 						lastLookedAt_block.z=breakCube.z;

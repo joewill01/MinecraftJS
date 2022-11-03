@@ -9,8 +9,10 @@ class World{
 		this.chunkSize = 16;
 		this.chunkSliceSize = this.chunkSize * this.chunkSize;
     this.chunks = {};
+    this.chunksBlockInstances = {};
     this.chunkIdToMesh = {};
-    this.blockInstances = new Array(255*this.chunkSize*this.chunkSize).fill(0);
+
+    console.log(this.blockInstances)
     this.faces = [
 		  { // left - north
 		    uvRow: 0,
@@ -100,13 +102,23 @@ class World{
     return this.chunks[this.computeChunkId(x, z)];
   }
 
+  getChunkBlockInstancesForVoxel(x, y, z) {
+    return this.chunksBlockInstances[this.computeChunkId(x, z)];
+  }
+
   setVoxel(x, y, z, v) {
     let chunk = this.getChunkForVoxel(x, y, z);
+    const chunkBlockInstances = this.getChunkBlockInstancesForVoxel(x, y, z);
+
     if (!chunk) {
       return 0;
     }
+
     const voxelOffset = this.computeVoxelOffset(x, y, z);
     chunk[voxelOffset] = v;
+
+    chunkBlockInstances[voxelOffset] = registry.getBlockInstanceFromId(v);
+
   }
 
   getVoxel(x, y, z) {
@@ -118,6 +130,14 @@ class World{
     return chunk[voxelOffset];
   }
 
+  getBlockInstance(x, y, z) {
+    const chunksBlockInstance = this.getChunkBlockInstancesForVoxel(x, y, z);
+    if (!chunk) {
+      return 'no chunk bro';
+    }
+    const voxelOffset = this.computeVoxelOffset(x, y, z);
+    return chunksBlockInstance[voxelOffset];
+  }
 
 	generateGeometryDataForChunk(chunkX, chunkY, chunkZ) {
     const {chunkSize} = this;
@@ -327,8 +347,16 @@ class World{
   	}
     const chunkId = this.get_chunk_name(chunkX, chunkZ)
     const {chunkSize} = this;
+
     let chunk = new Uint8Array(chunkSize * 255 * chunkSize);
+    let chunkBlockInstances;
+    (chunkBlockInstances = []).length = (chunkSize * 255 * chunkSize);
+    chunkBlockInstances.fill(0);
+
     this.chunks[chunkId] = chunk;
+    this.chunksBlockInstances[chunkId] = chunkBlockInstances;
+
+    console.log(this.chunksBlockInstances)
 
     
     this.generate(chunkX, chunkZ, chunkSize);
