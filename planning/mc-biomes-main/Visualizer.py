@@ -186,7 +186,8 @@ def main():
     # Show a single layer by using show_biome_map() or show_hyperbiome_map()
     # Pass in the result of GenLayer.get_ints(x, y, width, height)
     # Example:
-    show_biome_map(river_mix.get_ints(-64, -64, 128, 128))
+    show_biome_map(river_mix.get_ints(0, 0, 16, 16))
+    show_hyperbiome_map(river_mix.get_ints(0, 0, 16, 16))
 
 
 if __name__ == "__main__":

@@ -12,7 +12,6 @@ class World{
     this.chunksBlockInstances = {};
     this.chunkIdToMesh = {};
 
-    console.log(this.blockInstances)
     this.faces = [
 		  { // left - north
 		    uvRow: 0,
@@ -118,6 +117,9 @@ class World{
     chunk[voxelOffset] = v;
 
     chunkBlockInstances[voxelOffset] = registry.getBlockInstanceFromId(v);
+    chunkBlockInstances[voxelOffset].x = x
+    chunkBlockInstances[voxelOffset].y = y
+    chunkBlockInstances[voxelOffset].z = z
 
   }
 
@@ -132,7 +134,7 @@ class World{
 
   getBlockInstance(x, y, z) {
     const chunksBlockInstance = this.getChunkBlockInstancesForVoxel(x, y, z);
-    if (!chunk) {
+    if (!chunksBlockInstance) {
       return 'no chunk bro';
     }
     const voxelOffset = this.computeVoxelOffset(x, y, z);
@@ -355,8 +357,6 @@ class World{
 
     this.chunks[chunkId] = chunk;
     this.chunksBlockInstances[chunkId] = chunkBlockInstances;
-
-    console.log(this.chunksBlockInstances)
 
     
     this.generate(chunkX, chunkZ, chunkSize);
@@ -716,12 +716,9 @@ class World{
 		return this.getVoxel(x,y,z)
 	}
 
-
-
-
 	get_looking_at_block(){
 		if(lookingAt != null){
-			return this.getVoxel(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z);
+			return this.getBlockInstance(lookingAt.blockCoords.x,lookingAt.blockCoords.y,lookingAt.blockCoords.z);
 			return this.chunk_instances[this.get_chunk_name(coords.chunk_x, coords.chunk_z)].chunk[coords.index];
 		}
 	}
