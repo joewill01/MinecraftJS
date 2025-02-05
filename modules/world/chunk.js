@@ -194,7 +194,7 @@ class Chunk{
 			this.chunk.push(registry.getBlockInstanceFromId(id, this.x * 16 + x, y, this.z * 16 + z, this.ctextures))
 		}, this);
 
-		this.calculateSkylight()
+		//this.calculateSkylight()
 
 		this.chunk.forEach(function(block, e) {
 			if(!(block instanceof Air)){

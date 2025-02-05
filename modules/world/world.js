@@ -29,28 +29,16 @@ class World{
 		chunk_instance.generate()
 	}
 
-	world_to_chunk_coords(x, y, z){
-		let chunk_x = Math.floor(x/16);
-		let chunk_z = Math.floor(z/16);
-
-		let pos_x = null;
-		let pos_z = null;
-
-		if(x < 0){
-			pos_x = (16 - Math.abs(x%16))%16
-		}else{
-			pos_x = Math.abs(x%16)
-		}
-		
-		if(z < 0){
-			pos_z = (16 - Math.abs(z%16))%16
-		}else{
-			pos_z = Math.abs(z%16)
-		}
-
-		let index = y*256+pos_x*16+pos_z;
-
-		return {"chunk_x":chunk_x, "chunk_z":chunk_z, "pos_z":pos_z, "pos_x":pos_x, "index":index}
+	world_to_chunk_coords(x, y, z) {
+		let chunk_x = x >> 4; // Faster division by 16
+		let chunk_z = z >> 4; 
+	
+		let pos_x = (x & 15); // Faster modulo 16
+		let pos_z = (z & 15);
+	
+		let index = (y << 8) | (pos_x << 4) | pos_z; // Optimized index math
+	
+		return { chunk_x, chunk_z, pos_x, pos_z, index };
 	}
 
 	get_block_faces(x,y,z){
@@ -65,34 +53,39 @@ class World{
 		return faces
 	}
 
-	get_blocks_around_faces(x,y,z){
+	get_blocks_around_faces(x, y, z) {
 		let blocks = [];
-		// Starting from TL move ltr to BR
-		blocks.push(this.get_block(x-1, y+1, z-1))
-		blocks.push(this.get_block(x-1, y+1, z))
-		blocks.push(this.get_block(x-1, y+1, z+1))
-		blocks.push(this.get_block(x, y+1, z-1))
-		blocks.push(this.get_block(x, y+1, z+1))
-		blocks.push(this.get_block(x+1, y+1, z-1))
-		blocks.push(this.get_block(x+1, y+1, z))
-		blocks.push(this.get_block(x+1, y+1, z+1))
-
-		blocks.push(this.get_block(x-1, y, z-1))
-		blocks.push(this.get_block(x-1, y, z+1))
-		blocks.push(this.get_block(x+1, y, z-1))
-		blocks.push(this.get_block(x+1, y, z+1))
-
-		blocks.push(this.get_block(x-1, y-1, z-1))
-		blocks.push(this.get_block(x-1, y-1, z))
-		blocks.push(this.get_block(x-1, y-1, z+1))
-		blocks.push(this.get_block(x, y-1, z-1))
-		blocks.push(this.get_block(x, y-1, z+1))
-		blocks.push(this.get_block(x+1, y-1, z-1))
-		blocks.push(this.get_block(x+1, y-1, z))
-		blocks.push(this.get_block(x+1, y-1, z+1))
-
-		return blocks
+		let offsets = [
+			[-1, 1, -1], [-1, 1, 0], [-1, 1, 1],
+			[ 0, 1, -1], [ 0, 1, 1], [ 1, 1, -1],
+			[ 1, 1, 0],  [ 1, 1, 1], [-1, 0, -1],
+			[-1, 0, 1],  [ 1, 0, -1], [ 1, 0, 1],
+			[-1, -1, -1], [-1, -1, 0], [-1, -1, 1],
+			[ 0, -1, -1], [ 0, -1, 1], [ 1, -1, -1],
+			[ 1, -1, 0],  [ 1, -1, 1]
+		];
+	
+		let chunkCoords = this.world_to_chunk_coords(x, y, z);
+		let chunkName = this.get_chunk_name(chunkCoords.chunk_x, chunkCoords.chunk_z);
+		let chunk = this.chunk_instances[chunkName];
+	
+		if (!chunk) return Array(20).fill(-1); // Avoid unnecessary calls
+	
+		for (let [dx, dy, dz] of offsets) {
+			let nx = x + dx, ny = y + dy, nz = z + dz;
+			let nCoords = this.world_to_chunk_coords(nx, ny, nz);
+			let nChunkName = this.get_chunk_name(nCoords.chunk_x, nCoords.chunk_z);
+			let nChunk = this.chunk_instances[nChunkName];
+	
+			if (!nChunk) {
+				blocks.push(-1); // Chunk not loaded
+			} else {
+				blocks.push(nChunk.chunk[nCoords.index] ?? -1);
+			}
+		}
+		return blocks;
 	}
+	
 
 	get_block_coords_around_faces(x,y,z){
 		let blocks = [];
@@ -123,50 +116,23 @@ class World{
 		return blocks
 	}
 
-	get_block_ID(x,y,z){
-		if (y < 0 || y > 255) {
-			return 0
-		}
-
-		let coords = this.world_to_chunk_coords(x,y,z);
+	get_block_ID(x, y, z) {
+		if (y < 0 || y > 255) return 0;
+	
+		let coords = this.world_to_chunk_coords(x, y, z);
 		let chunk = this.world[this.get_chunk_name(coords.chunk_x, coords.chunk_z)];
-
-		try {
-			if (chunk === undefined){
-				return -1
-			} else {
-				let ID = chunk[coords.index];
-				if (chunk[coords.index] === 0) {
-					return 0
-				}
-				if (ID !== undefined){
-					return ID
-				} else {
-					return -1
-				}
-			}
-		} catch(e) {
-			return -1
-		}
+	
+		if (!chunk) return -1; // Avoids try-catch overhead
+		return chunk[coords.index] ?? -1; // Returns 0 only if explicitly set
 	}
 
 	get_block(x, y, z) {
-		if (y < 0 || y > 255) {
-			return 0
-		}
-
-		let coords = this.world_to_chunk_coords(x,y,z);
-		let chunk = this.chunk_instances[this.get_chunk_name(coords.chunk_x, coords.chunk_z)]
-
-		try {
-			if (chunk === undefined){
-				return -1;
-			} else {
-				return chunk.chunk[coords.index];
-			}
-		} catch(e) {
-			return -1;
-		}
+		if (y < 0 || y > 255) return 0;
+	
+		let coords = this.world_to_chunk_coords(x, y, z);
+		let chunk = this.chunk_instances[this.get_chunk_name(coords.chunk_x, coords.chunk_z)];
+	
+		return chunk ? chunk.chunk[coords.index] ?? -1 : -1;
 	}
 
 	set_id(x, y, z, id){
