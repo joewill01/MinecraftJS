@@ -203,7 +203,6 @@ class ItemEntity extends Entity{
 						child.position.y = -this.size/2 + offset
 					})
 				}
-				console.log(this.x,this.y,this.z)
 				this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.pivot)
 			}
 		}catch(e){

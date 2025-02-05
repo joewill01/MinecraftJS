@@ -34,6 +34,7 @@ class Block {
 		this.dropNumberMax = 1;
 		this.opacity = 2; //0: transparent, 1: attenuates light, 2:opaque
 		this.canFall = false;
+		this.hitbox = true;
 	}
 
 	render(chunk_geom){

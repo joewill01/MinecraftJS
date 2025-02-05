@@ -19,6 +19,7 @@ class Torch extends Block{
         this.baseLightIntensity = 15;
         this.opacity = 0;
 
+		this.hitbox = false;
 	}
 
     spawnParticles(){
