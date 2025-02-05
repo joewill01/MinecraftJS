@@ -15,8 +15,14 @@ class Emitter{
 		this.emitter.position.z = this.z
 		this.emitter.name = this.name
 		scene.add(this.emitter)
-		registry.registerEmitter(this)
+		this.id = registry.registerEmitter(this)
 		this.active = true;
+	}
+
+	remove(){
+		scene.remove(this.emitter)
+		registry.unRegisterEmitter(this.id)
+		this.active = false;
 	}
 
 	tick(){

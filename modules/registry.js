@@ -166,8 +166,12 @@ class Registry{
 			case 29:
 				return new Gravel(x,y,z,ctex);
 				break;
+			case 30:
+				return new Torch(x,y,z,ctex);
+				break;
 		}
 	}
+
 
 	getItemInstanceFromId(id){
 		switch(id){
@@ -309,6 +313,9 @@ class Registry{
 			case 45:
 				return new GravelItem();
 				break;
+			case 46:
+				return new TorchItem();
+				break;
 		}
 	}
 
@@ -342,6 +349,7 @@ class Registry{
 	registerEmitter(emitter){
 		this.emitterBuffer.push(emitter);
 		emitter.id = ++this.last_emitter_id;
+		return emitter.id;
 	}
 
 	tickParticleEmitters(){

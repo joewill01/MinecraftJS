@@ -2,7 +2,7 @@ class TorchEmitter extends Emitter{
 	constructor(x,y,z){
 		super(x,y,z)
 
-		this.name="TorchEmitter"
+		this.name="TorchEmitter" + (Math.random().toString())
 		this.init();
 		this.fireDelay = 0;
 		this.lastEmittedFire = 0;
@@ -15,7 +15,7 @@ class TorchEmitter extends Emitter{
 		this.fireEmitTimer = performance.now()
 		if(this.fireEmitTimer-this.lastEmittedFire>this.fireDelay){
 			this.emitFlame();
-			this.fireDelay = randomIntFromInterval(900,4000);
+			this.fireDelay = randomIntFromInterval(500,2000);
 			this.lastEmittedFire = performance.now()
 		}
 

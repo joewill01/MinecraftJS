@@ -3,6 +3,20 @@ class World{
 		this.world = {};
 		this.chunk_instances = {};
 		noise.seed(Math.random())
+		this.block_particles = {};
+	}
+
+	getBlockParticles(x,y,z){
+		return this.block_particles[x.toString()+ y.toString()+ z.toString()]
+	}
+
+	addBlockParticles(x,y,z,particle){
+		this.block_particles[x.toString()+ y.toString()+ z.toString()] = particle
+	}
+
+	removeBlockParticles(x,y,z){
+		this.block_particles[x.toString()+ y.toString()+ z.toString()].remove()
+		delete this.block_particles[x.toString()+ y.toString()+ z.toString()]
 	}
 
 	get_chunk_name(x,z){
@@ -41,12 +55,12 @@ class World{
 
 	get_block_faces(x,y,z){
 		let faces = {};
-		faces.U = this.get_block_ID(x,y+1,z);
-		faces.D = this.get_block_ID(x,y-1,z);
-		faces.N = this.get_block_ID(x-1,y,z);
-		faces.S = this.get_block_ID(x+1,y,z);
-		faces.E = this.get_block_ID(x,y,z+1);
-		faces.W = this.get_block_ID(x,y,z-1);
+		faces.U = this.get_block(x,y+1,z);
+		faces.D = this.get_block(x,y-1,z);
+		faces.N = this.get_block(x-1,y,z);
+		faces.S = this.get_block(x+1,y,z);
+		faces.E = this.get_block(x,y,z+1);
+		faces.W = this.get_block(x,y,z-1);
 		// console.log(faces)
 		return faces
 	}
@@ -54,28 +68,28 @@ class World{
 	get_blocks_around_faces(x,y,z){
 		let blocks = [];
 		// Starting from TL move ltr to BR
-		blocks.push(this.get_block_ID(x-1, y+1, z-1))
-		blocks.push(this.get_block_ID(x-1, y+1, z))
-		blocks.push(this.get_block_ID(x-1, y+1, z+1))
-		blocks.push(this.get_block_ID(x, y+1, z-1))
-		blocks.push(this.get_block_ID(x, y+1, z+1))
-		blocks.push(this.get_block_ID(x+1, y+1, z-1))
-		blocks.push(this.get_block_ID(x+1, y+1, z))
-		blocks.push(this.get_block_ID(x+1, y+1, z+1))
+		blocks.push(this.get_block(x-1, y+1, z-1))
+		blocks.push(this.get_block(x-1, y+1, z))
+		blocks.push(this.get_block(x-1, y+1, z+1))
+		blocks.push(this.get_block(x, y+1, z-1))
+		blocks.push(this.get_block(x, y+1, z+1))
+		blocks.push(this.get_block(x+1, y+1, z-1))
+		blocks.push(this.get_block(x+1, y+1, z))
+		blocks.push(this.get_block(x+1, y+1, z+1))
 
-		blocks.push(this.get_block_ID(x-1, y, z-1))
-		blocks.push(this.get_block_ID(x-1, y, z+1))
-		blocks.push(this.get_block_ID(x+1, y, z-1))
-		blocks.push(this.get_block_ID(x+1, y, z+1))
+		blocks.push(this.get_block(x-1, y, z-1))
+		blocks.push(this.get_block(x-1, y, z+1))
+		blocks.push(this.get_block(x+1, y, z-1))
+		blocks.push(this.get_block(x+1, y, z+1))
 
-		blocks.push(this.get_block_ID(x-1, y-1, z-1))
-		blocks.push(this.get_block_ID(x-1, y-1, z))
-		blocks.push(this.get_block_ID(x-1, y-1, z+1))
-		blocks.push(this.get_block_ID(x, y-1, z-1))
-		blocks.push(this.get_block_ID(x, y-1, z+1))
-		blocks.push(this.get_block_ID(x+1, y-1, z-1))
-		blocks.push(this.get_block_ID(x+1, y-1, z))
-		blocks.push(this.get_block_ID(x+1, y-1, z+1))
+		blocks.push(this.get_block(x-1, y-1, z-1))
+		blocks.push(this.get_block(x-1, y-1, z))
+		blocks.push(this.get_block(x-1, y-1, z+1))
+		blocks.push(this.get_block(x, y-1, z-1))
+		blocks.push(this.get_block(x, y-1, z+1))
+		blocks.push(this.get_block(x+1, y-1, z-1))
+		blocks.push(this.get_block(x+1, y-1, z))
+		blocks.push(this.get_block(x+1, y-1, z+1))
 
 		return blocks
 	}
@@ -146,12 +160,12 @@ class World{
 
 		try {
 			if (chunk === undefined){
-				return "undefined_chunk";
+				return -1;
 			} else {
 				return chunk.chunk[coords.index];
 			}
 		} catch(e) {
-			return null;
+			return -1;
 		}
 	}
 

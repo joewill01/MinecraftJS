@@ -42,11 +42,15 @@ class Block {
 
 		let blocks_around = world.get_blocks_around_faces(this.x, this.y, this.z)
 
-		let blocks_around_coords = world.get_block_coords_around_faces(this.x, this.y, this.z)
-
 		let around_faces_for_side;
 
-		if(faces.S == 0){
+		function shouldPlaceFace(block) {
+			if (block.ID == 0 || block.opacity == 0) {
+				return true;
+			}
+		}
+
+		if(shouldPlaceFace(faces.S)){
 			around_faces_for_side = [
 				blocks_around[7],
 				blocks_around[11],
@@ -59,7 +63,7 @@ class Block {
 			];
 			setPlane("y",  Math.PI * 0.5, this.texture_names["S"], this, "S", around_faces_for_side, true); //side
 		}
-		if(faces.N == 0){
+		if(shouldPlaceFace(faces.N)){
 			around_faces_for_side = [
 				blocks_around[0],
 				blocks_around[8],
@@ -72,7 +76,7 @@ class Block {
 			];
 			setPlane("y", -Math.PI * 0.5, this.texture_names["N"] , this, "N", around_faces_for_side, true); //side
 		}
-		if(faces.E == 0){
+		if(shouldPlaceFace(faces.E)){
 			around_faces_for_side = [
 				blocks_around[2],
 				blocks_around[9],
@@ -85,7 +89,7 @@ class Block {
 			];
 			setPlane("y",  0, this.texture_names["E"] , this, "E", around_faces_for_side, true); //side
 		}
-		if(faces.W == 0){
+		if(shouldPlaceFace(faces.W)){
 			around_faces_for_side = [
 				blocks_around[5],
 				blocks_around[10],
@@ -98,7 +102,7 @@ class Block {
 			];
 			setPlane("y",  Math.PI, this.texture_names["W"] , this, "W", around_faces_for_side, true);// side
 		}
-		if(faces.D == 0){
+		if(shouldPlaceFace(faces.D)){
 			around_faces_for_side = [
 				blocks_around[14],
 				blocks_around[13],
@@ -111,7 +115,7 @@ class Block {
 			];
 			setPlane("x",  Math.PI * 0.5, this.texture_names["D"] , this, "D", around_faces_for_side, true); //bottom
 		}
-		if(faces.U == 0){
+		if(shouldPlaceFace(faces.U)){
 			around_faces_for_side = [
 				blocks_around[0],
 				blocks_around[1],
@@ -172,14 +176,30 @@ class Block {
 
 			let planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
 
+			function blockNeedAO(block){
+				if(block == -1){
+					return false
+				}
+
+				if((block.ID == 0)){
+					return false
+				}
+
+				if(block.opacity == 0){
+					return false
+				}
+
+				return true;
+			}
+
 			//tl
-			let tlBlockCount = ((blocks_around_face[0] != 0 && blocks_around_face[0] != -1) ? 1 : 0) + ((blocks_around_face[1] != 0 && blocks_around_face[1] != -1) ? 1 : 0) + ((blocks_around_face[3] != 0 && blocks_around_face[3] != -1) ? 1 : 0)
+			let tlBlockCount = (blockNeedAO(blocks_around_face[0]) ? 1 : 0) + (blockNeedAO(blocks_around_face[1]) ? 1 : 0) + (blockNeedAO(blocks_around_face[3]) ? 1 : 0)
 			//tr
-			let blBlockCount = ((blocks_around_face[1] != 0 && blocks_around_face[1] != -1) ? 1 : 0) + ((blocks_around_face[2] != 0 && blocks_around_face[2] != -1) ? 1 : 0) + ((blocks_around_face[4] != 0 && blocks_around_face[4] != -1) ? 1 : 0)
+			let blBlockCount = (blockNeedAO(blocks_around_face[1]) ? 1 : 0) + (blockNeedAO(blocks_around_face[2]) ? 1 : 0) + (blockNeedAO(blocks_around_face[4]) ? 1 : 0)
 			//br
-			let brBlockCount = ((blocks_around_face[4] != 0 && blocks_around_face[4] != -1) ? 1 : 0) + ((blocks_around_face[6] != 0 && blocks_around_face[6] != -1) ? 1 : 0) + ((blocks_around_face[7] != 0 && blocks_around_face[7] != -1) ? 1 : 0)
+			let brBlockCount = (blockNeedAO(blocks_around_face[4]) ? 1 : 0) + (blockNeedAO(blocks_around_face[6]) ? 1 : 0) + (blockNeedAO(blocks_around_face[7]) ? 1 : 0)
 			//bl
-			let trBlockCount = ((blocks_around_face[3] != 0 && blocks_around_face[3] != -1) ? 1 : 0) + ((blocks_around_face[5] != 0 && blocks_around_face[5] != -1) ? 1 : 0) + ((blocks_around_face[6] != 0 && blocks_around_face[6] != -1) ? 1 : 0)
+			let trBlockCount = (blockNeedAO(blocks_around_face[3]) ? 1 : 0) + (blockNeedAO(blocks_around_face[5])? 1 : 0) + (blockNeedAO(blocks_around_face[6]) ? 1 : 0)
 			
 			let AOMultiplier;
 			if (ao) {
@@ -227,8 +247,7 @@ class Block {
 		world.set_block(this.x,this.y,this.z,0)
 	}
 
-	break(){//Overwrite this function and call break then add custom functions
-		this.onBreak();
+	dropItem(){
 		if(this.droppedItemId != null){
 			let item = registry.getItemInstanceFromId(this.droppedItemId);
 			const amountOfDrops = randomIntFromInterval(this.dropNumberMin,this.dropNumberMax)
@@ -238,8 +257,12 @@ class Block {
 				item_entity.velocity.x = randomIntFromInterval(-3,3)/100;
 				item_entity.velocity.z = randomIntFromInterval(-3,3)/100;
 			}
-
 		}
+	}
+
+	break(){//Overwrite this function and call break then add custom functions
+		this.onBreak();
+		this.dropItem();
 	}
 	fallingCheck(){
 		let faces = world.get_block_faces(this.x, this.y, this.z)
