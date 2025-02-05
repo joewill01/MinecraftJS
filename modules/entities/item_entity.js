@@ -1,6 +1,7 @@
 class ItemEntity extends Entity{
 	constructor(x,y,z,item){
 		if(item.displayType == "2d"){
+			console.log(item)
 			var xySize = 0.35;
 			var zSize = 0.02
 
@@ -118,7 +119,11 @@ class ItemEntity extends Entity{
 		    }
 
 		    img.entity = this
-		    img.src = 'minecraft/textures/item/'+item.itemTexture
+			if(item.type == "block"){
+		    	img.src = 'minecraft/textures/block/'+item.itemTexture
+			}else{
+				img.src = 'minecraft/textures/item/'+item.itemTexture
+			}
 
 		}else{
 

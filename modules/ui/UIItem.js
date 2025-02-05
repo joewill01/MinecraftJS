@@ -137,7 +137,12 @@ class UIItem {
                 this.block_top.style.background = 'none';
                 this.block_right.style.background = 'none';
                 this.block_front.style.background = 'none';
-                this.item_image.style.backgroundImage = `url(minecraft/textures/item/${this.item_slot.item.itemTexture})`;
+                if(this.item_slot.item.type == "block"){
+                    this.item_image.style.backgroundImage = `url(minecraft/textures/block/${this.item_slot.item.itemTexture})`;
+                }else{
+                    this.item_image.style.backgroundImage = `url(minecraft/textures/item/${this.item_slot.item.itemTexture})`;
+                }
+                
             } else {
                 this.block_top.style.backgroundImage = `url(minecraft/textures/block/${this.item_slot.item.blockTextures['U']})`;
                 this.block_right.style.background = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("minecraft/textures/block/${this.item_slot.item.blockTextures['N']}")`;
