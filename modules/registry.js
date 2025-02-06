@@ -17,6 +17,8 @@ class Registry{
 		this.particleBuffer = [];
 
 		this.entityBuffer = [];
+
+		this.blockConfig = {};
 	}
 
 	_registerBlockTexture(texName){

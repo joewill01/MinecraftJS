@@ -29,6 +29,14 @@ class Torch extends Block{
     }
 
     render(chunk_geom){
+
+		const block_config = Block.resolveConfig(this.pathprefix+"/"+this.name);
+
+		if (!Block.logged && this.name == "torch") {
+			console.log("Block config:", block_config);
+			Block.logged = true;
+		}
+
         this.spawnParticles();
         let faces = world.get_block_faces(this.x, this.y, this.z)
 

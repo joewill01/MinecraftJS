@@ -11,6 +11,7 @@ class Block {
 		this.name = "base"
 		this.displayName = "Not Named"
 		this.prefferedTool = null; // shovel, axe, pickaxe, shears, hoe, sword
+		this.pathprefix = "block"
 
 		//Should be changed
 		this.hardness = 0; // difficulty to mine. 0 is instant mine -1 is unbreakable. any positive number determines time
@@ -37,7 +38,106 @@ class Block {
 		this.hitbox = true;
 	}
 
+	static fileCache = {}; // Stores already-loaded files
+	static configCache = {}; // Stores already-loaded JSON files
+
+	static logged = false;
+
+    static loadConfig(file) {
+        if (!Block.fileCache[file]) {
+            const request = new XMLHttpRequest();
+            request.open("GET", file, false); // Synchronous request
+            request.send(null);
+
+            if (request.status === 200) {
+                Block.fileCache[file] = JSON.parse(request.responseText);
+				console.log(JSON.parse(request.responseText))
+            } else {
+                throw new Error(`Failed to load config file: ${file}`);
+            }
+        }
+        return Block.fileCache[file]; // Return cached config
+    }
+
+	static resolveConfig(path) {
+		if (!Block.configCache[path]) {
+			let config = Block.loadConfig(`minecraft/models/${path}.json`);
+
+			// If this block has a parent, recursively load and merge the parent first
+			if (config.parent) {
+				let parentConfig = Block.resolveConfig(config.parent); // Recursive call
+				config = Block.deepMerge(parentConfig, config);
+			}
+
+			const configWithPlaceholders = Block.resolvePlaceholders(config);
+
+			Block.configCache[path] = configWithPlaceholders;
+
+			return configWithPlaceholders;
+		}
+		
+		return Block.configCache[path];
+    }
+
+	static deepMerge(parent, child) {
+        if (!parent) return child;
+        if (!child) return parent;
+
+        let merged = Array.isArray(parent) ? [...parent] : { ...parent };
+
+        for (let key in child) {
+            if (child[key] instanceof Object && !Array.isArray(child[key])) {
+                merged[key] = Block.deepMerge(parent[key], child[key]); // Recursively merge objects
+            } else if (Array.isArray(child[key])) {
+                let parentArray = parent[key] || [];
+                let childArray = child[key];
+
+                let mergedArray = [...parentArray]; // Copy parent list
+                for (let item of childArray) {
+                    if (!parentArray.includes(item)) mergedArray.push(item); // Avoid duplicates
+                }
+                merged[key] = mergedArray;
+            } else {
+                merged[key] = child[key]; // Overwrite primitive values
+            }
+        }
+		return merged;
+    }
+
+	static resolvePlaceholders(config, referenceData = null) {
+        if (!referenceData) referenceData = config; // Use self if no reference is provided
+
+        if (typeof config === "string") {
+            if (config.startsWith("#")) {
+                let key = config.substring(1);
+                return referenceData.textures?.[key] || config; // Replace if found, otherwise keep placeholder
+            }
+            return config;
+        }
+
+        if (Array.isArray(config)) {
+            return config.map(item => Block.resolvePlaceholders(item, referenceData));
+        }
+
+        if (typeof config === "object" && config !== null) {
+            let resolved = {};
+            for (let key in config) {
+                resolved[key] = Block.resolvePlaceholders(config[key], referenceData);
+            }
+            return resolved;
+        }
+
+        return config;
+    }
+
 	render(chunk_geom){
+
+		const block_config = Block.resolveConfig(this.pathprefix+"/"+this.name);
+
+		if (!Block.logged && this.name == "bedrock") {
+			console.log("Block config:", block_config);
+			Block.logged = true;
+		}
 
 		let faces = world.get_block_faces(this.x, this.y, this.z)
 
@@ -51,86 +151,104 @@ class Block {
 			}
 		}
 
+		const around_faces_for_sideS = [
+			blocks_around[7],
+			blocks_around[11],
+			blocks_around[19],
+			blocks_around[6],
+			blocks_around[18],
+			blocks_around[5],
+			blocks_around[10],
+			blocks_around[17]
+		];
+
+		const around_faces_for_sideN = [
+			blocks_around[0],
+			blocks_around[8],
+			blocks_around[12],
+			blocks_around[1],
+			blocks_around[13],
+			blocks_around[2],
+			blocks_around[9],
+			blocks_around[14]
+		];
+
+		const around_faces_for_sideE = [
+			blocks_around[2],
+			blocks_around[9],
+			blocks_around[14],
+			blocks_around[4],
+			blocks_around[16],
+			blocks_around[7],
+			blocks_around[11],
+			blocks_around[19]
+		];
+
+		const around_faces_for_sideW = [
+			blocks_around[5],
+			blocks_around[10],
+			blocks_around[17],
+			blocks_around[3],
+			blocks_around[15],
+			blocks_around[0],
+			blocks_around[8],
+			blocks_around[12]
+		];
+
+		const around_faces_for_sideD = [
+			blocks_around[14],
+			blocks_around[13],
+			blocks_around[12],
+			blocks_around[16],
+			blocks_around[15],
+			blocks_around[19],
+			blocks_around[18],
+			blocks_around[17]
+		];
+
+		const around_faces_for_sideU = [
+			blocks_around[0],
+			blocks_around[1],
+			blocks_around[2],
+			blocks_around[3],
+			blocks_around[4],
+			blocks_around[5],
+			blocks_around[6],
+			blocks_around[7]
+		]; 
+
 		if(shouldPlaceFace(faces.S)){
-			around_faces_for_side = [
-				blocks_around[7],
-				blocks_around[11],
-				blocks_around[19],
-				blocks_around[6],
-				blocks_around[18],
-				blocks_around[5],
-				blocks_around[10],
-				blocks_around[17]
-			];
-			setPlane("y",  Math.PI * 0.5, this.texture_names["S"], this, "S", around_faces_for_side, true); //side
+			setPlane("y", this.texture_names["S"], this, "S", around_faces_for_sideS, true); //side
 		}
 		if(shouldPlaceFace(faces.N)){
-			around_faces_for_side = [
-				blocks_around[0],
-				blocks_around[8],
-				blocks_around[12],
-				blocks_around[1],
-				blocks_around[13],
-				blocks_around[2],
-				blocks_around[9],
-				blocks_around[14]
-			];
-			setPlane("y", -Math.PI * 0.5, this.texture_names["N"] , this, "N", around_faces_for_side, true); //side
+			setPlane("y", this.texture_names["N"] , this, "N", around_faces_for_sideN, true); //side
 		}
 		if(shouldPlaceFace(faces.E)){
-			around_faces_for_side = [
-				blocks_around[2],
-				blocks_around[9],
-				blocks_around[14],
-				blocks_around[4],
-				blocks_around[16],
-				blocks_around[7],
-				blocks_around[11],
-				blocks_around[19]
-			];
-			setPlane("y",  0, this.texture_names["E"] , this, "E", around_faces_for_side, true); //side
+			setPlane("y", this.texture_names["E"] , this, "E", around_faces_for_sideE, true); //side
 		}
 		if(shouldPlaceFace(faces.W)){
-			around_faces_for_side = [
-				blocks_around[5],
-				blocks_around[10],
-				blocks_around[17],
-				blocks_around[3],
-				blocks_around[15],
-				blocks_around[0],
-				blocks_around[8],
-				blocks_around[12]
-			];
-			setPlane("y",  Math.PI, this.texture_names["W"] , this, "W", around_faces_for_side, true);// side
+			setPlane("y", this.texture_names["W"] , this, "W", around_faces_for_sideW, true);// side
 		}
 		if(shouldPlaceFace(faces.D)){
-			around_faces_for_side = [
-				blocks_around[14],
-				blocks_around[13],
-				blocks_around[12],
-				blocks_around[16],
-				blocks_around[15],
-				blocks_around[19],
-				blocks_around[18],
-				blocks_around[17]
-			];
-			setPlane("x",  Math.PI * 0.5, this.texture_names["D"] , this, "D", around_faces_for_side, true); //bottom
+			setPlane("x", this.texture_names["D"] , this, "D", around_faces_for_sideD, true); //bottom
 		}
 		if(shouldPlaceFace(faces.U)){
-			around_faces_for_side = [
-				blocks_around[0],
-				blocks_around[1],
-				blocks_around[2],
-				blocks_around[3],
-				blocks_around[4],
-				blocks_around[5],
-				blocks_around[6],
-				blocks_around[7]
-			]; 
-			setPlane("x", -Math.PI * 0.5, this.texture_names["U"] , this, "U", around_faces_for_side, true); //top
+			setPlane("x", this.texture_names["U"] , this, "U", around_faces_for_sideU, true); //top
 		}
 	
-		function setPlane(axis, angle, texture_name, obj, name, blocks_around_face, ao) {
+		function setPlane(axis, texture_name, obj, name, blocks_around_face, ao) {
+
+			const angles = {
+				"S": Math.PI * 0.5,
+				"N": -Math.PI * 0.5,
+				"E": 0,
+				"W": Math.PI,
+				"D": Math.PI * 0.5,
+				"U": -Math.PI * 0.5
+			}
+
+			const angle = angles[name];
+
 			let mat_index = registry.registerMaterial(texture_name, obj.solid)
 			let material = registry.materials[mat_index]
 
