@@ -1,14 +1,6 @@
 class Stone extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'stone.png',
-			'S': 'stone.png',
-			'E': 'stone.png',
-			'W': 'stone.png',
-			'U': 'stone.png',
-			'D': 'stone.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 5;
 		this.name = "stone"

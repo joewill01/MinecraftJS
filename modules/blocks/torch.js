@@ -1,14 +1,6 @@
 class Torch extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'torch.png',
-			'S': 'torch.png',
-			'E': 'torch.png',
-			'W': 'torch.png',
-			'U': 'torch.png',
-			'D': 'torch.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 30;
 		this.name = "torch"

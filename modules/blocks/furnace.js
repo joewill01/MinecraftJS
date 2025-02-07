@@ -1,14 +1,6 @@
 class Furnace extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'furnace_front.png',
-			'S': 'furnace_side.png',
-			'E': 'furnace_side.png',
-			'W': 'furnace_side.png',
-			'U': 'furnace_top.png',
-			'D': 'furnace_top.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 11;
 		this.name = "furnace"

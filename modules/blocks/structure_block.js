@@ -1,14 +1,6 @@
 class StructureBlock extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'structure_block_save.png',
-			'S': 'structure_block_save.png',
-			'E': 'structure_block_save.png',
-			'W': 'structure_block_save.png',
-			'U': 'structure_block_save.png',
-			'D': 'structure_block_save.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 6;
 		this.name = "structure_block"

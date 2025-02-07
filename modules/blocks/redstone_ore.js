@@ -1,14 +1,6 @@
 class RedstoneOre extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'redstone_ore.png',
-			'S': 'redstone_ore.png',
-			'E': 'redstone_ore.png',
-			'W': 'redstone_ore.png',
-			'U': 'redstone_ore.png',
-			'D': 'redstone_ore.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 15;
 		this.name = "redstone_ore"

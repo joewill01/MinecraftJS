@@ -1,14 +1,6 @@
 class AcaciaLeaves extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'acacia_leaves.png',
-			'S': 'acacia_leaves.png',
-			'E': 'acacia_leaves.png',
-			'W': 'acacia_leaves.png',
-			'U': 'acacia_leaves.png',
-			'D': 'acacia_leaves.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 25;
 		this.name = "acacia_leaves";

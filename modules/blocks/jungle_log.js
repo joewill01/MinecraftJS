@@ -1,14 +1,6 @@
 class JungleLog extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'jungle_log.png',
-			'S': 'jungle_log.png',
-			'E': 'jungle_log.png',
-			'W': 'jungle_log.png',
-			'U': 'jungle_log_top.png',
-			'D': 'jungle_log_top.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 20;
 		this.name = "jungle_log"

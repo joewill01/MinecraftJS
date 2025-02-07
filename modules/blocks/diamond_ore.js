@@ -1,14 +1,6 @@
 class DiamondOre extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'diamond_ore.png',
-			'S': 'diamond_ore.png',
-			'E': 'diamond_ore.png',
-			'W': 'diamond_ore.png',
-			'U': 'diamond_ore.png',
-			'D': 'diamond_ore.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 14;
 		this.name = "diamond_ore"

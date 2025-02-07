@@ -1,14 +1,6 @@
 class OakLog extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'oak_log.png',
-			'S': 'oak_log.png',
-			'E': 'oak_log.png',
-			'W': 'oak_log.png',
-			'U': 'oak_log_top.png',
-			'D': 'oak_log_top.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 2;
 		this.name = "oak_log"

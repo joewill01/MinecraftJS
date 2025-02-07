@@ -1,14 +1,6 @@
 class CoalOre extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'coal_ore.png',
-			'S': 'coal_ore.png',
-			'E': 'coal_ore.png',
-			'W': 'coal_ore.png',
-			'U': 'coal_ore.png',
-			'D': 'coal_ore.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 12;
 		this.name = "coal_ore"

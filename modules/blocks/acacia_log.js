@@ -1,14 +1,6 @@
 class AcaciaLog extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'acacia_log.png',
-			'S': 'acacia_log.png',
-			'E': 'acacia_log.png',
-			'W': 'acacia_log.png',
-			'U': 'acacia_log_top.png',
-			'D': 'acacia_log_top.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 24;
 		this.name = "acacia_log"

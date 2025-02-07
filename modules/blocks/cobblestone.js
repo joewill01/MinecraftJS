@@ -1,14 +1,6 @@
 class Cobblestone extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'cobblestone.png',
-			'S': 'cobblestone.png',
-			'E': 'cobblestone.png',
-			'W': 'cobblestone.png',
-			'U': 'cobblestone.png',
-			'D': 'cobblestone.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 8;
 		this.name = "cobblestone"

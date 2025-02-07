@@ -1,7 +1,6 @@
 class Anvil extends Block{
 	constructor(x,y,z,ctex){
-        let textures = {}
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 31;
 		this.name = "anvil"

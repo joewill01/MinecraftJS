@@ -1,14 +1,6 @@
 class IronOre extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'iron_ore.png',
-			'S': 'iron_ore.png',
-			'E': 'iron_ore.png',
-			'W': 'iron_ore.png',
-			'U': 'iron_ore.png',
-			'D': 'iron_ore.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 10;
 		this.name = "iron_ore"

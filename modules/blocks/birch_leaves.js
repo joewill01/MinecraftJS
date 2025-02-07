@@ -1,14 +1,6 @@
 class BirchLeaves extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'birch_leaves.png',
-			'S': 'birch_leaves.png',
-			'E': 'birch_leaves.png',
-			'W': 'birch_leaves.png',
-			'U': 'birch_leaves.png',
-			'D': 'birch_leaves.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 19;
 		this.name = "birch_leaves";

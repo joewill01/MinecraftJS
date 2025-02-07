@@ -1,14 +1,6 @@
 class DarkOakLeaves extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'dark_oak_leaves.png',
-			'S': 'dark_oak_leaves.png',
-			'E': 'dark_oak_leaves.png',
-			'W': 'dark_oak_leaves.png',
-			'U': 'dark_oak_leaves.png',
-			'D': 'dark_oak_leaves.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 27;
 		this.name = "dark_oak_leaves";

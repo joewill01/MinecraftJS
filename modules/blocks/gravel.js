@@ -1,14 +1,6 @@
 class Gravel extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'gravel.png',
-			'S': 'gravel.png',
-			'E': 'gravel.png',
-			'W': 'gravel.png',
-			'U': 'gravel.png',
-			'D': 'gravel.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 		this.fallingCheck()
 		this.ID = 29;
 		this.name = "gravel"

@@ -1,14 +1,6 @@
 class OakPlanks extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'oak_planks.png',
-			'S': 'oak_planks.png',
-			'E': 'oak_planks.png',
-			'W': 'oak_planks.png',
-			'U': 'oak_planks.png',
-			'D': 'oak_planks.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 9;
 		this.name = "oak_planks"

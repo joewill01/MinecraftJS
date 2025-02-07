@@ -1,9 +1,8 @@
 class Block {
-	constructor(x,y,z,texture_names,ctex) {
+	constructor(x,y,z,ctex) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.texture_names = texture_names;
 		this.ctex = ctex;//chunk_textures list from world
 
 		//Must be changed for new blocks

@@ -1,14 +1,6 @@
 class LapisLazuliOre extends Block{
 	constructor(x,y,z,ctex){
-		let textures = {
-			'N': 'lapis_ore.png',
-			'S': 'lapis_ore.png',
-			'E': 'lapis_ore.png',
-			'W': 'lapis_ore.png',
-			'U': 'lapis_ore.png',
-			'D': 'lapis_ore.png',
-		};
-		super(x,y,z,textures,ctex);
+		super(x,y,z,ctex);
 
 		this.ID = 17;
 		this.name = "lapis_lazuli_ore"
