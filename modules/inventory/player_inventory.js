@@ -46,6 +46,7 @@ class PlayerInventory extends Inventory {
 		this.item_slots[7].item = new DiamondOreItem();
 		this.item_slots[8].item = new FurnaceItem();
 		this.item_slots[9].item = new TorchItem();
+		this.item_slots[10].item = new AnvilItem();
 
 		this.item_slots[0].amount = 1;
 		this.item_slots[1].amount = 1;
@@ -57,6 +58,7 @@ class PlayerInventory extends Inventory {
 		this.item_slots[7].amount = 1;
 		this.item_slots[8].amount = 1;
 		this.item_slots[9].amount = 64;
+		this.item_slots[10].amount = 64;
 
 	}
 	addItem(item,amount){

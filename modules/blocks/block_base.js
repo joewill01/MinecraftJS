@@ -136,7 +136,7 @@ class Block {
 
 		const block_config = Block.resolveConfig(this.pathprefix+"/"+this.name);
 
-		if (!Block.logged && this.name == "oak_leaves") {
+		if (!Block.logged && this.name == "anvil") {
 			console.log("Block config:", block_config);
 			Block.logged = true;
 		}
@@ -246,19 +246,53 @@ class Block {
 			}
 		});
 
-		function modifyUvs(geom, x1, y1, x2, y2, verticalFace) {
-			if(verticalFace){
-				y1 = 16-y1;
-				y2 = 16-y2;
+		function modifyUvs(geom, x1, y1, x2, y2, verticalFace, rotation = 0) {
+			// Adjust for vertical face if needed (flip y-axis)
+			if (verticalFace) {
+				y1 = 16 - y1;
+				y2 = 16 - y2;
 			}
-			geom.faceVertexUvs[0][0][0].set(x1/16, y2/16);
-			geom.faceVertexUvs[0][0][1].set(x1/16, y1/16);
-			geom.faceVertexUvs[0][0][2].set(x2/16, y2/16);
-
-			geom.faceVertexUvs[0][1][0].set(x1/16, y1/16);
-			geom.faceVertexUvs[0][1][1].set(x2/16, y1/16);
-			geom.faceVertexUvs[0][1][2].set(x2/16, y2/16);
+		
+			// Normalize the x and y coordinates by dividing by 16 (assuming texture size of 16x16)
+			x1 /= 16;
+			y1 /= 16;
+			x2 /= 16;
+			y2 /= 16;
+		
+			// Apply rotation logic
+			// switch (rotation) {
+			// 	case 90:
+			// 		console.log("90")
+			// 		// Rotate 90 degrees (swap x and y, invert y)
+			// 		[x1, y1, x2] = [y1, 1 - x1, y2];
+			// 		break;
+			// 	case 180:
+			// 		// Rotate 180 degrees (invert both x and y)
+			// 		x1 = 1 - x1;
+			// 		x2 = 1 - x2;
+			// 		y1 = 1 - y1;
+			// 		y2 = 1 - y2;
+			// 		break;
+			// 	case 270:
+			// 		// Rotate 270 degrees (swap x and y, invert x)
+			// 		[x1, y1, x2] = [1 - y1, x1, 1 - y2];
+			// 		break;
+			// 	case 0:
+			// 	default:
+			// 		// No rotation (do nothing)
+			// 		break;
+			// }
+		
+			// Update the UV coordinates for the geometry faces
+			geom.faceVertexUvs[0][0][0].set(x1, y2);  // First triangle
+			geom.faceVertexUvs[0][0][1].set(x1, y1);  // First triangle
+			geom.faceVertexUvs[0][0][2].set(x2, y2);  // First triangle
+		
+			geom.faceVertexUvs[0][1][0].set(x1, y1);  // Second triangle
+			geom.faceVertexUvs[0][1][1].set(x2, y1);  // Second triangle
+			geom.faceVertexUvs[0][1][2].set(x2, y2);  // Second triangle
 		}
+		
 
 		function getFaceSize(name, element) {
 			switch (name) {
@@ -307,40 +341,44 @@ class Block {
 					plane.position.y += 0.0001;
 					break;
 				case "W":
-					// positive z brings it closer to center
-					// y and x are up down, left right
-					plane.position.z += (element.from[0])/16;
-					//TODO: Add x and y
+					currentY = 8 - (faceSize.y/2);
+					currentX = 8 - (faceSize.x/2);
+					plane.position.z += (16 - element.to[0])/16;
+					plane.position.y -= (currentY - element.from[1])/16;
+					plane.position.x -= (currentX - element.from[2])/16;		
 
 					//Flash offset
 					plane.position.z += 0.0001;
 					break;
 				case "E":
-					// negative z brings it closer to center
-					// y and x are up down, left right
+					currentY = 8 - (faceSize.y/2);
+					currentX = 8 - (faceSize.x/2);
 					plane.position.z -= (16 - element.to[0])/16;
-					//TODO: Add x and y
+					plane.position.y -= (currentY - element.from[1])/16;
+					plane.position.x -= (currentX - element.from[2])/16;					
 
 					//Flash offset
 					plane.position.z -= 0.0001;
 					break;
 				case "N":
-					// positive x brings it closer to center
-					// y and z are up down, left right
-					//TODO: Add y and z
+					currentY = 8 - (faceSize.y/2);
+					currentZ = 8 - (faceSize.x/2);
 					plane.position.x += (element.from[2])/16;
+					plane.position.y -= (currentY - element.from[1])/16;
+					plane.position.z -= (currentZ - element.from[0])/16;
 
 					//Flash offset
 					plane.position.x += 0.0001;
 					break;
 				case "S":
-					// negative x brings it closer to center
-					// y and z are up down, left right
-					//TODO: Add y and z
-					plane.position.x -= (16 - element.to[2])/16;
+					currentY = 8 - (faceSize.y/2);
+					currentZ = 8 - (faceSize.x/2);
+					plane.position.x -= (element.from[2])/16;
+					plane.position.y -= (currentY - element.from[1])/16;
+					plane.position.z -= (currentZ - element.from[0])/16;
 
 					//Flash offset
-					plane.position.x -= 0.0001;
+					plane.position.x += 0.0001;
 					break;
 			}
 		}
@@ -408,13 +446,17 @@ class Block {
 			if(faceSize == undefined){
 				planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
 			}else {
-				planeGeom = new THREE.PlaneGeometry(faceSize.x/16 - 0.0001, faceSize.y/16 - 0.0001, 1, 1);
+				if(name == "U" || name == "D"){
+					planeGeom = new THREE.PlaneGeometry(faceSize.y/16 - 0.0001, faceSize.x/16 - 0.0001, 1, 1);
+				}else{
+					planeGeom = new THREE.PlaneGeometry(faceSize.x/16 - 0.0001, faceSize.y/16 - 0.0001, 1, 1);
+				}
 			}
 
 			
 
 			if(faceConfig.uv != undefined){
-				modifyUvs(planeGeom, faceConfig.uv[0], faceConfig.uv[1], faceConfig.uv[2], faceConfig.uv[3], name == "U" || name == "D");
+				modifyUvs(planeGeom, faceConfig.uv[0], faceConfig.uv[1], faceConfig.uv[2], faceConfig.uv[3], name == "U" || name == "D", faceConfig.rotation??0);
 			}
 
 			function blockNeedAO(block){
