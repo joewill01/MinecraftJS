@@ -247,51 +247,60 @@ class Block {
 		});
 
 		function modifyUvs(geom, x1, y1, x2, y2, verticalFace, rotation = 0) {
-			// Adjust for vertical face if needed (flip y-axis)
+			// Flip Y-axis if it's a vertical face
 			if (verticalFace) {
 				y1 = 16 - y1;
 				y2 = 16 - y2;
 			}
 		
-			// Normalize the x and y coordinates by dividing by 16 (assuming texture size of 16x16)
+			// Normalize UV coordinates (assuming texture size is 16x16)
 			x1 /= 16;
 			y1 /= 16;
 			x2 /= 16;
 			y2 /= 16;
 		
-			// Apply rotation logic
-			// switch (rotation) {
-			// 	case 90:
-			// 		console.log("90")
-			// 		// Rotate 90 degrees (swap x and y, invert y)
-			// 		[x1, y1, x2] = [y1, 1 - x1, y2];
-			// 		break;
-			// 	case 180:
-			// 		// Rotate 180 degrees (invert both x and y)
-			// 		x1 = 1 - x1;
-			// 		x2 = 1 - x2;
-			// 		y1 = 1 - y1;
-			// 		y2 = 1 - y2;
-			// 		break;
-			// 	case 270:
-			// 		// Rotate 270 degrees (swap x and y, invert x)
-			// 		[x1, y1, x2] = [1 - y1, x1, 1 - y2];
-			// 		break;
-			// 	case 0:
-			// 	default:
-			// 		// No rotation (do nothing)
-			// 		break;
-			// }
+			let uv00, uv01, uv10, uv11; // Four UV corners
 		
-			// Update the UV coordinates for the geometry faces
-			geom.faceVertexUvs[0][0][0].set(x1, y2);  // First triangle
-			geom.faceVertexUvs[0][0][1].set(x1, y1);  // First triangle
-			geom.faceVertexUvs[0][0][2].set(x2, y2);  // First triangle
+			switch (rotation) {
+				case 90:
+					uv00 = [x2, y1];  // Bottom-left → Bottom-right
+					uv01 = [x1, y1];  // Top-left → Bottom-left
+					uv10 = [x2, y2];  // Bottom-right → Top-right
+					uv11 = [x1, y2];  // Top-right → Top-left
+					break;
+				case 180:
+					uv00 = [x2, y2];  // Bottom-left → Top-right
+					uv01 = [x1, y2];  // Top-left → Top-left
+					uv10 = [x2, y1];  // Bottom-right → Bottom-right
+					uv11 = [x1, y1];  // Top-right → Bottom-left
+					break;
+				case 270:
+					uv00 = [x1, y2];  // Bottom-left → Top-left
+					uv01 = [x2, y2];  // Top-left → Top-right
+					uv10 = [x1, y1];  // Bottom-right → Bottom-left
+					uv11 = [x2, y1];  // Top-right → Bottom-right
+					break;
+				case 0:
+				default:
+					uv00 = [x1, y2];  // Fix: Swap y1 and y2 to correct default orientation
+					uv01 = [x1, y1];
+					uv10 = [x2, y2];
+					uv11 = [x2, y1];
+					break;
+			}
 		
-			geom.faceVertexUvs[0][1][0].set(x1, y1);  // Second triangle
-			geom.faceVertexUvs[0][1][1].set(x2, y1);  // Second triangle
-			geom.faceVertexUvs[0][1][2].set(x2, y2);  // Second triangle
+			// Apply the calculated UV mapping
+			geom.faceVertexUvs[0][0][0].set(...uv00);  // First triangle
+			geom.faceVertexUvs[0][0][1].set(...uv01);
+			geom.faceVertexUvs[0][0][2].set(...uv10);
+		
+			geom.faceVertexUvs[0][1][0].set(...uv01);  // Second triangle
+			geom.faceVertexUvs[0][1][1].set(...uv11);
+			geom.faceVertexUvs[0][1][2].set(...uv10);
+		
+			geom.uvsNeedUpdate = true;  // Ensure the update is applied
 		}
+		
 		
 
 		function getFaceSize(name, element) {
