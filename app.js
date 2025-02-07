@@ -86,7 +86,7 @@ function initScene(){
 
 	//SERVER OR CLIENT
 	world = new World()
-	let render_distance = 4;
+	let render_distance = 5;
 	chunkLoadManager = new ChunkLoadManager(player, render_distance)
 	chunkLoadManager.initial_load()
 
@@ -453,7 +453,7 @@ rendererStats.domElement.style.zIndex	= '100'
 document.body.appendChild( rendererStats.domElement )
 
 var frames = 0;
-var infinite_terrain = true;
+var infinite_terrain = false;
 
 function animate() {
 	frames+=1;
