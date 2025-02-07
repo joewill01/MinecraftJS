@@ -20,5 +20,7 @@ class OakLeaves extends Block{
 		this.needsRandomTick = true;
 		this.hardness = 0.2
 		this.resistance = 0.2
+		this.colourMultiplier = 0x5E9D34;
+		this.layersToMultiply = {"N":[0], "S":[0], "E":[0], "W":[0], "U":[0], "D":[0]};
 	}
 }

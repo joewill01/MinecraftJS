@@ -37,6 +37,8 @@ class Block {
 		this.canFall = false;
 		this.hitbox = true;
 		this.solid = true;
+		this.colourMultiplier = null;
+		this.layersToMultiply = {"N":[], "S":[], "E":[], "W":[], "U":[], "D":[]};
 	}
 
 	static fileCache = {}; // Stores already-loaded files
@@ -223,26 +225,26 @@ class Block {
 			blocks_around[7]
 		]; 
 
-		for(let e of block_config.elements){
+		block_config.elements.forEach((e, elementIndex) => {
 			if(shouldPlaceFace(faces.S, e.faces.south)){
-				setPlane("y", e.faces.south, e, this, "S", around_faces_for_sideS, block_config.ambientocclusion ?? true); //side
+				setPlane("y", e.faces.south, e, elementIndex, this, "S", around_faces_for_sideS, block_config.ambientocclusion ?? true); //side
 			}
 			if(shouldPlaceFace(faces.N, e.faces.north)){
-				setPlane("y", e.faces.north, e, this, "N", around_faces_for_sideN, block_config.ambientocclusion ?? true); //side
+				setPlane("y", e.faces.north, e, elementIndex, this, "N", around_faces_for_sideN, block_config.ambientocclusion ?? true); //side
 			}
 			if(shouldPlaceFace(faces.E, e.faces.east)){
-				setPlane("y", e.faces.east, e, this, "E", around_faces_for_sideE, block_config.ambientocclusion ?? true); //side
+				setPlane("y", e.faces.east, e, elementIndex, this, "E", around_faces_for_sideE, block_config.ambientocclusion ?? true); //side
 			}
 			if(shouldPlaceFace(faces.W, e.faces.west)){
-				setPlane("y", e.faces.west, e, this, "W", around_faces_for_sideW, block_config.ambientocclusion ?? true);// side
+				setPlane("y", e.faces.west, e, elementIndex, this, "W", around_faces_for_sideW, block_config.ambientocclusion ?? true);// side
 			}
 			if(shouldPlaceFace(faces.D, e.faces.down)){
-				setPlane("x", e.faces.down, e, this, "D", around_faces_for_sideD, block_config.ambientocclusion ?? true); //bottom
+				setPlane("x", e.faces.down, e, elementIndex, this, "D", around_faces_for_sideD, block_config.ambientocclusion ?? true); //bottom
 			}
 			if(shouldPlaceFace(faces.U, e.faces.up)){
-				setPlane("x", e.faces.up, e, this, "U", around_faces_for_sideU, block_config.ambientocclusion ?? true); //top
+				setPlane("x", e.faces.up, e, elementIndex, this, "U", around_faces_for_sideU, block_config.ambientocclusion ?? true); //top
 			}
-		}
+		});
 
 		function modifyUvs(geom, x1, y1, x2, y2, verticalFace) {
 			if(verticalFace){
@@ -343,7 +345,7 @@ class Block {
 			}
 		}
 	
-		function setPlane(axis, faceConfig, elementConfig, obj, name, blocks_around_face, ao) {
+		function setPlane(axis, faceConfig, elementConfig, elementIndex, obj, name, blocks_around_face, ao) {
 
 			const angles = {
 				"S": Math.PI * 0.5,
@@ -459,8 +461,21 @@ class Block {
 			let br = new THREE.Color(finalLights.r + (AOMultiplier * brBlockCount),finalLights.g + (AOMultiplier * brBlockCount),finalLights.b + (AOMultiplier * brBlockCount))
 			
 
+			if(obj.colourMultiplier != null && obj.layersToMultiply[name].includes(elementIndex)){
+				const biomeColor = new THREE.Color(obj.colourMultiplier)
+
+				tl = tl.multiply(biomeColor)
+				tr = tr.multiply(biomeColor)
+				bl = bl.multiply(biomeColor)
+				br = br.multiply(biomeColor)
+			}
+			
+
 			planeGeom.faces[0].vertexColors.push(tl,bl,tr)
 			planeGeom.faces[1].vertexColors.push(bl,br,tr)
+			planeGeom.faces[0].color.r = 0;
+			planeGeom.faces[1].color.r = 0;
+
 			planeGeom.translate(0, 0, 0.5);
 			switch (axis) {
 		    	case 'y':

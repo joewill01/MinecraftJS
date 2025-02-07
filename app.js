@@ -86,7 +86,7 @@ function initScene(){
 
 	//SERVER OR CLIENT
 	world = new World()
-	let render_distance = 5;
+	let render_distance = 8;
 	chunkLoadManager = new ChunkLoadManager(player, render_distance)
 	chunkLoadManager.initial_load()
 

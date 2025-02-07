@@ -19,5 +19,7 @@ class GrassBlock extends Block {
 		this.resistance = 0.6;
 		this.droppedItemId = 12
 
+		this.colourMultiplier = 0x91BD59;
+		this.layersToMultiply = {"N":[1], "S":[1], "E":[1], "W":[1], "U":[0], "D":[0]};
 	}
 }
