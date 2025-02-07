@@ -175,6 +175,12 @@ class Registry{
 			case 31:
 				return new Anvil(x,y,z,ctex);
 				break;
+			case 32:
+				return new RedstoneTorch(x,y,z,ctex);
+				break;
+			case 33:
+				return new Comparator(x,y,z,ctex);
+				break;
 		}
 	}
 
@@ -324,6 +330,12 @@ class Registry{
 				break;
 			case 47:
 				return new AnvilItem();
+				break;
+			case 48:
+				return new RedstoneTorchItem();
+				break;
+			case 49:
+				return new ComparatorItem();
 				break;
 		}
 	}

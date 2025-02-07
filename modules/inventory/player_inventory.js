@@ -36,20 +36,22 @@ class PlayerInventory extends Inventory {
 
 		// add some test items to the hotbar
 
-		this.item_slots[0].item = new DiamondLeggingsItem();
-		this.item_slots[1].item = new CobblestoneItem();
-		this.item_slots[2].item = new IronOreItem();
+		this.item_slots[0].item = new TorchItem();
+		this.item_slots[1].item = new AnvilItem();
+		this.item_slots[2].item = new RedstoneTorchItem();
 		this.item_slots[3].item = new IronOreItem();
 		this.item_slots[4].item = new LapisLazuliOreItem();
 		this.item_slots[5].item = new CoalOreItem();
 		this.item_slots[6].item = new GoldOreItem();
 		this.item_slots[7].item = new DiamondOreItem();
 		this.item_slots[8].item = new FurnaceItem();
-		this.item_slots[9].item = new TorchItem();
-		this.item_slots[10].item = new AnvilItem();
+		this.item_slots[9].item = new DiamondLeggingsItem();
+		this.item_slots[10].item = new CobblestoneItem();
+		this.item_slots[11].item = new IronOreItem();
+		
 
-		this.item_slots[0].amount = 1;
-		this.item_slots[1].amount = 1;
+		this.item_slots[0].amount = 64;
+		this.item_slots[1].amount = 64;
 		this.item_slots[2].amount = 48;
 		this.item_slots[3].amount = 48;
 		this.item_slots[4].amount = 1;
@@ -57,8 +59,9 @@ class PlayerInventory extends Inventory {
 		this.item_slots[6].amount = 1;
 		this.item_slots[7].amount = 1;
 		this.item_slots[8].amount = 1;
-		this.item_slots[9].amount = 64;
-		this.item_slots[10].amount = 64;
+		this.item_slots[9].amount = 1;
+		this.item_slots[10].amount = 1;
+		this.item_slots[11].amount = 48;
 
 	}
 	addItem(item,amount){
