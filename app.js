@@ -345,9 +345,11 @@ function getSelected(raycaster, mouse){
 		if (intersects.length >= 1){
 			if (intersects[0].distance <= 4){
 				lookingAt = intersects[ 0 ]
+				// console.log(lookingAt)
+				// console.log(lookingAt.face)
 				let pos = lookingAt.point
 				let normal = lookingAt.face.normal
-				//console.log(pos.x,pos.y,pos.z)
+				// console.log(pos.x,pos.y,pos.z)
 				normal.x = Math.round(normal.x)
 				normal.y = Math.round(normal.y)
 				normal.z = Math.round(normal.z)
@@ -358,39 +360,39 @@ function getSelected(raycaster, mouse){
 
 				if(normal.x==0 & normal.y==1 & normal.z==0){
 					lookingAt.face = "T"
-					pos.y -= 0.5
+					pos.y -= 0.4999
 					pos.x = Math.floor(pos.x + 0.5)
 					pos.z = Math.floor(pos.z + 0.5)
 				}else if(normal.x==0 & normal.y==-1 & normal.z==0){
 					//console.log("Bottom")
 					lookingAt.face = "B"
-					pos.y += 0.5
+					pos.y += 0.4999
 					pos.x = Math.floor(pos.x + 0.5)
 					pos.z = Math.floor(pos.z + 0.5)
 				}else if(normal.x==1 & normal.y==0 & normal.z==0){
 					//console.log("North")
 					lookingAt.face = "N"
 					pos.y = Math.floor(pos.y + 0.5)
-					pos.x -= 0.5
+					pos.x -= 0.4999
 					pos.z = Math.floor(pos.z + 0.5)
 				}else if(normal.x==-1 & normal.y==0 & normal.z==0){
 					//console.log("South")
 					lookingAt.face = "S"
 					pos.y = Math.floor(pos.y + 0.5)
-					pos.x += 0.5
+					pos.x += 0.4999
 					pos.z = Math.floor(pos.z + 0.5)
 				}else if(normal.x==0 & normal.y==0 & normal.z==1){
 					//console.log("East")
 					lookingAt.face = "E"
 					pos.y = Math.floor(pos.y + 0.5)
 					pos.x = Math.floor(pos.x + 0.5)
-					pos.z -= 0.5
+					pos.z -= 0.4999
 				}else if(normal.x==0 & normal.y==0 & normal.z==-1){
 					//console.log("West")
 					lookingAt.face = "W"
 					pos.y = Math.floor(pos.y + 0.5)
 					pos.x = Math.floor(pos.x + 0.5)
-					pos.z += 0.5
+					pos.z += 0.4999
 				}
 
 				//Fix spazzing
