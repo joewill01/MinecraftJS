@@ -13,5 +13,6 @@ class GrassBlock extends Block {
 
 		this.colourMultiplier = 0x91BD59;
 		this.layersToMultiply = {"N":[1], "S":[1], "E":[1], "W":[1], "U":[0], "D":[0]};
+		this.hasTransparentFaces = true;
 	}
 }

@@ -10,7 +10,7 @@ class Torch extends Block{
         this.lightSource = true;
         this.baseLightIntensity = 15;
         this.opacity = 0;
-		this.hasTransparentFaces = false;
+		this.hasTransparentFaces = true;
 		this.solid=false;
 
 		this.hitbox = false;

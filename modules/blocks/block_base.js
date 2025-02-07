@@ -38,6 +38,7 @@ class Block {
 		this.solid = true;
 		this.colourMultiplier = null;
 		this.layersToMultiply = {"N":[], "S":[], "E":[], "W":[], "U":[], "D":[]};
+		this.hasTransparentFaces = false;
 	}
 
 	static fileCache = {}; // Stores already-loaded files
@@ -336,7 +337,6 @@ class Block {
 					plane.position.z -= (currentZ - element.from[2])/16;
 
 					//Flash offset
-					plane.position.y -= 0.0001;
 					break;
 				case "D":
 					currentX = 8 - (faceSize.x/2);
@@ -346,7 +346,6 @@ class Block {
 					plane.position.z -= (currentZ - element.from[2])/16;
 
 					//Flash offset
-					plane.position.y += 0.0001;
 					break;
 				case "W":
 					currentY = 8 - (faceSize.y/2);
@@ -356,7 +355,6 @@ class Block {
 					plane.position.x -= (currentX - element.from[2])/16;		
 
 					//Flash offset
-					plane.position.z += 0.0001;
 					break;
 				case "E":
 					currentY = 8 - (faceSize.y/2);
@@ -366,7 +364,6 @@ class Block {
 					plane.position.x -= (currentX - element.from[2])/16;					
 
 					//Flash offset
-					plane.position.z -= 0.0001;
 					break;
 				case "N":
 					currentY = 8 - (faceSize.y/2);
@@ -376,7 +373,6 @@ class Block {
 					plane.position.z -= (currentZ - element.from[0])/16;
 
 					//Flash offset
-					plane.position.x += 0.0001;
 					break;
 				case "S":
 					currentY = 8 - (faceSize.y/2);
@@ -386,7 +382,6 @@ class Block {
 					plane.position.z -= (currentZ - element.from[0])/16;
 
 					//Flash offset
-					plane.position.x += 0.0001;
 					break;
 			}
 		}
@@ -404,7 +399,7 @@ class Block {
 
 			const angle = angles[name];
 
-			let mat_index = registry.registerMaterial(faceConfig.texture, !obj.hasTransparentFaces)
+			let mat_index = registry.registerMaterial(faceConfig.texture, obj.hasTransparentFaces)
 
 			//Lowest possible light level
 			const ambient = 0.14
@@ -455,9 +450,9 @@ class Block {
 				planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
 			}else {
 				if(name == "U" || name == "D"){
-					planeGeom = new THREE.PlaneGeometry(faceSize.y/16 - 0.0001, faceSize.x/16 - 0.0001, 1, 1);
+					planeGeom = new THREE.PlaneGeometry(faceSize.y/16, faceSize.x/16, 1, 1);
 				}else{
-					planeGeom = new THREE.PlaneGeometry(faceSize.x/16 - 0.0001, faceSize.y/16 - 0.0001, 1, 1);
+					planeGeom = new THREE.PlaneGeometry(faceSize.x/16, faceSize.y/16, 1, 1);
 				}
 			}
 
@@ -523,8 +518,6 @@ class Block {
 
 			planeGeom.faces[0].vertexColors.push(tl,bl,tr)
 			planeGeom.faces[1].vertexColors.push(bl,br,tr)
-			planeGeom.faces[0].color.r = 0;
-			planeGeom.faces[1].color.r = 0;
 
 			planeGeom.translate(0, 0, 0.5);
 			switch (axis) {

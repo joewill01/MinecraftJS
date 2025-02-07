@@ -360,45 +360,41 @@ function getSelected(raycaster, mouse){
 
 				if(normal.x==0 & normal.y==1 & normal.z==0){
 					lookingAt.face = "T"
-					pos.y -= 0.4999
+					pos.y -= 0.5
 					pos.x = Math.floor(pos.x + 0.5)
 					pos.z = Math.floor(pos.z + 0.5)
 				}else if(normal.x==0 & normal.y==-1 & normal.z==0){
 					//console.log("Bottom")
 					lookingAt.face = "B"
-					pos.y += 0.4999
+					pos.y += 0.5
 					pos.x = Math.floor(pos.x + 0.5)
 					pos.z = Math.floor(pos.z + 0.5)
 				}else if(normal.x==1 & normal.y==0 & normal.z==0){
 					//console.log("North")
 					lookingAt.face = "N"
 					pos.y = Math.floor(pos.y + 0.5)
-					pos.x -= 0.4999
+					pos.x -= 0.5
 					pos.z = Math.floor(pos.z + 0.5)
 				}else if(normal.x==-1 & normal.y==0 & normal.z==0){
 					//console.log("South")
 					lookingAt.face = "S"
 					pos.y = Math.floor(pos.y + 0.5)
-					pos.x += 0.4999
+					pos.x += 0.5
 					pos.z = Math.floor(pos.z + 0.5)
 				}else if(normal.x==0 & normal.y==0 & normal.z==1){
 					//console.log("East")
 					lookingAt.face = "E"
 					pos.y = Math.floor(pos.y + 0.5)
 					pos.x = Math.floor(pos.x + 0.5)
-					pos.z -= 0.4999
+					pos.z -= 0.5
 				}else if(normal.x==0 & normal.y==0 & normal.z==-1){
 					//console.log("West")
 					lookingAt.face = "W"
 					pos.y = Math.floor(pos.y + 0.5)
 					pos.x = Math.floor(pos.x + 0.5)
-					pos.z += 0.4999
+					pos.z += 0.5
 				}
 
-				//Fix spazzing
-				pos.x = Math.floor(pos.x + 0.00001)
-				pos.z = Math.floor(pos.z + 0.00001)
-				pos.y = Math.floor(pos.y + 0.00001)
 
 				selectionCube.position.x = pos.x
 				selectionCube.position.y = pos.y
