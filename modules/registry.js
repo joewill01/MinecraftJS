@@ -68,7 +68,7 @@ class Registry{
 	registerParticleMaterial(texture_name,transparent){
 		let texID = this.registerParticleTexture(texture_name)
 		if (!this.materialRegister.hasOwnProperty(texture_name)){
-			let material = new THREE.MeshBasicMaterial( {map: this.textures[texID],transparent: transparent} );
+			let material = new THREE.MeshBasicMaterial( {map: this.textures[texID],transparent: transparent, alphaTest: transparent ? 0.5 : null} );
 			this.materials.push(material);
 			this.materialRegister[texture_name] = this.materials.length-1;
 			return this.materials.length-1;
