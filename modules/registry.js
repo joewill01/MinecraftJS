@@ -23,7 +23,7 @@ class Registry{
 
 	_registerBlockTexture(texName){
 		if (!this.textureRegister.hasOwnProperty(texName)){
-			let texture = new THREE.TextureLoader().load(`minecraft/textures/block/${texName}`)
+			let texture = new THREE.TextureLoader().load(`minecraft/textures/${texName}.png`)
 			texture.magFilter = THREE.NearestFilter;
 			texture.minFilter = THREE.NearestFilter;
 			this.textures.push(texture);
@@ -41,7 +41,8 @@ class Registry{
 				map: this.textures[texID],
 				transparent: transparent, 
 				side: THREE.DoubleSide,
-				vertexColors: THREE.VertexColors
+				vertexColors: THREE.VertexColors,
+				alphaTest: transparent ? 0.5 : null
 			});
 			this.materials.push(material);
 			this.materialRegister[texture_name] = this.materials.length-1;

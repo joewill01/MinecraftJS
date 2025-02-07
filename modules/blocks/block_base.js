@@ -36,6 +36,7 @@ class Block {
 		this.opacity = 2; //0: transparent, 1: attenuates light, 2:opaque
 		this.canFall = false;
 		this.hitbox = true;
+		this.solid = true;
 	}
 
 	static fileCache = {}; // Stores already-loaded files
@@ -51,7 +52,6 @@ class Block {
 
             if (request.status === 200) {
                 Block.fileCache[file] = JSON.parse(request.responseText);
-				console.log(JSON.parse(request.responseText))
             } else {
                 throw new Error(`Failed to load config file: ${file}`);
             }
@@ -134,7 +134,7 @@ class Block {
 
 		const block_config = Block.resolveConfig(this.pathprefix+"/"+this.name);
 
-		if (!Block.logged && this.name == "bedrock") {
+		if (!Block.logged && this.name == "oak_leaves") {
 			console.log("Block config:", block_config);
 			Block.logged = true;
 		}
@@ -143,10 +143,16 @@ class Block {
 
 		let blocks_around = world.get_blocks_around_faces(this.x, this.y, this.z)
 
-		let around_faces_for_side;
+		function shouldPlaceFace(connectingBlock, faceConfig) {
+			if(faceConfig == undefined){
+				return false;
+			}
 
-		function shouldPlaceFace(block) {
-			if (block.ID == 0 || block.opacity == 0) {
+			if (faceConfig.cullface == undefined) {
+				return true;
+			}
+
+			if (connectingBlock.ID == 0 || connectingBlock.opacity == 0) {
 				return true;
 			}
 		}
@@ -217,26 +223,127 @@ class Block {
 			blocks_around[7]
 		]; 
 
-		if(shouldPlaceFace(faces.S)){
-			setPlane("y", this.texture_names["S"], this, "S", around_faces_for_sideS, true); //side
+		for(let e of block_config.elements){
+			if(shouldPlaceFace(faces.S, e.faces.south)){
+				setPlane("y", e.faces.south, e, this, "S", around_faces_for_sideS, block_config.ambientocclusion ?? true); //side
+			}
+			if(shouldPlaceFace(faces.N, e.faces.north)){
+				setPlane("y", e.faces.north, e, this, "N", around_faces_for_sideN, block_config.ambientocclusion ?? true); //side
+			}
+			if(shouldPlaceFace(faces.E, e.faces.east)){
+				setPlane("y", e.faces.east, e, this, "E", around_faces_for_sideE, block_config.ambientocclusion ?? true); //side
+			}
+			if(shouldPlaceFace(faces.W, e.faces.west)){
+				setPlane("y", e.faces.west, e, this, "W", around_faces_for_sideW, block_config.ambientocclusion ?? true);// side
+			}
+			if(shouldPlaceFace(faces.D, e.faces.down)){
+				setPlane("x", e.faces.down, e, this, "D", around_faces_for_sideD, block_config.ambientocclusion ?? true); //bottom
+			}
+			if(shouldPlaceFace(faces.U, e.faces.up)){
+				setPlane("x", e.faces.up, e, this, "U", around_faces_for_sideU, block_config.ambientocclusion ?? true); //top
+			}
 		}
-		if(shouldPlaceFace(faces.N)){
-			setPlane("y", this.texture_names["N"] , this, "N", around_faces_for_sideN, true); //side
+
+		function modifyUvs(geom, x1, y1, x2, y2, verticalFace) {
+			if(verticalFace){
+				y1 = 16-y1;
+				y2 = 16-y2;
+			}
+			geom.faceVertexUvs[0][0][0].set(x1/16, y2/16);
+			geom.faceVertexUvs[0][0][1].set(x1/16, y1/16);
+			geom.faceVertexUvs[0][0][2].set(x2/16, y2/16);
+
+			geom.faceVertexUvs[0][1][0].set(x1/16, y1/16);
+			geom.faceVertexUvs[0][1][1].set(x2/16, y1/16);
+			geom.faceVertexUvs[0][1][2].set(x2/16, y2/16);
 		}
-		if(shouldPlaceFace(faces.E)){
-			setPlane("y", this.texture_names["E"] , this, "E", around_faces_for_sideE, true); //side
+
+		function getFaceSize(name, element) {
+			switch (name) {
+				case "U": // Up (+Y)
+					return { x: element.to[0] - element.from[0], y: element.to[2] - element.from[2] }; // Size in X and Z
+				case "D": // Down (-Y)
+					return { x: element.to[0] - element.from[0], y: element.to[2] - element.from[2] }; // Size in X and Z
+				case "N": // North (-Z)
+					return { x: element.to[0] - element.from[0], y: element.to[1] - element.from[1] }; // Size in X and Y
+				case "S": // South (+Z)
+					return { x: element.to[0] - element.from[0], y: element.to[1] - element.from[1] }; // Size in X and Y
+				case "W": // West (-X)
+					return { x: element.to[2] - element.from[2], y: element.to[1] - element.from[1] }; // Size in Z and Y
+				case "E": // East (+X)
+					return { x: element.to[2] - element.from[2], y: element.to[1] - element.from[1] }; // Size in Z and Y
+				default:
+					console.warn(`Unknown face: ${name}`);
+					return { x: 0, y: 0 }; // Default fallback
+			}
 		}
-		if(shouldPlaceFace(faces.W)){
-			setPlane("y", this.texture_names["W"] , this, "W", around_faces_for_sideW, true);// side
-		}
-		if(shouldPlaceFace(faces.D)){
-			setPlane("x", this.texture_names["D"] , this, "D", around_faces_for_sideD, true); //bottom
-		}
-		if(shouldPlaceFace(faces.U)){
-			setPlane("x", this.texture_names["U"] , this, "U", around_faces_for_sideU, true); //top
+		
+
+		function offsetPlane(name, element, plane, faceSize){
+			let currentX;
+			let currentZ;
+			let currentY;
+			switch(name){
+				case "U":
+					currentX = 8 - (faceSize.x/2);
+					currentZ = 8 - (faceSize.y/2);
+					plane.position.y -= (16 - element.to[1])/16;
+					plane.position.x -= (currentX - element.from[0])/16;
+					plane.position.z -= (currentZ - element.from[2])/16;
+
+					//Flash offset
+					plane.position.y -= 0.0001;
+					break;
+				case "D":
+					currentX = 8 - (faceSize.x/2);
+					currentZ = 8 - (faceSize.y/2);
+					plane.position.y += (element.from[1])/16;
+					plane.position.x -= (currentX - element.from[0])/16;
+					plane.position.z -= (currentZ - element.from[2])/16;
+
+					//Flash offset
+					plane.position.y += 0.0001;
+					break;
+				case "W":
+					// positive z brings it closer to center
+					// y and x are up down, left right
+					plane.position.z += (element.from[0])/16;
+					//TODO: Add x and y
+
+					//Flash offset
+					plane.position.z += 0.0001;
+					break;
+				case "E":
+					// negative z brings it closer to center
+					// y and x are up down, left right
+					plane.position.z -= (16 - element.to[0])/16;
+					//TODO: Add x and y
+
+					//Flash offset
+					plane.position.z -= 0.0001;
+					break;
+				case "N":
+					// positive x brings it closer to center
+					// y and z are up down, left right
+					//TODO: Add y and z
+					plane.position.x += (element.from[2])/16;
+
+					//Flash offset
+					plane.position.x += 0.0001;
+					break;
+				case "S":
+					// negative x brings it closer to center
+					// y and z are up down, left right
+					//TODO: Add y and z
+					plane.position.x -= (16 - element.to[2])/16;
+
+					//Flash offset
+					plane.position.x -= 0.0001;
+					break;
+			}
 		}
 	
-		function setPlane(axis, texture_name, obj, name, blocks_around_face, ao) {
+		function setPlane(axis, faceConfig, elementConfig, obj, name, blocks_around_face, ao) {
 
 			const angles = {
 				"S": Math.PI * 0.5,
@@ -249,8 +356,7 @@ class Block {
 
 			const angle = angles[name];
 
-			let mat_index = registry.registerMaterial(texture_name, obj.solid)
-			let material = registry.materials[mat_index]
+			let mat_index = registry.registerMaterial(faceConfig.texture, !obj.hasTransparentFaces)
 
 			//Lowest possible light level
 			const ambient = 0.14
@@ -293,7 +399,21 @@ class Block {
 				b:(ambient*tint.b)+combinedLight
 			}
 
-			let planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
+			const faceSize = getFaceSize(name, elementConfig);
+
+			let planeGeom;
+
+			if(faceSize == undefined){
+				planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
+			}else {
+				planeGeom = new THREE.PlaneGeometry(faceSize.x/16 - 0.0001, faceSize.y/16 - 0.0001, 1, 1);
+			}
+
+			
+
+			if(faceConfig.uv != undefined){
+				modifyUvs(planeGeom, faceConfig.uv[0], faceConfig.uv[1], faceConfig.uv[2], faceConfig.uv[3], name == "U" || name == "D");
+			}
 
 			function blockNeedAO(block){
 				if(block == -1){
@@ -356,6 +476,8 @@ class Block {
 			plane.position.z = obj.z;
 			plane.blockClass = obj;
 		  	plane.name = name;
+
+			offsetPlane(name, elementConfig, plane, faceSize);
 
 		  	plane.updateMatrix();
 		  	chunk_geom.merge(planeGeom, plane.matrix, mat_index);
