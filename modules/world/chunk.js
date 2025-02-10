@@ -6,13 +6,25 @@ class Chunk{
 		this.z = z;
 		this.name = x.toString() + "_" + z.toString()
 		this.chunk_geom = null;
+		this.stage = 0; // 0 is just made, 1 is world shaped, 2 is decorated and ready to render, can only decorate if all surrounding chunks are at stage 2
+
+		this.worldHeightZoom = 100;
+		this.worldHeightScale = 10;
+		this.worldHeightRaise = 40;
+		this.worldHeightOffset = 999999999999999;
+
+		this.treeZoom = 100;
+		this.treeScale = 50;
+		this.treeOffset = 1000;
 	}
 
-	generate(){
-		let zoom = 100
-		let scale = 10
-		let raise = 40
-		let offset = 999999999999999
+	
+
+	worldShape(){
+		const whz = this.worldHeightZoom;
+		const whs = this.worldHeightScale;
+		const whr = this.worldHeightRaise;
+		const who = this.worldHeightOffset;
 
 		for (let y = 0; y < 257; y++){
 			for (let x = 0; x < 16; x++) {
@@ -24,32 +36,52 @@ class Chunk{
 		}
 		for (let x = 0; x < 16; x++) {
 			for (let z = 0; z < 16; z++) {
-				let height = Math.ceil(Math.abs(noise.perlin2((this.x*16+x+offset) / zoom, (this.z*16 + z + offset) / zoom)) * scale) + raise;
+				let height = Math.ceil(Math.abs(noise.perlin2((this.x*16+x+who) / whz, (this.z*16 + z + who) / whz)) * whs) + whr;
+				for (let y = 0; y <= height; y++){
+					this.cdata[y*256 + x*16 + z] = 5
+				}
+			}
+		}
+		this.stage = 1;
+	}
+
+	decorate(){
+		//If this is ran, all chunks around it have been world shaped
+
+		// height
+		const whz = this.worldHeightZoom;
+		const whs = this.worldHeightScale;
+		const whr = this.worldHeightRaise;
+		const who = this.worldHeightOffset;
+
+		//Trees
+		const tz = this.treeZoom;
+		const ts = this.treeScale;
+		const to = this.treeOffset;
+
+		for (let x = 0; x < 16; x++) {
+			for (let z = 0; z < 16; z++) {
+				let height = Math.ceil(Math.abs(noise.perlin2((this.x*16+x+who) / whz, (this.z*16 + z + who) / whz)) * whs) + whr;
+				// let tree = noise.perlin2((this.x*16+x+to) / tz, (this.z*16 + z + to) / tz) > 0.6
+				// console.log(tree)
 				for (let y = 0; y <= height; y++){
 					if(y==height){
 						this.cdata[y*256 + x*16 + z] = 1
-						// TREE
-						if (Math.floor(Math.random() * 100) == 1) {
-							this.buildTree(this.cdata, x*16, y*256, z);
-						}
-
-						// BIG STICK
-						if (Math.floor(Math.random() * 100000) == 1) {
-							this.buildBigStick(this.cdata, x*16, y*256, z);
-						}
 					}else if(y==height-1 || y==height-2 || y==height-3){
 						this.cdata[y*256 + x*16 + z] = 7
 					}else if(y==0){
 						this.cdata[y*256 + x*16 + z] = 4
-					}else{
-						this.cdata[y*256 + x*16 + z] = 5
 					}
 				}
+
+				// if(tree){
+				// 	let y = height + 1
+				// 	this.cdata[y*256 + x*16 + z] = 2;
+				// }
 			}
 		}
 
-		world.world[this.name] = this.cdata
-		this.render()
+		this.stage = 2;
 	}
 
 	buildTree(cdata, x, y, z) {
@@ -214,6 +246,7 @@ class Chunk{
 		chunk_mesh.name = this.name + "_mesh"
 		this.chunk_mesh = chunk_mesh
 		scene.add(chunk_mesh);
+		this.stage = 3;
 	}
 }
 

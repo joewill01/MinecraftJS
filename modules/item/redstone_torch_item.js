@@ -9,7 +9,7 @@ class RedstoneTorchItem extends Item{
 
 		this.hasDurability = false;
 
-		this.itemTexture = "redstone_torch.png";
+		this.itemTexture = "block/redstone_torch";
 		this.blockId = 32;
 	}
 }

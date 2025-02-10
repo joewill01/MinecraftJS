@@ -12,12 +12,12 @@ class GrassItem extends Item{
 		//If Block
 		this.blockId = 1;
 		this.blockTextures = {
-			'N': 'grass_block_side.png',
-			'S': 'grass_block_side.png',
-			'E': 'grass_block_side.png',
-			'W': 'grass_block_side.png',
-			'U': 'grass_block_top-NORMAL-BY-JOE.png',
-			'D': 'dirt.png',
+			'N': 'block/grass_block_side',
+			'S': 'block/grass_block_side',
+			'E': 'block/grass_block_side',
+			'W': 'block/grass_block_side',
+			'U': 'block/grass_block_top-NORMAL-BY-JOE',
+			'D': 'block/dirt',
 		};
 	}
 }

@@ -12,12 +12,12 @@ class AcaciaLeavesItem extends Item{
 		//If Block
 		this.blockId = 25;
 		this.blockTextures = {
-			'N': 'acacia_leaves.png',
-			'S': 'acacia_leaves.png',
-			'E': 'acacia_leaves.png',
-			'W': 'acacia_leaves.png',
-			'U': 'acacia_leaves.png',
-			'D': 'acacia_leaves.png',
+			'N': 'block/acacia_leaves',
+			'S': 'block/acacia_leaves',
+			'E': 'block/acacia_leaves',
+			'W': 'block/acacia_leaves',
+			'U': 'block/acacia_leaves',
+			'D': 'block/acacia_leaves',
 		};
 	}
 }

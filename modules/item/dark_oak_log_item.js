@@ -12,12 +12,12 @@ class DarkOakLogItem extends Item{
 		//If Block
 		this.blockId = 26;
 		this.blockTextures = {
-			'N': 'dark_oak_log.png',
-			'S': 'dark_oak_log.png',
-			'E': 'dark_oak_log.png',
-			'W': 'dark_oak_log.png',
-			'U': 'dark_oak_log_top.png',
-			'D': 'dark_oak_log_top.png',
+			'N': 'block/dark_oak_log',
+			'S': 'block/dark_oak_log',
+			'E': 'block/dark_oak_log',
+			'W': 'block/dark_oak_log',
+			'U': 'block/dark_oak_log_top',
+			'D': 'block/dark_oak_log_top',
 		};
 	}
 }

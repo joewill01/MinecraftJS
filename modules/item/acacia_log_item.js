@@ -12,12 +12,12 @@ class AcaciaLogItem extends Item{
 		//If Block
 		this.blockId = 24;
 		this.blockTextures = {
-			'N': 'acacia_log.png',
-			'S': 'acacia_log.png',
-			'E': 'acacia_log.png',
-			'W': 'acacia_log.png',
-			'U': 'acacia_log_top.png',
-			'D': 'acacia_log_top.png',
+			'N': 'block/acacia_log',
+			'S': 'block/acacia_log',
+			'E': 'block/acacia_log',
+			'W': 'block/acacia_log',
+			'U': 'block/acacia_log_top',
+			'D': 'block/acacia_log_top',
 		};
 	}
 }

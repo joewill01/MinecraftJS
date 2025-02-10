@@ -12,12 +12,12 @@ class DiamondOreItem extends Item{
 		//If Block
 		this.blockId = 14;
 		this.blockTextures = {
-			'N': 'diamond_ore.png',
-			'S': 'diamond_ore.png',
-			'E': 'diamond_ore.png',
-			'W': 'diamond_ore.png',
-			'U': 'diamond_ore.png',
-			'D': 'diamond_ore.png',
+			'N': 'block/diamond_ore',
+			'S': 'block/diamond_ore',
+			'E': 'block/diamond_ore',
+			'W': 'block/diamond_ore',
+			'U': 'block/diamond_ore',
+			'D': 'block/diamond_ore',
 		};
 	}
 }

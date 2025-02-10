@@ -12,12 +12,12 @@ class CoalOreItem extends Item{
 		//If Block
 		this.blockId = 12;
 		this.blockTextures = {
-			'N': 'coal_ore.png',
-			'S': 'coal_ore.png',
-			'E': 'coal_ore.png',
-			'W': 'coal_ore.png',
-			'U': 'coal_ore.png',
-			'D': 'coal_ore.png',
+			'N': 'block/coal_ore',
+			'S': 'block/coal_ore',
+			'E': 'block/coal_ore',
+			'W': 'block/coal_ore',
+			'U': 'block/coal_ore',
+			'D': 'block/coal_ore',
 		};
 	}
 }

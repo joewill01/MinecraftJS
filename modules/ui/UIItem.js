@@ -137,16 +137,12 @@ class UIItem {
                 this.block_top.style.background = 'none';
                 this.block_right.style.background = 'none';
                 this.block_front.style.background = 'none';
-                if(this.item_slot.item.type == "block"){
-                    this.item_image.style.backgroundImage = `url(minecraft/textures/block/${this.item_slot.item.itemTexture})`;
-                }else{
-                    this.item_image.style.backgroundImage = `url(minecraft/textures/item/${this.item_slot.item.itemTexture})`;
-                }
+                this.item_image.style.backgroundImage = `url(minecraft/textures/${this.item_slot.item.itemTexture}.png)`;
                 
             } else {
-                this.block_top.style.backgroundImage = `url(minecraft/textures/block/${this.item_slot.item.blockTextures['U']})`;
-                this.block_right.style.background = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("minecraft/textures/block/${this.item_slot.item.blockTextures['N']}")`;
-                this.block_front.style.background = `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("minecraft/textures/block/${this.item_slot.item.blockTextures['E']}")`;
+                this.block_top.style.backgroundImage = `url(minecraft/textures/${this.item_slot.item.blockTextures['U']}.png)`;
+                this.block_right.style.background = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("minecraft/textures/${this.item_slot.item.blockTextures['N']}.png")`;
+                this.block_front.style.background = `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url("minecraft/textures/${this.item_slot.item.blockTextures['E']}.png")`;
                 
                 this.block_top.style.backgroundSize = 'cover';
                 this.block_right.style.backgroundSize = 'cover';

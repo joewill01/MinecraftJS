@@ -7,7 +7,7 @@ class WoodenAxeItem extends Item{
 		this.displayName = "Wooden Axe"; 
 		this.type = "tool"; // material, tool, food, block, armour
 		this.allowedEnchants = [{"efficiency":5},{"fortune":3},{"silk_touch":1},{"unbreaking":3},{"mending":1},{"curse_of_vanishing":1},{"sharpness":5},{"smite":5},{"bane_of_arthropods":5},{"cleaving":3}];
-		this.itemTexture = "wooden_axe.png";
+		this.itemTexture = "wooden_axe";
 
 		this.stackable = false;
 		this.hasDurability = true;

@@ -6,7 +6,7 @@ class RawBeefItem extends Item{
 		this.name = "raw_beef";
 		this.displayName = "Raw Beef";
 		this.type = "food";
-		this.itemTexture = "beef.png";
+		this.itemTexture = "beef";
 
 		this.hasDurability = false;
 

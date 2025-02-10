@@ -12,12 +12,12 @@ class LapisLazuliOreItem extends Item{
 		//If Block
 		this.blockId = 17;
 		this.blockTextures = {
-			'N': 'lapis_ore.png',
-			'S': 'lapis_ore.png',
-			'E': 'lapis_ore.png',
-			'W': 'lapis_ore.png',
-			'U': 'lapis_ore.png',
-			'D': 'lapis_ore.png',
+			'N': 'block/lapis_ore',
+			'S': 'block/lapis_ore',
+			'E': 'block/lapis_ore',
+			'W': 'block/lapis_ore',
+			'U': 'block/lapis_ore',
+			'D': 'block/lapis_ore',
 		};
 	}
 }

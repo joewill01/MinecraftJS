@@ -12,12 +12,12 @@ class BirchLogItem extends Item{
 		//If Block
 		this.blockId = 2;
 		this.blockTextures = {
-			'N': 'birch_log.png',
-			'S': 'birch_log.png',
-			'E': 'birch_log.png',
-			'W': 'birch_log.png',
-			'U': 'birch_log_top.png',
-			'D': 'birch_log_top.png',
+			'N': 'block/birch_log',
+			'S': 'block/birch_log',
+			'E': 'block/birch_log',
+			'W': 'block/birch_log',
+			'U': 'block/birch_log_top',
+			'D': 'block/birch_log_top',
 		};
 	}
 }

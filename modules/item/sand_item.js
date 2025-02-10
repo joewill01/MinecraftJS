@@ -12,12 +12,12 @@ class SandItem extends Item{
 		//If Block
 		this.blockId = 28;
 		this.blockTextures = {
-			'N': 'sand.png',
-			'S': 'sand.png',
-			'E': 'sand.png',
-			'W': 'sand.png',
-			'U': 'sand.png',
-			'D': 'sand.png',
+			'N': 'block/sand',
+			'S': 'block/sand',
+			'E': 'block/sand',
+			'W': 'block/sand',
+			'U': 'block/sand',
+			'D': 'block/sand',
 		};
 	}
 }

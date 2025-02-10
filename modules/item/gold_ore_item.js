@@ -12,12 +12,12 @@ class GoldOreItem extends Item{
 		//If Block
 		this.blockId = 13;
 		this.blockTextures = {
-			'N': 'gold_ore.png',
-			'S': 'gold_ore.png',
-			'E': 'gold_ore.png',
-			'W': 'gold_ore.png',
-			'U': 'gold_ore.png',
-			'D': 'gold_ore.png',
+			'N': 'block/gold_ore',
+			'S': 'block/gold_ore',
+			'E': 'block/gold_ore',
+			'W': 'block/gold_ore',
+			'U': 'block/gold_ore',
+			'D': 'block/gold_ore',
 		};
 	}
 }

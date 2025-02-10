@@ -72,7 +72,7 @@ function initScene(){
 		breaktextures[i].minFilter = THREE.NearestFilter;
 	}
 
-	let breakCubeMat = new THREE.MeshPhongMaterial({"map":breaktextures[0],"opacity":0.5})
+	let breakCubeMat = new THREE.MeshPhongMaterial({"map":breaktextures[0],"opacity":0.5, alphaTest: 0.5})
 	breakCubeMat.transparent = true;
 	breakCube = new THREE.Mesh(breakCubeGeometry, breakCubeMat);
 	breakCube.needsUpdate = true;

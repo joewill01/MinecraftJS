@@ -12,12 +12,12 @@ class RedstoneOreItem extends Item{
 		//If Block
 		this.blockId = 15;
 		this.blockTextures = {
-			'N': 'redstone_ore.png',
-			'S': 'redstone_ore.png',
-			'E': 'redstone_ore.png',
-			'W': 'redstone_ore.png',
-			'U': 'redstone_ore.png',
-			'D': 'redstone_ore.png',
+			'N': 'block/redstone_ore',
+			'S': 'block/redstone_ore',
+			'E': 'block/redstone_ore',
+			'W': 'block/redstone_ore',
+			'U': 'block/redstone_ore',
+			'D': 'block/redstone_ore',
 		};
 	}
 }

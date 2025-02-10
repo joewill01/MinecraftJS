@@ -24,9 +24,68 @@ class World{
 	}
 
 	generate_chunk(chunkx,chunkz){
-		let chunk_instance = new Chunk(chunkx,chunkz);
-		this.chunk_instances[chunk_instance.name] = chunk_instance;
-		chunk_instance.generate()
+		console.log("generating", chunkx, chunkz)
+		// We need to show chunk at x,z so all chunks around need to go through stage 1 and 2
+		// If there is no chunk at this poisition, create one
+		if(this.world[this.get_chunk_name(chunkx,chunkz)] == undefined){
+			this._generate_worldShapingAroundChunk(chunkx,chunkz);
+			this._generate_decorateAroundChunk(chunkx,chunkz);
+			this.world[this.get_chunk_name(chunkx,chunkz)] = this.chunk_instances[this.get_chunk_name(chunkx,chunkz)].cdata
+			this.chunk_instances[this.get_chunk_name(chunkx,chunkz)].render();
+			this._generate_rerenderAroundChunk(chunkx,chunkz);
+		}
+	}
+
+	_generate_worldShapingAroundChunk(chunkx,chunkz){
+		let offsets = [
+			[0,0], [-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [1, 1], [-1, 1], [1, -1]
+		];
+		for (let [dx, dz] of offsets) {
+			let nx = chunkx + dx, nz = chunkz + dz;
+			let chunkName = this.get_chunk_name(nx, nz);
+			let chunk = this.chunk_instances[chunkName];
+	
+			if (!chunk){
+				let chunk_instance = new Chunk(nx,nz);
+				this.chunk_instances[chunk_instance.name] = chunk_instance;
+				chunk_instance.worldShape()
+			};
+		}
+	}
+
+	_generate_decorateAroundChunk(chunkx,chunkz){
+		let offsets = [
+			[0,0], [-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [1, 1], [-1, 1], [1, -1],
+		];
+		for (let [dx, dz] of offsets) {
+			let nx = chunkx + dx, nz = chunkz + dz;
+			let chunkName = this.get_chunk_name(nx, nz);
+			let chunk = this.chunk_instances[chunkName];
+	
+			if (!chunk){
+				let chunk_instance = new Chunk(nx,nz);
+				this.chunk_instances[chunk_instance.name] = chunk_instance;
+				chunk_instance.worldShape()
+			} else if(chunk.stage == 1){
+				this._generate_worldShapingAroundChunk(nx,nz)
+				chunk.decorate();
+			}
+		}
+	}
+
+	_generate_rerenderAroundChunk(chunkx,chunkz){
+		let offsets = [
+			[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [1, 1], [-1, 1], [1, -1]
+		];
+		for (let [dx, dz] of offsets) {
+			let nx = chunkx + dx, nz = chunkz + dz;
+			let chunkName = this.get_chunk_name(nx, nz);
+			let chunk = this.chunk_instances[chunkName];
+	
+			if (chunk && chunk.stage == 3){
+				this.reload_chunk(nx, nz)
+			}
+		}
 	}
 
 	world_to_chunk_coords(x, y, z) {
@@ -77,7 +136,7 @@ class World{
 			let nChunkName = this.get_chunk_name(nCoords.chunk_x, nCoords.chunk_z);
 			let nChunk = this.chunk_instances[nChunkName];
 	
-			if (!nChunk) {
+			if (!nChunk || !nChunk.chunk) {
 				blocks.push(-1); // Chunk not loaded
 			} else {
 				blocks.push(nChunk.chunk[nCoords.index] ?? -1);
@@ -116,6 +175,7 @@ class World{
 		return blocks
 	}
 
+	//Can be done on chunks in any stage
 	get_block_ID(x, y, z) {
 		if (y < 0 || y > 255) return 0;
 	
@@ -126,11 +186,20 @@ class World{
 		return chunk[coords.index] ?? -1; // Returns 0 only if explicitly set
 	}
 
+	//This can only be done on chunks in stage 3
 	get_block(x, y, z) {
 		if (y < 0 || y > 255) return 0;
 	
 		let coords = this.world_to_chunk_coords(x, y, z);
 		let chunk = this.chunk_instances[this.get_chunk_name(coords.chunk_x, coords.chunk_z)];
+
+		if(chunk == undefined){
+			return -1
+		}
+
+		if(!chunk.chunk){
+			return -1;
+		}
 	
 		return chunk ? chunk.chunk[coords.index] ?? -1 : -1;
 	}
@@ -143,15 +212,16 @@ class World{
 	unload_chunk(x, z){
 		if(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh") != undefined){
 			delete this.chunk_instances[this.get_chunk_name(x,z)]
-			delete this.world[this.get_chunk_name(x,z)]
+			//delete this.world[this.get_chunk_name(x,z)]
 			scene.remove(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh"));
 		}else{}
 	}
 
 	reload_chunk(x, z){
-		if(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh") != undefined){
+		const chunk = scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh")
+		if(chunk != undefined){
+			scene.remove(chunk);
 			this.chunk_instances[this.get_chunk_name(x,z)].render();
-			scene.remove(scene.getObjectByName(this.get_chunk_name(x,z)+"_mesh"));
 		}else{
 			//console.warn("Tryed to update chunk " + this.get_chunk_name(x,z) + ", Failed as chunk does not exist")
 		}
@@ -227,8 +297,10 @@ class World{
 
 	get_chunk_instances_array(){
 		let meshs = [];
-		for (const [key, value] of Object.entries(this.chunk_instances)) {
-		  meshs.push(value.chunk_mesh);
+		for (const [key, chunk] of Object.entries(this.chunk_instances)) {
+			if(chunk.stage == 3){
+				meshs.push(chunk.chunk_mesh);
+			}
 		}
 		return meshs
 	}

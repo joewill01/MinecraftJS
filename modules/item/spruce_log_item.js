@@ -12,12 +12,12 @@ class SpruceLogItem extends Item{
 		//If Block
 		this.blockId = 22;
 		this.blockTextures = {
-			'N': 'spruce_log.png',
-			'S': 'spruce_log.png',
-			'E': 'spruce_log.png',
-			'W': 'spruce_log.png',
-			'U': 'spruce_log_top.png',
-			'D': 'spruce_log_top.png',
+			'N': 'block/spruce_log',
+			'S': 'block/spruce_log',
+			'E': 'block/spruce_log',
+			'W': 'block/spruce_log',
+			'U': 'block/spruce_log_top',
+			'D': 'block/spruce_log_top',
 		};
 	}
 }

@@ -12,12 +12,12 @@ class SpruceLeavesItem extends Item{
 		//If Block
 		this.blockId = 23;
 		this.blockTextures = {
-			'N': 'spruce_leaves.png',
-			'S': 'spruce_leaves.png',
-			'E': 'spruce_leaves.png',
-			'W': 'spruce_leaves.png',
-			'U': 'spruce_leaves.png',
-			'D': 'spruce_leaves.png',
+			'N': 'block/spruce_leaves',
+			'S': 'block/spruce_leaves',
+			'E': 'block/spruce_leaves',
+			'W': 'block/spruce_leaves',
+			'U': 'block/spruce_leaves',
+			'D': 'block/spruce_leaves',
 		};
 	}
 }

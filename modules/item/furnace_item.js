@@ -12,12 +12,12 @@ class FurnaceItem extends Item{
 		//If Block
 		this.blockId = 11;
 		this.blockTextures = {
-			'N': 'furnace_front.png',
-			'S': 'furnace_side.png',
-			'E': 'furnace_side.png',
-			'W': 'furnace_side.png',
-			'U': 'furnace_top.png',
-			'D': 'furnace_top.png',
+			'N': 'block/furnace_front',
+			'S': 'block/furnace_side',
+			'E': 'block/furnace_side',
+			'W': 'block/furnace_side',
+			'U': 'block/furnace_top',
+			'D': 'block/furnace_top',
 		};
 	}
 }

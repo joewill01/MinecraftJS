@@ -12,12 +12,12 @@ class BedrockItem extends Item{
 		//If Block
 		this.blockId = 4;
 		this.blockTextures = {
-			'N': 'bedrock.png',
-			'S': 'bedrock.png',
-			'E': 'bedrock.png',
-			'W': 'bedrock.png',
-			'U': 'bedrock.png',
-			'D': 'bedrock.png',
+			'N': 'block/bedrock',
+			'S': 'block/bedrock',
+			'E': 'block/bedrock',
+			'W': 'block/bedrock',
+			'U': 'block/bedrock',
+			'D': 'block/bedrock',
 		};
 	}
 }

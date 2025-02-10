@@ -12,12 +12,12 @@ class JungleLeavesItem extends Item{
 		//If Block
 		this.blockId = 21;
 		this.blockTextures = {
-			'N': 'jungle_leaves.png',
-			'S': 'jungle_leaves.png',
-			'E': 'jungle_leaves.png',
-			'W': 'jungle_leaves.png',
-			'U': 'jungle_leaves.png',
-			'D': 'jungle_leaves.png',
+			'N': 'block/jungle_leaves',
+			'S': 'block/jungle_leaves',
+			'E': 'block/jungle_leaves',
+			'W': 'block/jungle_leaves',
+			'U': 'block/jungle_leaves',
+			'D': 'block/jungle_leaves',
 		};
 	}
 }

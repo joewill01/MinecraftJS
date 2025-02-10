@@ -9,7 +9,7 @@ class ComparatorItem extends Item{
 
 		this.hasDurability = false;
 
-		this.itemTexture = "comparator.png";
+		this.itemTexture = "comparator";
 		this.blockId = 33;
 	}
 }

@@ -12,12 +12,12 @@ class OakLeavesItem extends Item{
 		//If Block
 		this.blockId = 3;
 		this.blockTextures = {
-			'N': 'oak_leaves-NORMAL-BY-JOE.png',
-			'S': 'oak_leaves-NORMAL-BY-JOE.png',
-			'E': 'oak_leaves-NORMAL-BY-JOE.png',
-			'W': 'oak_leaves-NORMAL-BY-JOE.png',
-			'U': 'oak_leaves-NORMAL-BY-JOE.png',
-			'D': 'oak_leaves-NORMAL-BY-JOE.png',
+			'N': 'block/oak_leaves-NORMAL-BY-JOE',
+			'S': 'block/oak_leaves-NORMAL-BY-JOE',
+			'E': 'block/oak_leaves-NORMAL-BY-JOE',
+			'W': 'block/oak_leaves-NORMAL-BY-JOE',
+			'U': 'block/oak_leaves-NORMAL-BY-JOE',
+			'D': 'block/oak_leaves-NORMAL-BY-JOE',
 		};
 	}
 }

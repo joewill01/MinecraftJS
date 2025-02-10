@@ -12,12 +12,12 @@ class EmeraldOreItem extends Item{
 		//If Block
 		this.blockId = 16;
 		this.blockTextures = {
-			'N': 'emerald_ore.png',
-			'S': 'emerald_ore.png',
-			'E': 'emerald_ore.png',
-			'W': 'emerald_ore.png',
-			'U': 'emerald_ore.png',
-			'D': 'emerald_ore.png',
+			'N': 'block/emerald_ore',
+			'S': 'block/emerald_ore',
+			'E': 'block/emerald_ore',
+			'W': 'block/emerald_ore',
+			'U': 'block/emerald_ore',
+			'D': 'block/emerald_ore',
 		};
 	}
 }

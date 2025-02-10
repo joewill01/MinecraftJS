@@ -12,12 +12,12 @@ class GravelItem extends Item{
 		//If Block
 		this.blockId = 29;
 		this.blockTextures = {
-			'N': 'gravel.png',
-			'S': 'gravel.png',
-			'E': 'gravel.png',
-			'W': 'gravel.png',
-			'U': 'gravel.png',
-			'D': 'gravel.png',
+			'N': 'block/gravel',
+			'S': 'block/gravel',
+			'E': 'block/gravel',
+			'W': 'block/gravel',
+			'U': 'block/gravel',
+			'D': 'block/gravel',
 		};
 	}
 }

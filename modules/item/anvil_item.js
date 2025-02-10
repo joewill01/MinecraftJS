@@ -11,6 +11,6 @@ class AnvilItem extends Item{
 
 		//If Block
 		this.blockId = 31;
-		this.itemTexture = "anvil.png";
+		this.itemTexture = "block/anvil";
 	}
 }

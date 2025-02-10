@@ -12,12 +12,12 @@ class OakLogItem extends Item{
 		//If Block
 		this.blockId = 2;
 		this.blockTextures = {
-			'N': 'oak_log.png',
-			'S': 'oak_log.png',
-			'E': 'oak_log.png',
-			'W': 'oak_log.png',
-			'U': 'oak_log_top.png',
-			'D': 'oak_log_top.png',
+			'N': 'block/oak_log',
+			'S': 'block/oak_log',
+			'E': 'block/oak_log',
+			'W': 'block/oak_log',
+			'U': 'block/oak_log_top',
+			'D': 'block/oak_log_top',
 		};
 	}
 }

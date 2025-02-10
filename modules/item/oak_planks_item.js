@@ -12,12 +12,12 @@ class OakPlanksItem extends Item{
 		//If Block
 		this.blockId = 8;
 		this.blockTextures = {
-			'N': 'oak_planks.png',
-			'S': 'oak_planks.png',
-			'E': 'oak_planks.png',
-			'W': 'oak_planks.png',
-			'U': 'oak_planks.png',
-			'D': 'oak_planks.png',
+			'N': 'block/oak_planks',
+			'S': 'block/oak_planks',
+			'E': 'block/oak_planks',
+			'W': 'block/oak_planks',
+			'U': 'block/oak_planks',
+			'D': 'block/oak_planks',
 		};
 	}
 }

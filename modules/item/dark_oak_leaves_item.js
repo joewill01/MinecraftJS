@@ -12,12 +12,12 @@ class DarkOakLeavesItem extends Item{
 		//If Block
 		this.blockId = 27;
 		this.blockTextures = {
-			'N': 'dark_oak_leaves.png',
-			'S': 'dark_oak_leaves.png',
-			'E': 'dark_oak_leaves.png',
-			'W': 'dark_oak_leaves.png',
-			'U': 'dark_oak_leaves.png',
-			'D': 'dark_oak_leaves.png',
+			'N': 'block/dark_oak_leaves',
+			'S': 'block/dark_oak_leaves',
+			'E': 'block/dark_oak_leaves',
+			'W': 'block/dark_oak_leaves',
+			'U': 'block/dark_oak_leaves',
+			'D': 'block/dark_oak_leaves',
 		};
 	}
 }

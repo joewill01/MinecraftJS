@@ -9,7 +9,7 @@ class TorchItem extends Item{
 
 		this.hasDurability = false;
 
-		this.itemTexture = "torch.png";
+		this.itemTexture = "block/torch";
 		this.blockId = 30;
 	}
 }

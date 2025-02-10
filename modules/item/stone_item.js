@@ -12,12 +12,12 @@ class StoneItem extends Item{
 		//If Block
 		this.blockId = 1;
 		this.blockTextures = {
-			'N': 'stone.png',
-			'S': 'stone.png',
-			'E': 'stone.png',
-			'W': 'stone.png',
-			'U': 'stone.png',
-			'D': 'stone.png',
+			'N': 'block/stone',
+			'S': 'block/stone',
+			'E': 'block/stone',
+			'W': 'block/stone',
+			'U': 'block/stone',
+			'D': 'block/stone',
 		};
 	}
 }

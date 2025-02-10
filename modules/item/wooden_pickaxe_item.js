@@ -7,7 +7,7 @@ class WoodenPickaxeItem extends Item{
 		this.displayName = "Wooden Pickaxe"; 
 		this.type = "tool"; // material, tool, food, block, armour
 		this.allowedEnchants = [{"efficiency":5},{"fortune":3},{"silk_touch":1},{"unbreaking":3},{"mending":1},{"curse_of_vanishing":1}];
-		this.itemTexture = "wooden_pickaxe.png";
+		this.itemTexture = "wooden_pickaxe";
 
 		this.stackable = false;
 		this.hasDurability = true;

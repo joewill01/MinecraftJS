@@ -7,7 +7,7 @@ class WoodenSwordItem extends Item{
 		this.displayName = "Wooden Sword"; // Same as name but able to be overwritten for custom item names
 		this.type = "tool"; // material, tool, food, block, armour
 		this.allowedEnchants = [{"sharpness":5},{"looting":3},{"fire_aspect":2},{"unbreaking":3},{"mending":1},{"curse_of_vanishing":1},{"smite":5},{"bane_of_arthropods":5},{"knockback":2},{"sweeping_edge":3}];
-		this.itemTexture = "wooden_sword.png";
+		this.itemTexture = "wooden_sword";
 
 		this.stackable = false;
 		this.hasDurability = true;

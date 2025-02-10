@@ -12,12 +12,12 @@ class JungleLogItem extends Item{
 		//If Block
 		this.blockId = 20;
 		this.blockTextures = {
-			'N': 'jungle_log.png',
-			'S': 'jungle_log.png',
-			'E': 'jungle_log.png',
-			'W': 'jungle_log.png',
-			'U': 'jungle_log_top.png',
-			'D': 'jungle_log_top.png',
+			'N': 'block/jungle_log',
+			'S': 'block/jungle_log',
+			'E': 'block/jungle_log',
+			'W': 'block/jungle_log',
+			'U': 'block/jungle_log_top',
+			'D': 'block/jungle_log_top',
 		};
 	}
 }

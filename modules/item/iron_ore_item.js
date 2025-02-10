@@ -12,12 +12,12 @@ class IronOreItem extends Item{
 		//If Block
 		this.blockId = 10;
 		this.blockTextures = {
-			'N': 'iron_ore.png',
-			'S': 'iron_ore.png',
-			'E': 'iron_ore.png',
-			'W': 'iron_ore.png',
-			'U': 'iron_ore.png',
-			'D': 'iron_ore.png',
+			'N': 'block/iron_ore',
+			'S': 'block/iron_ore',
+			'E': 'block/iron_ore',
+			'W': 'block/iron_ore',
+			'U': 'block/iron_ore',
+			'D': 'block/iron_ore',
 		};
 	}
 }

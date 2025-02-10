@@ -7,7 +7,7 @@ class WoodenShovelItem extends Item{
 		this.displayName = "Wooden Shovel"; 
 		this.type = "tool";
 		this.allowedEnchants = [{"efficiency":5},{"fortune":3},{"silk_touch":1},{"unbreaking":3},{"mending":1},{"curse_of_vanishing":1}];
-		this.itemTexture = "wooden_shovel.png";
+		this.itemTexture = "wooden_shovel";
 		this.rarity = 0;
 
 		this.stackable = false;

@@ -6,7 +6,7 @@ class SeedsItem extends Item{
 		this.name = "seeds"; // Item name such as diamond_sword
 		this.displayName = "Seeds"; // Same as name but able to be overwritten for custom item names
 		this.type = "material"; // material, tool, food, block, armour
-		this.itemTexture = "wheat_seeds.png";
+		this.itemTexture = "wheat_seeds";
 
 		this.hasDurability = false;
 	}

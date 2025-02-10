@@ -12,12 +12,12 @@ class DirtItem extends Item{
 		//If Block
 		this.blockId = 7;
 		this.blockTextures = {
-			'N': 'dirt.png',
-			'S': 'dirt.png',
-			'E': 'dirt.png',
-			'W': 'dirt.png',
-			'U': 'dirt.png',
-			'D': 'dirt.png',
+			'N': 'block/dirt',
+			'S': 'block/dirt',
+			'E': 'block/dirt',
+			'W': 'block/dirt',
+			'U': 'block/dirt',
+			'D': 'block/dirt',
 		};
 	}
 }

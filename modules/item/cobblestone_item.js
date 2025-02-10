@@ -12,12 +12,12 @@ class CobblestoneItem extends Item{
 		//If Block
 		this.blockId = 8;
 		this.blockTextures = {
-			'N': 'cobblestone.png',
-			'S': 'cobblestone.png',
-			'E': 'cobblestone.png',
-			'W': 'cobblestone.png',
-			'U': 'cobblestone.png',
-			'D': 'cobblestone.png',
+			'N': 'block/cobblestone',
+			'S': 'block/cobblestone',
+			'E': 'block/cobblestone',
+			'W': 'block/cobblestone',
+			'U': 'block/cobblestone',
+			'D': 'block/cobblestone',
 		};
 	}
 }

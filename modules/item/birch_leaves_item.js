@@ -12,12 +12,12 @@ class BirchLeavesItem extends Item{
 		//If Block
 		this.blockId = 19;
 		this.blockTextures = {
-			'N': 'birch_leaves.png',
-			'S': 'birch_leaves.png',
-			'E': 'birch_leaves.png',
-			'W': 'birch_leaves.png',
-			'U': 'birch_leaves.png',
-			'D': 'birch_leaves.png',
+			'N': 'block/birch_leaves',
+			'S': 'block/birch_leaves',
+			'E': 'block/birch_leaves',
+			'W': 'block/birch_leaves',
+			'U': 'block/birch_leaves',
+			'D': 'block/birch_leaves',
 		};
 	}
 }
