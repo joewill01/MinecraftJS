@@ -177,6 +177,7 @@ class ItemEntity extends Entity{
 
 			scene.add( pivot );
 			this.pivot = pivot;
+			this.mesh = mesh;
 		}	
 		this.item = item;
 	}
@@ -184,15 +185,15 @@ class ItemEntity extends Entity{
 	update(){
 		this.updateCollBoxes();
 		var time = performance.now();
-		var delta = ( time - prevTime ) / 1000;
-		if(this.velocity.y - 9.8 * this.mass > -this.terminalVelocity){
-			this.velocity.y -= 9.8 * this.mass;
+		var delta = ( time - this.prevTime ) / 1000;
+		if(this.velocity.y - 9.8 * this.mass * delta > -this.terminalVelocity){
+			this.velocity.y -= 9.8 * this.mass * delta;
 		}else{
 			this.velocity.y = -this.terminalVelocity
 		}
 		try{
 			if(this.pivot != undefined){
-				this.pivot.rotation.y += 0.015;
+				this.mesh.rotation.y += 0.015;
 				let offset = Math.sin(performance.now()/400)*0.02 + 0.1
 				if(this.xySize!=undefined){
 					this.pivot.children.forEach((child, index)=>{
@@ -203,7 +204,7 @@ class ItemEntity extends Entity{
 						child.position.y = -this.size/2 + offset
 					})
 				}
-				this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.pivot)
+				this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.hitbox)
 			}
 		}catch(e){
 			console.log(e)
@@ -211,11 +212,17 @@ class ItemEntity extends Entity{
 		this.x = this.hitbox.position.x
 		this.y = this.hitbox.position.y
 		this.z = this.hitbox.position.z
+		this.pivot.position.x = this.x
+		this.pivot.position.y = this.y
+		this.pivot.position.z = this.z
+
+		this.prevTime = time;
 	}
 
 	onHitGround(){
 		this.velocity.x = 0;
 		this.velocity.z = 0;
+		this.velocity.y = 0;
 	}
 
 	cleanup(){

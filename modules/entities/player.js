@@ -68,7 +68,7 @@ class Player extends Entity{
 	moveCamera() {
 		if(!this.frozen){
 			var time = performance.now();
-			var delta = ( time - prevTime ) / 1000;
+			var delta = ( time - this.prevTime ) / 1000;
 
 			if(delta>0.2){
 				delta = 0.15
@@ -113,7 +113,7 @@ class Player extends Entity{
 
 			this.move(-this.velocity.x, this.velocity.y*delta, -this.velocity.z, this.camera)
 
-			prevTime = time;
+			this.prevTime = time;
 
 			//Do a raycast here to see how far away the nearsest block is and then set the z to that if its less than 5
 			this.thirdPersonCamera.position.z = 5

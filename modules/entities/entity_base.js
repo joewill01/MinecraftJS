@@ -8,9 +8,11 @@ class Entity {
 		this.z = z;
 		this.velocity = new THREE.Vector3();
 		this.vec = new THREE.Vector3();
-		this.mass = 0.3;
+		this.mass = 2.5;
 		this.terminalVelocity = 50;
 		this.hasGravity = true;
+
+		this.prevTime = performance.now()
 
 		let geom = new THREE.CubeGeometry( this.hitboxWidth, this.hitboxHeight, this.hitboxWidth);
 		let wireMaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF, wireframe:true } );
@@ -237,11 +239,8 @@ class Entity {
 			toMove.position.x += moveVec.x * collisionTime.entryTime
 			toMove.position.y += moveVec.y * collisionTime.entryTime
 			toMove.position.z += moveVec.z * collisionTime.entryTime
-
-
-
 		}
-		
+
 
 		if(this.eyeLevelHitbox != undefined){
 			this.eyeLevelHitbox.position.x = toMove.position.x

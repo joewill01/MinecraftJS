@@ -552,9 +552,9 @@ class Block {
 			const amountOfDrops = randomIntFromInterval(this.dropNumberMin,this.dropNumberMax)
 			for (let i = 0; i < amountOfDrops; i++) {
 				let item_entity = new ItemEntity(this.x, this.y, this.z, item);
-				item_entity.velocity.y = randomIntFromInterval(5,10);
-				item_entity.velocity.x = randomIntFromInterval(-3,3)/100;
-				item_entity.velocity.z = randomIntFromInterval(-3,3)/100;
+				item_entity.velocity.y = randomIntFromInterval(0.8,1.5);
+				item_entity.velocity.x = randomIntFromInterval(-1,1)/100;
+				item_entity.velocity.z = randomIntFromInterval(-1,1)/100;
 			}
 		}
 	}

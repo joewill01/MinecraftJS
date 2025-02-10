@@ -10,7 +10,6 @@ var mouse = new THREE.Vector2();
 var pressed = [];
 
 //Misc Vars
-var prevTime = performance.now();
 var sprinting = false;
 var ctlHeld = false;
 var prevSelected = null;
@@ -127,7 +126,6 @@ function initScene(){
 	ui.captureCursor = (() => {
 		player.controls.lock();
 		locked = true;
-		prevTime = performance.now()
 		player.frozen = false;
 	});
 
