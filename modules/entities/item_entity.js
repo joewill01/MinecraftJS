@@ -156,7 +156,25 @@ class ItemEntity extends Entity{
 			      		break;
 			    	default:
 			      		planeGeom.rotateX(angle);
-			  	}
+			  	}	
+				
+				let combinedLight = 0.75
+
+				if(name!="D"&&name!="U"){
+					combinedLight*=0.9
+				}
+	
+				if(name=="S"||name=="N"){
+					combinedLight*=0.8
+				}
+	
+				let tl = new THREE.Color(combinedLight, combinedLight, combinedLight)
+				let tr = new THREE.Color(combinedLight, combinedLight, combinedLight)
+				let bl = new THREE.Color(combinedLight, combinedLight, combinedLight)
+				let br = new THREE.Color(combinedLight, combinedLight, combinedLight)
+
+				planeGeom.faces[0].vertexColors.push(tl,bl,tr)
+				planeGeom.faces[1].vertexColors.push(bl,br,tr)
 
 			  	let plane = new THREE.Mesh(planeGeom);
 			  	plane.name = name;
@@ -165,9 +183,10 @@ class ItemEntity extends Entity{
 			  	block_geom.merge(planeGeom, plane.matrix, mat_index);
 			}
 
+		
 			let mesh = new THREE.Mesh(block_geom, registry.materials);
 			mesh.geometry.computeFaceNormals();
-			mesh.geometry.computeVertexNormals();
+			mesh.geometry.computeVertexNormals(); 
 
 			var pivot = new THREE.Object3D();
 			pivot.position.x = x 
@@ -179,7 +198,7 @@ class ItemEntity extends Entity{
 			this.pivot = pivot;
 			this.mesh = mesh;
 		}	
-		this.item = item;
+		this.item = item; 
 	}
 
 	update(){
