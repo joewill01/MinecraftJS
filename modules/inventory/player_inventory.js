@@ -39,7 +39,7 @@ class PlayerInventory extends Inventory {
 		this.item_slots[0].item = new TorchItem();
 		this.item_slots[1].item = new AnvilItem();
 		this.item_slots[2].item = new RedstoneTorchItem();
-		this.item_slots[3].item = new IronOreItem();
+		this.item_slots[3].item = new GrassItem();
 		this.item_slots[4].item = new LapisLazuliOreItem();
 		this.item_slots[5].item = new CoalOreItem();
 		this.item_slots[6].item = new GoldOreItem();

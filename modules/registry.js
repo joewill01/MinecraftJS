@@ -40,7 +40,7 @@ class Registry{
 			let material = new THREE.MeshBasicMaterial( {
 				map: this.textures[texID],
 				transparent: transparent, 
-				side: THREE.DoubleSide,
+				side: THREE.FrontSide,
 				vertexColors: THREE.VertexColors,
 				alphaTest: transparent ? 0.5 : null
 			});
@@ -181,6 +181,9 @@ class Registry{
 			case 33:
 				return new Comparator(x,y,z,ctex);
 				break;
+			case 34:
+				return new Grass(x,y,z,ctex);
+				break;
 		}
 	}
 
@@ -275,7 +278,7 @@ class Registry{
 				return new LapisLazuliItem();
 				break;
 			case 29:
-				return new GrassItem();
+				return new GrassBlockItem();
 				break;
 			case 30:
 				return new StoneItem();
@@ -336,6 +339,9 @@ class Registry{
 				break;
 			case 49:
 				return new ComparatorItem();
+				break;
+			case 50:
+				return new GrassItem();
 				break;
 		}
 	}

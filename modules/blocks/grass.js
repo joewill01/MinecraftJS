@@ -1,18 +1,21 @@
-class GrassBlock extends Block {
+class Grass extends Block {
 	constructor(x, y, z, ctex) {
 		super(x, y, z, ctex);
 
-		this.ID = 1;
-		this.name = "grass_block"
+		this.ID = 34;
+		this.name = "grass"
 		this.displayName = "Grass"
-		this.prefferedTool = "shovel";
 
-		this.hardness = 0.6;
-		this.resistance = 0.6;
-		this.droppedItemId = 12
+		this.hardness = 0;
+		this.resistance = 0;
+		this.droppedItemId = 50;
 
-		this.colourMultiplier = 0x91BD59;
-		this.layersToMultiply = {"N":[1], "S":[1], "E":[1], "W":[1], "U":[0], "D":[0]};
+        this.solid=false;
+        this.opacity = 0;
 		this.hasTransparentFaces = true;
+		this.hitbox = false;
+
+        this.colourMultiplier = 0x91BD59;
+		this.layersToMultiply = {"N":[0], "S":[0], "E":[1], "W":[1]};
 	}
 }

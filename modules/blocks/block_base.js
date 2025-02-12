@@ -132,6 +132,40 @@ class Block {
         return config;
     }
 
+	static rotatePlaneAroundPivotByXDegreesOnAxis(planeMesh, pivot, degrees, axis, blockPos) {
+		// Correctly define the rotation axis
+		const rotationAxis = new THREE.Vector3(
+			axis === "x" ? 1 : 0,
+			axis === "y" ? 1 : 0,
+			axis === "z" ? 1 : 0
+		);
+	
+		// Convert block position and pivot into world space
+		const rootBlockPos = new THREE.Vector3(...blockPos);
+		let pivotVector = new THREE.Vector3(...pivot).divideScalar(16);
+		pivotVector.sub(new THREE.Vector3(0.5, 0.5, 0.5))
+		
+
+		//Set planeMesh to 0,0,0
+		planeMesh.position.sub(rootBlockPos);
+	
+		// Move mesh relative to pivot
+		planeMesh.position.sub(pivotVector);
+	
+		// Create quaternion for rotation
+		const quaternion = new THREE.Quaternion();
+		quaternion.setFromAxisAngle(rotationAxis, THREE.MathUtils.degToRad(degrees));
+	
+		// Rotate both the position and the object
+		planeMesh.position.applyQuaternion(quaternion);
+		planeMesh.quaternion.premultiply(quaternion);
+	
+		// Move object back to its original position
+		planeMesh.position.add(pivotVector);
+
+		planeMesh.position.add(rootBlockPos);
+	}
+
 	render(chunk_geom){
 
 		const block_config = Block.resolveConfig(this.pathprefix+"/"+this.name);
@@ -323,7 +357,6 @@ class Block {
 			}
 		}
 		
-
 		function offsetPlane(name, element, plane, faceSize){
 			let currentX;
 			let currentZ;
@@ -536,6 +569,11 @@ class Block {
 		  	plane.name = name;
 
 			offsetPlane(name, elementConfig, plane, faceSize);
+
+			if(elementConfig.rotation != undefined){
+				Block.rotatePlaneAroundPivotByXDegreesOnAxis(plane, elementConfig.rotation.origin, elementConfig.rotation.angle, elementConfig.rotation.axis, [obj.x, obj.y, obj.z])
+				console.log(plane)
+			}
 
 		  	plane.updateMatrix();
 		  	chunk_geom.merge(planeGeom, plane.matrix, mat_index);
