@@ -18,7 +18,7 @@ class ChunkLoadManager{
 
 		for(let y=256;y>0;y--){
 			if(world.get_block_ID(player.x,y,player.z) != 0){
-				player.tp(player.x,y+2.5,player.z)
+				player.tp(player.x,y+3.5,player.z)
 				return
 			}
 		}

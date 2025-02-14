@@ -40,7 +40,7 @@ class PlayerInventory extends Inventory {
 		this.item_slots[1].item = new AnvilItem();
 		this.item_slots[2].item = new RedstoneTorchItem();
 		this.item_slots[3].item = new GrassItem();
-		this.item_slots[4].item = new LapisLazuliOreItem();
+		this.item_slots[4].item = new PoppyItem();
 		this.item_slots[5].item = new CoalOreItem();
 		this.item_slots[6].item = new GoldOreItem();
 		this.item_slots[7].item = new DiamondOreItem();
@@ -54,7 +54,7 @@ class PlayerInventory extends Inventory {
 		this.item_slots[1].amount = 64;
 		this.item_slots[2].amount = 48;
 		this.item_slots[3].amount = 48;
-		this.item_slots[4].amount = 1;
+		this.item_slots[4].amount = 10;
 		this.item_slots[5].amount = 1;
 		this.item_slots[6].amount = 1;
 		this.item_slots[7].amount = 1;

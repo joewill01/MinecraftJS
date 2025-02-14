@@ -184,6 +184,9 @@ class Registry{
 			case 34:
 				return new Grass(x,y,z,ctex);
 				break;
+			case 35:
+				return new Poppy(x,y,z,ctex);
+				break;
 		}
 	}
 
@@ -342,6 +345,9 @@ class Registry{
 				break;
 			case 50:
 				return new GrassItem();
+				break;
+			case 51:
+				return new PoppyItem();
 				break;
 		}
 	}

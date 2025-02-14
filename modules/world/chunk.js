@@ -62,7 +62,7 @@ class Chunk{
 		for (let x = 0; x < 16; x++) {
 			for (let z = 0; z < 16; z++) {
 				let height = Math.ceil(Math.abs(noise.perlin2((this.x*16+x+who) / whz, (this.z*16 + z + who) / whz)) * whs) + whr;
-				// let tree = noise.perlin2((this.x*16+x+to) / tz, (this.z*16 + z + to) / tz) > 0.6
+				let tree = noise.perlin2((this.x*16+x+to) / tz, (this.z*16 + z + to) / tz) > 0.4
 				// console.log(tree)
 				for (let y = 0; y <= height; y++){
 					if(y==height){
@@ -74,10 +74,10 @@ class Chunk{
 					}
 				}
 
-				// if(tree){
-				// 	let y = height + 1
-				// 	this.cdata[y*256 + x*16 + z] = 2;
-				// }
+				if(tree){
+					let y = height + 1
+					this.cdata[y*256 + x*16 + z] = 35;
+				}
 			}
 		}
 

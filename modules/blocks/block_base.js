@@ -572,7 +572,6 @@ class Block {
 
 			if(elementConfig.rotation != undefined){
 				Block.rotatePlaneAroundPivotByXDegreesOnAxis(plane, elementConfig.rotation.origin, elementConfig.rotation.angle, elementConfig.rotation.axis, [obj.x, obj.y, obj.z])
-				console.log(plane)
 			}
 
 		  	plane.updateMatrix();
