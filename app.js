@@ -392,6 +392,10 @@ function getSelected(raycaster, mouse){
 					pos.x = Math.floor(pos.x + 0.5)
 					pos.z += 0.5
 				}
+				pos.y = Math.ceil(pos.y)
+				pos.x = Math.ceil(pos.x)
+				pos.z = Math.ceil(pos.z)
+				// console.log(pos)
 
 
 				selectionCube.position.x = pos.x

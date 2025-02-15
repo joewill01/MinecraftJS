@@ -39,7 +39,7 @@ class Registry{
 		if (!this.materialRegister.hasOwnProperty(texture_name)){
 			let material = new THREE.MeshBasicMaterial( {
 				map: this.textures[texID],
-				transparent: transparent, 
+				transparent: true,
 				side: THREE.FrontSide,
 				vertexColors: THREE.VertexColors,
 				alphaTest: transparent ? 0.5 : null
@@ -186,6 +186,9 @@ class Registry{
 				break;
 			case 35:
 				return new Poppy(x,y,z,ctex);
+				break;
+			case 36:
+				return new OakSapling(x,y,z,ctex);
 				break;
 		}
 	}
@@ -348,6 +351,9 @@ class Registry{
 				break;
 			case 51:
 				return new PoppyItem();
+				break;
+			case 52:
+				return new OakSaplingItem();
 				break;
 		}
 	}

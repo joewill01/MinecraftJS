@@ -475,6 +475,26 @@ class Block {
 				b:(ambient*tint.b)+combinedLight
 			}
 
+			let scaleFactorX = 1;
+			let scaleFactorY = 1;
+			let scaleFactorZ = 1;
+
+			if(elementConfig.rotation != undefined && elementConfig.rotation.rescale == true){
+				const scaleFactor = 1/ Math.cos(THREE.MathUtils.degToRad(elementConfig.rotation.angle))
+				if(elementConfig.rotation.axis == "y"){
+					scaleFactorX = scaleFactor;
+					scaleFactorZ = scaleFactor;
+				}
+				if(elementConfig.rotation.axis == "z"){
+					scaleFactorX = scaleFactor;
+					scaleFactorY = scaleFactor;
+				}
+				if(elementConfig.rotation.axis == "x"){
+					scaleFactorY = scaleFactor;
+					scaleFactorZ = scaleFactor;
+				}
+			}
+
 			const faceSize = getFaceSize(name, elementConfig);
 
 			let planeGeom;
@@ -483,9 +503,9 @@ class Block {
 				planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1);
 			}else {
 				if(name == "U" || name == "D"){
-					planeGeom = new THREE.PlaneGeometry(faceSize.y/16, faceSize.x/16, 1, 1);
+					planeGeom = new THREE.PlaneGeometry(faceSize.y/16*scaleFactorX, faceSize.x/16*scaleFactorZ, 1, 1);
 				}else{
-					planeGeom = new THREE.PlaneGeometry(faceSize.x/16, faceSize.y/16, 1, 1);
+					planeGeom = new THREE.PlaneGeometry(faceSize.x/16*scaleFactorX, faceSize.y/16*scaleFactorY, 1, 1);
 				}
 			}
 
