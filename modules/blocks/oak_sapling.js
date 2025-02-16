@@ -26,6 +26,7 @@ class OakSapling extends Block{
     }
 
     genLayer(layerConfig, height){
+        let toReturn = []
         for (let block of layerConfig){
             if(block[4]){
                 if(this.getRandomBoolean()){
@@ -33,11 +34,13 @@ class OakSapling extends Block{
                 }
             }
 
-            world.set_block(this.x+block[0], this.y+height+block[1], this.z+block[2], block[3]);
+            toReturn.push({x:this.x+block[0], y:this.y+height+block[1], z:this.z+block[2], id:block[3]})
         }
+        return toReturn;
     }
 
     growTree(){
+        let toUpdate = []
 
         // [x, y, z offsets], blockId, random?
         let layerConfig = []
@@ -47,7 +50,7 @@ class OakSapling extends Block{
 
         //Trunk
         for(let i=0;i<height-1;i++){
-            world.set_block(this.x, this.y+i, this.z, 2);
+            toUpdate.push({x:this.x, y:this.y+i, z:this.z, id:2});
         }
 
         //Top layer
@@ -58,7 +61,7 @@ class OakSapling extends Block{
             [0,0,-1,3,false],
             [0,0,1,3,false],
         ]
-        this.genLayer(layerConfig, height)
+        toUpdate = [...toUpdate, ...this.genLayer(layerConfig, height)]
 
 
         //One from top
@@ -72,7 +75,7 @@ class OakSapling extends Block{
             [-1,-1,1,3,true],
             [1,-1,-1,3,true]
         ]
-        this.genLayer(layerConfig, height)
+        toUpdate = [...toUpdate, ...this.genLayer(layerConfig, height)]
 
         //Two from top
         layerConfig = [
@@ -107,7 +110,7 @@ class OakSapling extends Block{
             [2,-2,-2,3,true],
             [2,-2,2,3,true],
         ]
-        this.genLayer(layerConfig, height)
+        toUpdate = [...toUpdate, ...this.genLayer(layerConfig, height)]
 
         //Three from top
         layerConfig = [
@@ -142,7 +145,9 @@ class OakSapling extends Block{
             [2,-3,-2,3,true],
             [2,-3,2,3,true],
         ];
-        this.genLayer(layerConfig, height)
+        toUpdate = [...toUpdate, ...this.genLayer(layerConfig, height)]
+
+        world.batch_set_block(toUpdate)
         
     }
 }
