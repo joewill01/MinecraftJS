@@ -1,45 +1,39 @@
-testRecipes = [{
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
-  "group": "bed",
-  "key": {
-    "#": "minecraft:white_wool",
-    "X": "#minecraft:planks"
-  },
-  "pattern": [
-    "###",
-    "XXX"
-  ],
-  "result": {
-    "count": 1,
-    "id": "minecraft:white_bed"
-  }
-},
-{
-  "type": "minecraft:crafting_shaped",
-  "category": "misc",
-  "group": "wooden_fence",
-  "key": {
-    "#": "minecraft:stick",
-    "W": "minecraft:acacia_planks"
-  },
-  "pattern": [
-    "W#W",
-    "W#W"
-  ],
-  "result": {
-    "count": 3,
-    "id": "minecraft:acacia_fence"
-  }
-}]
-let reformattedRecipes = reformatAll(testRecipes)
-// let craftingGrid = [[" "," "," "],[" ","x"," "],[" ","p"," "]]
+const fs = require('fs');
+const path = require('path');
+
 let craftingGrid = [
   [" ", " ", " "],
   ['minecraft:white_wool','minecraft:white_wool','minecraft:white_wool'],
   [ '#minecraft:planks', '#minecraft:planks', '#minecraft:planks' ]
 ]
-console.log(shapedCraft(craftingGrid, reformattedRecipes))
+let recipes = getRecipes()
+console.log(recipes)
+
+function getRecipes() {
+    const directoryPath = path.resolve('../../minecraft/recipe');
+    let recipes = []
+    try {
+      const files = fs.readdirSync(directoryPath);
+      files.forEach(file => {
+          const filePath = path.join(directoryPath, file);
+          
+          if (fs.statSync(filePath).isFile()) {
+              let content = fs.readFileSync(filePath, 'utf8');
+              content = JSON.parse(content)
+              if(content.type == 'minecraft:crafting_shaped'){
+                recipes.push(content)
+              }
+          }
+      });
+      recipes = reformatAll(recipes);
+
+      return recipes;
+  } catch (error) {
+      console.error('Error reading directory:', error);
+      return [];
+  }
+}
+
 
 function addItem(item, position){
     vertical = Math.floor(position/3)
@@ -48,10 +42,10 @@ function addItem(item, position){
 }
 
 function reformatRecipe(recipe){
-    let pattern = recipe['pattern']
-    let key = recipe['key']
-    let reformattedRecipe = pattern.map(item => [...item]);
-    return reformattedRecipe.map(row => row.map(cell => key[cell]));
+  let pattern = recipe.pattern
+  let key = recipe.key
+  let reformattedRecipe = pattern.map(item => [...item]);
+  return reformattedRecipe.map(row => row.map(cell => key[cell]));
 }
 
 function reformatAll(unformattedRecipes){
