@@ -627,4 +627,8 @@ class Block {
 			let falling_block = new FallingBlock(this.x, this.y, this.z, this);
 		}
 	}
+
+	onRightClickWithItem(item){
+
+	}
 }

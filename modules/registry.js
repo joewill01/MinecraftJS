@@ -355,6 +355,9 @@ class Registry{
 			case 52:
 				return new OakSaplingItem();
 				break;
+			case 53:
+				return new BonemealItem();
+				break;
 		}
 	}
 
