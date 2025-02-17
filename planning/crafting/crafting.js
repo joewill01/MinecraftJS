@@ -7,9 +7,15 @@ const path = require('path');
 //   ['#minecraft:planks', '#minecraft:planks',' '],
 // ]
 
+// let craftingGrid = [
+//   ['#minecraft:planks', '#minecraft:planks',' '],
+//   ['#minecraft:planks', '#minecraft:planks',' '],
+//   [' ', ' ', ' '],
+// ]
+
 let craftingGrid = [
-  ['#minecraft:planks', '#minecraft:planks',' '],
-  ['#minecraft:planks', '#minecraft:planks',' '],
+  [' ','#minecraft:planks', '#minecraft:planks'],
+  [' ','#minecraft:planks', '#minecraft:planks'],
   [' ', ' ', ' '],
 ]
 
@@ -17,7 +23,7 @@ let recipes = getRecipes()
 // console.log((recipes.shapeless)[0])
 // console.log((recipes.shaped).length)
 
-console.log(shapedCraft(craftingGrid, recipes.shaped))
+console.log(shapedCraft(craftingGrid,recipes.shaped))
 
 function getRecipes() {
     const directoryPath = path.resolve('../../minecraft/recipe');
@@ -103,7 +109,11 @@ function trimColumns(craftingGrid){
   if (emptyColumns.length > 0 && emptyColumns != [1]){
     for (const column in emptyColumns) {
       for (let row = 0; row < craftingGrid.length; row++) {
-        craftingGrid[row].splice(emptyColumns[column]) 
+        if(emptyColumns[column] == 0){
+          craftingGrid[row].shift();
+        } else{
+          craftingGrid[row].splice(emptyColumns[column]) 
+        }
       }
     }
   }
