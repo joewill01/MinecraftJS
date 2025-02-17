@@ -39,8 +39,8 @@ class Registry{
 		if (!this.materialRegister.hasOwnProperty(texture_name)){
 			let material = new THREE.MeshBasicMaterial( {
 				map: this.textures[texID],
-				transparent: transparent, 
-				side: THREE.DoubleSide,
+				transparent: true,
+				side: THREE.FrontSide,
 				vertexColors: THREE.VertexColors,
 				alphaTest: transparent ? 0.5 : null
 			});
@@ -181,6 +181,15 @@ class Registry{
 			case 33:
 				return new Comparator(x,y,z,ctex);
 				break;
+			case 34:
+				return new Grass(x,y,z,ctex);
+				break;
+			case 35:
+				return new Poppy(x,y,z,ctex);
+				break;
+			case 36:
+				return new OakSapling(x,y,z,ctex);
+				break;
 		}
 	}
 
@@ -275,7 +284,7 @@ class Registry{
 				return new LapisLazuliItem();
 				break;
 			case 29:
-				return new GrassItem();
+				return new GrassBlockItem();
 				break;
 			case 30:
 				return new StoneItem();
@@ -336,6 +345,18 @@ class Registry{
 				break;
 			case 49:
 				return new ComparatorItem();
+				break;
+			case 50:
+				return new GrassItem();
+				break;
+			case 51:
+				return new PoppyItem();
+				break;
+			case 52:
+				return new OakSaplingItem();
+				break;
+			case 53:
+				return new BonemealItem();
 				break;
 		}
 	}

@@ -292,6 +292,11 @@ document.onmousedown = function(e){
 						break;
 				}
 			}
+		}else if(player_inventory.item_slots[hotbar.selected_item].item.type == "material"){
+			const blockRightClickedOn = world.get_block(lookingAt.blockCoords.x, lookingAt.blockCoords.y, lookingAt.blockCoords.z)
+			console.log(blockRightClickedOn)
+			console.log(player_inventory.item_slots[hotbar.selected_item])
+			blockRightClickedOn.onRightClickWithItem(player_inventory.item_slots[hotbar.selected_item].item)
 		}
 	}
 }
@@ -392,6 +397,10 @@ function getSelected(raycaster, mouse){
 					pos.x = Math.floor(pos.x + 0.5)
 					pos.z += 0.5
 				}
+				pos.y = Math.ceil(pos.y)
+				pos.x = Math.ceil(pos.x)
+				pos.z = Math.ceil(pos.z)
+				// conso le.log(pos)
 
 
 				selectionCube.position.x = pos.x
