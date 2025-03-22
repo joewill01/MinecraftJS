@@ -130,36 +130,27 @@ class PlayerInventory extends Inventory {
         ];
 		let craftBool = false
 		if(this.item_slots[41].item){
-			console.log(this.item_slots[41].item)
 			crafting.craftingGrid[0][0] = "minecraft:" + this.item_slots[41].item.name
 			craftBool = true;
-			console.log(crafting.craftingGrid)
 		}
 		if(this.item_slots[42].item){
-			console.log(this.item_slots[42].item)
 			crafting.craftingGrid[0][1] = "minecraft:" + this.item_slots[42].item.name
 			craftBool = true;
-			console.log(crafting.craftingGrid)
 		}
 		if(this.item_slots[43].item){
-			console.log(this.item_slots[43].item)
 			crafting.craftingGrid[1][0] = "minecraft:" + this.item_slots[43].item.name
 			craftBool = true;
-			console.log(crafting.craftingGrid)
 		}
 		if(this.item_slots[44].item){
-			console.log(this.item_slots[44].item)
 			crafting.craftingGrid[1][1] = "minecraft:" + this.item_slots[44].item.name
 			craftBool = true;
-			console.log(crafting.craftingGrid)
 		}
 		if(craftBool){
 			let result = crafting.shapedCraft();
 			if(result){
-				console.log("result",result['id'])
 				this.item_slots[45].item = registry.getItemInstanceFromName(result['id']);
-				console.log(registry.getItemInstanceFromName(result['id']))
 				this.item_slots[45].amount = result['count'];
+				this.item_slots[45].updateUIItem()
 			}
 		}
 	}
