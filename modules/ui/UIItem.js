@@ -194,6 +194,7 @@ class UIItem {
     setItem(item) {
         this.setAmount(item.amount);
         this.setItemInstance(item['item']);
+        player_inventory.checkCraft();
     }
 
     removeItem() {

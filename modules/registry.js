@@ -358,6 +358,9 @@ class Registry{
 			case 53:
 				return new BonemealItem();
 				break;
+			case 54:
+				return new StickItem();
+				break;
 		}
 	}
 

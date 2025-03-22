@@ -26,7 +26,7 @@ var serverConn = null;
 var m1Pressed = false;
 var currentItem = null;
 
-var ui, hotbar, pause_menu,options_menu, player_inventory, player_inventory_ui, scene, renderer
+var ui, hotbar, pause_menu,options_menu, player_inventory, player_inventory_ui, scene, renderer, crafting
 var selectionCube, breakCube, registry, player, world, chunkLoadManager
 var control_type, breaktextures
 
@@ -44,6 +44,8 @@ function initScene(){
 
 	player_inventory = new PlayerInventory()
 	player_inventory_ui = new PlayerInventoryUI(ui, player_inventory, hotbar);
+
+	crafting = new Crafting()
 
 	scene = new Physijs.Scene;
 	scene.fog = new THREE.Fog(0x99ccff, 70, 90);

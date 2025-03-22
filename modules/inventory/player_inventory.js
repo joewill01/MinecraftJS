@@ -48,6 +48,8 @@ class PlayerInventory extends Inventory {
 		this.item_slots[9].item = new DiamondLeggingsItem();
 		this.item_slots[10].item = new CobblestoneItem();
 		this.item_slots[11].item = new IronOreItem();
+		this.item_slots[12].item = new CoalItem();
+		this.item_slots[13].item = new StickItem();
 		
 
 		this.item_slots[0].amount = 64;
@@ -62,6 +64,10 @@ class PlayerInventory extends Inventory {
 		this.item_slots[9].amount = 1;
 		this.item_slots[10].amount = 1;
 		this.item_slots[11].amount = 48;
+		this.item_slots[12].amount = 1;
+		this.item_slots[13].amount = 1;
+
+
 
 	}
 	addItem(item,amount){
@@ -114,5 +120,41 @@ class PlayerInventory extends Inventory {
 			return true
 		}
 
+	}
+
+	checkCraft(){
+		crafting.craftingGrid = [
+            [' ',' ', ' '],
+            [' ',' ', ' '],
+            [' ', ' ', ' ']
+        ];
+		let craftBool = false
+		if(this.item_slots[41].item){
+			console.log(this.item_slots[41].item)
+			crafting.craftingGrid[0][0] = "minecraft:" + this.item_slots[41].item.name
+			craftBool = true;
+			console.log(crafting.craftingGrid)
+		}
+		if(this.item_slots[42].item){
+			console.log(this.item_slots[42].item)
+			crafting.craftingGrid[0][1] = "minecraft:" + this.item_slots[42].item.name
+			craftBool = true;
+			console.log(crafting.craftingGrid)
+		}
+		if(this.item_slots[43].item){
+			console.log(this.item_slots[43].item)
+			crafting.craftingGrid[1][0] = "minecraft:" + this.item_slots[43].item.name
+			craftBool = true;
+			console.log(crafting.craftingGrid)
+		}
+		if(this.item_slots[44].item){
+			console.log(this.item_slots[44].item)
+			crafting.craftingGrid[1][1] = "minecraft:" + this.item_slots[44].item.name
+			craftBool = true;
+			console.log(crafting.craftingGrid)
+		}
+		if(craftBool){
+			console.log(crafting.shapedCraft())
+		}
 	}
 }
