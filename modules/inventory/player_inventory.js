@@ -154,7 +154,13 @@ class PlayerInventory extends Inventory {
 			console.log(crafting.craftingGrid)
 		}
 		if(craftBool){
-			console.log(crafting.shapedCraft())
+			let result = crafting.shapedCraft();
+			if(result){
+				console.log("result",result['id'])
+				this.item_slots[45].item = registry.getItemInstanceFromName(result['id']);
+				console.log(registry.getItemInstanceFromName(result['id']))
+				this.item_slots[45].amount = result['count'];
+			}
 		}
 	}
 }

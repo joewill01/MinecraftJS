@@ -192,7 +192,13 @@ class Registry{
 				break;
 		}
 	}
-
+	getItemInstanceFromName(name){
+		switch(name){
+			case 'minecraft:torch':
+				return new TorchItem();
+				break
+		}
+	}
 
 	getItemInstanceFromId(id){
 		switch(id){
