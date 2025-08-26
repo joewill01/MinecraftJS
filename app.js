@@ -46,8 +46,8 @@ function initScene(){
 	player_inventory_ui = new PlayerInventoryUI(ui, player_inventory, hotbar);
 
 	scene = new Physijs.Scene;
-	scene.fog = new THREE.Fog(0x99ccff, 70, 90);
-	scene.background = new THREE.Color( 0x99ccff );
+	scene.fog = new THREE.Fog(0x000000, 70, 90);
+	scene.background = new THREE.Color( 0x000000 );
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );

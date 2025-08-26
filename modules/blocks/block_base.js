@@ -449,13 +449,13 @@ class Block {
 			}
 
 			//Sky Light Level 0-15
-			let skylight = 15
+			let skylight = obj.skylight != null ? obj.skylight : 0 // CURSOR
 
 			//Block Light Level 0-15
-			let blocklight = 0
+			let blocklight = obj.blocklight != null ? obj.blocklight : 0 // CURSOR
 
 			//Calculate result of block+sky and find range between 0-0.6 to add to the light
-			let combinedLight = ((skylight + blocklight) ) * 0.05
+			let combinedLight = ((skylight + blocklight)) * 0.05 // CURSOR
 			if(combinedLight>0.75){
 				combinedLight=0.75
 			}

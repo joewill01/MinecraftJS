@@ -16,10 +16,14 @@ class Chunk{
 		this.treeZoom = 100;
 		this.treeScale = 50;
 		this.treeOffset = 1000;
+
+		// CURSOR Per-voxel persistent block light map (local coords)
+		this.SIZE = 16*16*256;
+		this.blocklightMap = new Uint8Array(this.SIZE);
 	}
 
 	
-
+	
 	worldShape(){
 		const whz = this.worldHeightZoom;
 		const whs = this.worldHeightScale;
@@ -214,6 +218,83 @@ class Chunk{
 		}
 	}
 
+	// CURSOR Simple flood-fill block light from lightSource blocks
+	calculateBlocklight(){
+		const queue = [];
+		// Seed from light sources, writing into persistent map
+		for (let i=0;i<this.chunk.length;i++){
+			const b = this.chunk[i];
+			if(!b){ continue }
+			if(b.lightSource === true){
+				const coords = world.world_to_chunk_coords(b.x,b.y,b.z);
+				const level = b.baseLightIntensity || 14;
+				if(this.blocklightMap[coords.index] < level){
+					this.blocklightMap[coords.index] = level;
+				}
+				queue.push({x:b.x,y:b.y,z:b.z, level});
+			}
+		}
+		const dirs = [
+			[ 1, 0, 0],[-1, 0, 0],
+			[ 0, 1, 0],[ 0,-1, 0],
+			[ 0, 0, 1],[ 0, 0,-1]
+		];
+		const neighborsTouched = {};
+		while(queue.length>0){
+			const cur = queue.shift();
+			for (let d=0; d<6; d++){
+				const nx = cur.x + dirs[d][0];
+				const ny = cur.y + dirs[d][1];
+				const nz = cur.z + dirs[d][2];
+				const nBlock = world.get_block(nx,ny,nz);
+				if(nBlock === -1){ continue }
+				const candidate = cur.level - 1;
+				if(candidate <= 0){ continue }
+				const nCoords = world.world_to_chunk_coords(nx,ny,nz);
+				const neighborChunkName = world.get_chunk_name(nCoords.chunk_x,nCoords.chunk_z);
+				const neighborChunk = world.chunk_instances[neighborChunkName];
+				if(!neighborChunk){ continue }
+				if(neighborChunk.blocklightMap == undefined){
+					neighborChunk.SIZE = 16*16*256;
+					neighborChunk.blocklightMap = new Uint8Array(neighborChunk.SIZE);
+				}
+				if(neighborChunk.blocklightMap[nCoords.index] < candidate){
+					neighborChunk.blocklightMap[nCoords.index] = candidate;
+					neighborsTouched[neighborChunkName] = [nCoords.chunk_x,nCoords.chunk_z];
+					queue.push({x:nx,y:ny,z:nz, level:candidate});
+				}
+			}
+		}
+		// reload touched neighbors once after propagation completes
+		for (let key in neighborsTouched){
+			const [nx,nz] = neighborsTouched[key];
+			if(world.chunk_instances[world.get_chunk_name(nx,nz)]){
+				world.reload_chunk(nx,nz);
+			}
+		}
+	}
+
+	// CURSOR Reload neighbor chunks if border blocks have non-zero blocklight
+	reloadNeighborsIfLit(){
+		let neighborsToReload = {};
+		for (let i=0;i<this.chunk.length;i++){
+			const b = this.chunk[i];
+			if(!b || !b.blocklight || b.blocklight <= 0){ continue }
+			// Determine local coords inside this chunk
+			const coords = world.world_to_chunk_coords(b.x, b.y, b.z);
+			if(coords.pos_x === 0){ neighborsToReload[world.get_chunk_name(this.x-1,this.z)] = [this.x-1,this.z]; }
+			if(coords.pos_x === 15){ neighborsToReload[world.get_chunk_name(this.x+1,this.z)] = [this.x+1,this.z]; }
+			if(coords.pos_z === 0){ neighborsToReload[world.get_chunk_name(this.x,this.z-1)] = [this.x,this.z-1]; }
+			if(coords.pos_z === 15){ neighborsToReload[world.get_chunk_name(this.x,this.z+1)] = [this.x,this.z+1]; }
+		}
+		for (let key in neighborsToReload){
+			const [nx,nz] = neighborsToReload[key];
+			if(world.chunk_instances[world.get_chunk_name(nx,nz)]){
+				world.reload_chunk(nx,nz);
+			}
+		}
+	}
+
 	render(){
 		this.chunk = [];
 		let chunk_geom = new THREE.Geometry();
@@ -226,7 +307,40 @@ class Chunk{
 			this.chunk.push(registry.getBlockInstanceFromId(id, this.x * 16 + x, y, this.z * 16 + z, this.ctextures))
 		}, this);
 
-		//this.calculateSkylight()
+		this.calculateSkylight()
+		this.calculateBlocklight()
+		this.reloadNeighborsIfLit()
+
+		// CURSOR Apply persistent map values to blocks for shading
+		for (let i=0;i<this.chunk.length;i++){
+			const b = this.chunk[i];
+			if(!b){ continue }
+			const coords = world.world_to_chunk_coords(b.x,b.y,b.z);
+			b.skylight = this.skylightMap ? (this.skylightMap[coords.index] || 0) : (b.skylight || 0);
+			if(this.blocklightMap){
+				// sample self and 6 neighbors to light solid faces
+				let maxLight = this.blocklightMap[coords.index] || 0;
+				const neighbors = [
+					[ 1, 0, 0],[-1, 0, 0],
+					[ 0, 1, 0],[ 0,-1, 0],
+					[ 0, 0, 1],[ 0, 0,-1]
+				];
+				for (let d=0; d<6; d++){
+					const nx = b.x + neighbors[d][0];
+					const ny = b.y + neighbors[d][1];
+					const nz = b.z + neighbors[d][2];
+					const nCoords = world.world_to_chunk_coords(nx,ny,nz);
+					const nChunk = world.chunk_instances[world.get_chunk_name(nCoords.chunk_x,nCoords.chunk_z)];
+					if(nChunk && nChunk.blocklightMap){
+						const lvl = nChunk.blocklightMap[nCoords.index] || 0;
+						if(lvl > maxLight){ maxLight = lvl; }
+					}
+				}
+				b.blocklight = maxLight;
+			}else{
+				b.blocklight = b.blocklight || 0;
+			}
+		}
 
 		this.chunk.forEach(function(block, e) {
 			if(!(block instanceof Air)){
