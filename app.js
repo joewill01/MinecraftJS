@@ -49,6 +49,9 @@ function initScene(){
 	scene.fog = new THREE.Fog(0x000000, 70, 90);
 	scene.background = new THREE.Color( 0x000000 );
 
+	// Add starfield to the sky
+	addStarfield(scene);
+
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
@@ -418,7 +421,64 @@ function getSelected(raycaster, mouse){
 		}
 	}catch{
 		lookingAt = null;
-	}	
+		}
+}
+
+// Minecraft-style starfield generation using fixed seed
+function addStarfield(scene) {
+	// Use Minecraft's fixed seed for consistent star positions
+	const starSeed = 10842;
+	const rng = new (function() {
+		let seed = starSeed;
+		this.next = function() {
+			seed = (seed * 9301 + 49297) % 233280;
+			return seed / 233280;
+		};
+	})();
+	
+	// Generate 1500 star attempts, filter to ~780 visible stars
+	const starGroup = new THREE.Group();
+	starGroup.name = "starfield";
+	
+	for (let i = 0; i < 1500; i++) {
+		// Generate random position on a large sphere
+		const theta = rng.next() * Math.PI * 2; // longitude
+		const phi = Math.acos(2 * rng.next() - 1); // latitude
+		const radius = 100 + rng.next() * 50; // distance from center
+		
+		// Convert to Cartesian coordinates
+		const x = radius * Math.sin(phi) * Math.cos(theta);
+		const y = radius * Math.sin(phi) * Math.sin(theta);
+		const z = radius * Math.cos(phi);
+		
+		// Filter out stars that would be below horizon or too close to sun
+		if (y < -20 || (Math.abs(x) < 10 && z > 80)) {
+			continue;
+		}
+		
+		// Random star size and brightness
+		const size = 0.1 + rng.next() * 0.3;
+		const brightness = 0.3 + rng.next() * 0.7;
+		
+		// Create star as small white quad
+		const starGeometry = new THREE.PlaneGeometry(size, size);
+		const starMaterial = new THREE.MeshBasicMaterial({
+			color: 0xFFFFFF,
+			transparent: true,
+			opacity: brightness,
+			side: THREE.DoubleSide
+		});
+		
+		const star = new THREE.Mesh(starGeometry, starMaterial);
+		star.position.set(x, y, z);
+		
+		// Make star always face camera
+		star.lookAt(0, 0, 0);
+		
+		starGroup.add(star);
+	}
+	
+	scene.add(starGroup);
 }
 
 document.addEventListener( 'keydown', onKeyDown, false );
