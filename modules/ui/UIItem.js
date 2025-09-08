@@ -201,6 +201,19 @@ class UIItem {
         this.setAmount(0);
         this.item_slot.item = '';
         this.updateTexture();
+        player_inventory.checkCraft();
+        if(this.item_slot.type == 'output'){
+            player_inventory.item_slots[41].amount = 0
+            player_inventory.item_slots[41].updateUIItem()
+            player_inventory.item_slots[42].amount = 0
+            player_inventory.item_slots[42].updateUIItem()
+            player_inventory.item_slots[43].amount = 0
+            player_inventory.item_slots[43].updateUIItem()
+            player_inventory.item_slots[44].amount = 0
+            player_inventory.item_slots[44].updateUIItem()
+            player_inventory.item_slots[45].amount = 0
+            player_inventory.item_slots[45].updateUIItem()
+        }
     }
 
 

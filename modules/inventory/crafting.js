@@ -6,7 +6,6 @@ class Crafting {
             [' ', ' ', ' ']
         ];
         this.recipes = this.reformatAll(this.getRecipes());
-        console.log(this.recipes)
     }
 
     getRecipes(){
@@ -37,7 +36,6 @@ class Crafting {
 
     reshapeGrid(craftingGrid){
         let rowsRemoved = this.trimRows(craftingGrid);
-        console.log(rowsRemoved)
         return(this.trimColumns(rowsRemoved))
     }
       
@@ -83,7 +81,6 @@ class Crafting {
       
     shapedCraft(){
         let reshapedGrid = this.reshapeGrid(this.craftingGrid);
-        console.log(reshapedGrid)
         let filteredArray = this.recipes.find(obj => JSON.stringify(obj['pattern']) === JSON.stringify(reshapedGrid));
         if (filteredArray){
             return filteredArray.result

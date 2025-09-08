@@ -32,6 +32,7 @@ class PlayerInventory extends Inventory {
 
 		// crafting result
 		this.item_slots[45].locked = true;
+		this.item_slots[45].type = 'output'
 
 
 		// add some test items to the hotbar
@@ -150,6 +151,9 @@ class PlayerInventory extends Inventory {
 			if(result){
 				this.item_slots[45].item = registry.getItemInstanceFromName(result['id']);
 				this.item_slots[45].amount = result['count'];
+				this.item_slots[45].updateUIItem()
+			} else {
+				this.item_slots[45].amount = 0
 				this.item_slots[45].updateUIItem()
 			}
 		}
