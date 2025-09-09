@@ -92,6 +92,10 @@ class PlayerInventoryUI extends UIBase {
 
         // offhand
         this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[40], 154, 124, 400));
+		
+		// crafting text
+        let craftingText = new UIText(this.itemsContainer, 194, 6, 400, "Crafting");
+        craftingText.element.classList.add("inventoryPlayer_craftingText");
 
         // crafting
         this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[41], 196, 36, 400));
@@ -380,6 +384,11 @@ class PlayerInventoryUI extends UIBase {
             .inventoryPlayer_container .player .leg-right span.right   { transform: rotateY( 90deg) translateZ(50px) translateY(200px) scaleX(-1); background-position: 0 -500px; width: 100px; }
             .inventoryPlayer_container .player .leg-right span.front   { transform: rotateY(  0deg) translateZ(50px) translateY(200px); background-position: -100px -500px; }
             .inventoryPlayer_container .player_model .leg-right span.back    { transform: rotateY(180deg) translateZ(50px) translateY(200px); background-position: -300px -500px; }
+			
+			.inventoryPlayer_craftingText {
+                color: #444;
+                text-shadow: none
+            }
         `;
         this.element.appendChild(this.stylesheet);
     }
