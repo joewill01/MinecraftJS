@@ -79,16 +79,16 @@ class PlayerInventoryUI extends UIBase {
         this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[35], 304, 240, 400));
 
         // helmet
-		this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[36], 16, 16, 400));
+		this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[36], 16, 16, 400, false, false, "minecraft/textures/item/empty_armor_slot_helmet.png"));
 
 		// chestplate
-        this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[37], 16, 52, 400));
+        this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[37], 16, 52, 400, false, false, "minecraft/textures/item/empty_armor_slot_chestplate.png"));
 
         // leggings
-        this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[38], 16, 88, 400));
+        this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[38], 16, 88, 400, false, false, "minecraft/textures/item/empty_armor_slot_leggings.png"));
 
         // boots
-        this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[39], 16, 124, 400));
+        this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[39], 16, 124, 400, false, false, "minecraft/textures/item/empty_armor_slot_boots.png"));
 
         // offhand
         this.ui_items.push(new UIItem(this.itemsContainer, this.player_inventory.item_slots[40], 154, 124, 400));

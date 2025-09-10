@@ -1,11 +1,12 @@
 class UIItem {
-    constructor(parentElement, item_slot, x=0, y=0, id="", x_invert=false, y_invert=false) {
+    constructor(parentElement, item_slot, x=0, y=0, id="", x_invert=false, y_invert=false, background_image="") {
         this.dom = document;
         this.parentElement = parentElement;
         this.x = x;
         this.y = y;
         this.x_invert = x_invert;
         this.y_invert = y_invert;
+        this.background_image = background_image;
         this.id = id;
         this.mirrorEl = '';
         this.mirroring = false;
@@ -28,6 +29,13 @@ class UIItem {
         this.element.oncontextmenu = () => {this.oncontextmenuInternal()};
         this.element.classList.add("standard_item");
         this.element.id = this.id;
+        
+        if (this.background_image) {
+            this.element.style.backgroundImage = `url(${this.background_image})`;
+            this.element.style.backgroundSize = 'cover';
+            this.element.style.imageRendering = 'pixelated';
+        }
+        
 
         this.item_hover_overlay = this.dom.createElement("span");
         this.item_hover_overlay.id = `${this.id}:item_hover_overlay`;

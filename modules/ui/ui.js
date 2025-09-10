@@ -262,9 +262,10 @@ class UI {
                 left: 0;
                 height: 100%;
                 width: 100%;
-                background-color: #bbb;
+                background-color: #fff;
+                opacity: 0.5;
                 visibility: hidden;
-                z-index: 10;
+                z-index: 11;
             }
             
             .standard_item:hover .item_hover_overlay {
