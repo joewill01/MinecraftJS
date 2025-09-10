@@ -21,6 +21,7 @@ var locked = false;
 var baseFOV = 70;
 var collidingEntities = {};
 var serverConn = null;
+var showDebugStats = false;
 
 //Vars for breaking blocks
 var m1Pressed = false;
@@ -239,6 +240,11 @@ var onKeyDown = function ( event ) {
 			}else{
 				player.perspective = 1;
 			}
+			break;
+		case 114: // f3
+			showDebugStats = !showDebugStats;
+			if (stats && stats.domElement) stats.domElement.style.display = showDebugStats ? 'block' : 'none';
+			if (rendererStats && rendererStats.domElement) rendererStats.domElement.style.display = showDebugStats ? 'block' : 'none';
 			break;
 		case 66:
 			renderHitboxes = !renderHitboxes;
@@ -509,6 +515,7 @@ function createStats() {
 
 stats = createStats();
 document.body.appendChild( stats.domElement );
+stats.domElement.style.display = 'none';
 
 var rendererStats	= new THREEx.RendererStats()
 rendererStats.domElement.style.position	= 'absolute'
@@ -516,6 +523,7 @@ rendererStats.domElement.style.left	= '0px'
 rendererStats.domElement.style.bottom	= '0px'
 rendererStats.domElement.style.zIndex	= '100'
 document.body.appendChild( rendererStats.domElement )
+rendererStats.domElement.style.display = 'none'
 
 var frames = 0;
 var infinite_terrain = false;
