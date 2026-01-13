@@ -95,6 +95,7 @@ class MainMenu extends UIBase {
 
 
 
-        this.UIelements["buttons"]["singleplayer"].onclick = () => {this.ui.openScreen("singleplayer_menu")}
+        // this.UIelements["buttons"]["singleplayer"].onclick = () => {this.ui.openScreen("singleplayer_menu")}
+       this.UIelements["buttons"]["singleplayer"].onclick = () => {this.hide()};
     }
 }
